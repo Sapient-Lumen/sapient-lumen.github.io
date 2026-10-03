@@ -1,0 +1,81 @@
+{
+  "schema": "lumen.handoff/v3",
+  "edition": "rev0037",
+  "generated_at": "2026-10-02T14:58:57Z",
+  "source_fingerprint_sha256": "f73011f81483a28e28563da2cffe009fd57b765c27d3c94ca4555ec4415071b6",
+  "primary": {
+    "role": "portable-browser-and-cloudtainer-edition",
+    "file": "Lumen.html",
+    "sha256": "80aea87881743703fb30ba13926c33bbd3772b0957b3e16914e4b23973f00caf",
+    "bytes": 3681162,
+    "extract": "unzip Lumen.html"
+  },
+  "archives": [
+    {
+      "role": "github-pages-projection",
+      "file": "lumen-site-rev0037-f73011f81483.zip",
+      "sha256": "f721086a6beab30f589d9c0a169269f978af630bc98f49198fd2fc755427458d",
+      "bytes": 2604055
+    },
+    {
+      "role": "ordinary-github-worktree",
+      "file": "lumen-repository-rev0037-f73011f81483.zip",
+      "sha256": "87f2112f90228e657503f24849ffa39f003baeb053b4ff2f3ceef8b7ec2b0377",
+      "bytes": 1272656
+    }
+  ],
+  "hypertext": {
+    "passages": 116,
+    "typed_context_edges": 69,
+    "relationship_edges": 69,
+    "ledger": "dist/meta/hypertext-ledger.json"
+  },
+  "references": {
+    "sources": 30,
+    "domains": 17,
+    "ledger": "dist/meta/references.json"
+  },
+  "reading_paths": {
+    "paths": 3,
+    "steps": 12,
+    "ledger": "dist/meta/reading-paths.json"
+  },
+  "operator_commands": [
+    "./lumen start",
+    "./lumen look",
+    "./lumen look night-study",
+    "./lumen page PAGE_ID",
+    "./lumen folio [PAGE_ID]",
+    "./lumen pathfolio [PATH_ID]",
+    "./lumen edit PAGE_ID",
+    "./lumen history --check",
+    "./lumen revise PAGE_ID --summary 'What changed and why'",
+    "./lumen context PAGE_ID#SECTION",
+    "./lumen references QUERY --format markdown",
+    "./lumen thread [PATH] --format markdown",
+    "./lumen cite PAGE_ID#SECTION --format markdown --quote",
+    "./lumen marker PAGE_ID#SECTION --output return-point.json",
+    "./lumen marker --check return-point.json",
+    "./lumen correction PACKET.json --check",
+    "./lumen compare OTHER-Lumen.html --format markdown",
+    "./lumen packet PAGE_ID#SECTION",
+    "./lumen packet --fieldbook lumen-fieldbook.json",
+    "LUMEN_CHECKPOINT_DIR=../private-recovery ./lumen preserve --verify",
+    "./lumen reopen CHECKPOINT.zip --verify-only",
+    "./lumen sync --check",
+    "./lumen ship --replace"
+  ],
+  "start": [
+    "open Lumen.html in a browser, or extract it",
+    "cd Lumen",
+    "./lumen doctor",
+    "./lumen start"
+  ],
+  "excluded": [
+    "historical donor archive",
+    "private repositories",
+    "private worktree checkpoints",
+    "private review evidence",
+    "outer revision workshop"
+  ]
+}
