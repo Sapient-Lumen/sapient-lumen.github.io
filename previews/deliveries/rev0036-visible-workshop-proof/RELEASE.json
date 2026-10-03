@@ -1,0 +1,18 @@
+{
+  "schema": "lumen.release/v2",
+  "edition": "rev0036",
+  "archive": "lumen-site-rev0036-bc01de6d8fb3.zip",
+  "sha256": "77c41b7e3dc6381bc258bf0614e4324741150db279ec7b6f0ceadcddf48df47a",
+  "bytes": 2597771,
+  "source_fingerprint_sha256": "bc01de6d8fb3518ae53eb996700a2196a21daf90149a35523a9128fcf6284383",
+  "build_receipt": "dist/build-receipt.json",
+  "deployment_boundary": "dist/ only",
+  "reproducible_zip_timestamp": [
+    2026,
+    10,
+    2,
+    14,
+    58,
+    56
+  ]
+}
