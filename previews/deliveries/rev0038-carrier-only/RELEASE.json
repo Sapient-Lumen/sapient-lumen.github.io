@@ -1,0 +1,31 @@
+{
+  "schema": "lumen.release/v3",
+  "edition": "rev0038",
+  "source_fingerprint_sha256": "bef52cc94aed8ffdfdeb54f7fc9ccf8ce89050e749c492c46ca0f4afd569ae36",
+  "release_recipe": {
+    "schema": "lumen.release-recipe/v1",
+    "mode": "carrier-only",
+    "command": "./lumen ship --release-mode carrier-only",
+    "public_exports": [
+      "Lumen.html"
+    ],
+    "private_recovery": "separate worktree checkpoint; never embedded in public exports"
+  },
+  "primary": {
+    "role": "portable-browser-and-cloudtainer-edition",
+    "file": "Lumen.html",
+    "sha256": "e836ac5c01a45c52fee342b4bcca009e7373f777183bfa694a3a103a244978f7",
+    "bytes": 3686547,
+    "extract": "unzip Lumen.html"
+  },
+  "build_receipt": "Lumen/dist/build-receipt.json inside Lumen.html",
+  "deployment_boundary": "extract Lumen.html; deploy Lumen/dist/ only",
+  "reproducible_zip_timestamp": [
+    2026,
+    10,
+    2,
+    14,
+    58,
+    56
+  ]
+}
