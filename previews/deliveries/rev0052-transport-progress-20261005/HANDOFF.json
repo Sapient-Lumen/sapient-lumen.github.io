@@ -1,0 +1,77 @@
+{
+  "schema": "lumen.handoff/v4",
+  "edition": "rev0052",
+  "generated_at": "2026-10-05T05:30:57Z",
+  "source_fingerprint_sha256": "ab69e5dc34399e1df0968c63c4b68051236be133975d97cb82091949666d200a",
+  "primary": {
+    "role": "portable-browser-and-cloudtainer-edition",
+    "file": "Lumen.html",
+    "sha256": "9d16df5b363936aa000286b13da29d3ab130958594f7dd9ffc6b4634907b73ca",
+    "bytes": 5093203,
+    "extract": "unzip Lumen.html"
+  },
+  "archives": [],
+  "hypertext": {
+    "passages": 140,
+    "typed_context_edges": 73,
+    "relationship_edges": 73,
+    "ledger": "dist/meta/hypertext-ledger.json"
+  },
+  "references": {
+    "sources": 49,
+    "domains": 32,
+    "ledger": "dist/meta/references.json"
+  },
+  "reading_paths": {
+    "paths": 3,
+    "steps": 12,
+    "ledger": "dist/meta/reading-paths.json"
+  },
+  "operator_commands": [
+    "./lumen start",
+    "./lumen look",
+    "./lumen look night-study",
+    "./lumen page PAGE_ID",
+    "./lumen folio [PAGE_ID]",
+    "./lumen pathfolio [PATH_ID]",
+    "./lumen edit PAGE_ID",
+    "./lumen history --check",
+    "./lumen revise PAGE_ID --summary 'What changed and why'",
+    "./lumen context PAGE_ID#SECTION",
+    "./lumen references QUERY --format markdown",
+    "./lumen thread [PATH] --format markdown",
+    "./lumen cite PAGE_ID#SECTION --format markdown --quote",
+    "./lumen marker PAGE_ID#SECTION --output return-point.json",
+    "./lumen marker --check return-point.json",
+    "./lumen correction PACKET.json --check",
+    "./lumen compare OTHER-Lumen.html --format markdown",
+    "./lumen packet PAGE_ID#SECTION",
+    "./lumen packet --fieldbook lumen-fieldbook.json",
+    "LUMEN_CHECKPOINT_DIR=../private-recovery ./lumen preserve --verify",
+    "./lumen reopen CHECKPOINT.zip --verify-only",
+    "./lumen sync --check",
+    "./lumen ship --release-mode carrier-only --replace"
+  ],
+  "start": [
+    "open Lumen.html in a browser, or extract it",
+    "cd Lumen",
+    "./lumen doctor",
+    "./lumen start"
+  ],
+  "excluded": [
+    "historical donor archive",
+    "private repositories",
+    "private worktree checkpoints",
+    "private review evidence",
+    "outer revision workshop"
+  ],
+  "release_recipe": {
+    "schema": "lumen.release-recipe/v1",
+    "mode": "carrier-only",
+    "command": "./lumen ship --release-mode carrier-only",
+    "public_exports": [
+      "Lumen.html"
+    ],
+    "private_recovery": "separate worktree checkpoint; never embedded in public exports"
+  }
+}
