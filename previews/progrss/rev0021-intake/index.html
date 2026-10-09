@@ -449,7 +449,19 @@ function safeUrl(raw, base) {
   u.hash = ''; return u.href;
 }
 function text(value, limit=1000) { return String(value == null ? '' : value).replace(/\s+/g,' ').trim().slice(0,limit); }
-function htmlText(value,limit=1200) { return text(String(value || '').replace(/<[^>]*>/g,' ').replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;/gi,'&').replace(/&lt;/gi,'<').replace(/&gt;/gi,'>'),limit); }
+// Decode one reference layer after tag removal. This is plain-text preparation,
+// not an HTML sanitizer or a complete HTML parser. Never insert its result as HTML.
+function htmlText(value,limit=1200) {
+  const named={nbsp:' ',amp:'&',lt:'<',gt:'>',quot:'"',apos:"'"};
+  const legacy={128:8364,130:8218,131:402,132:8222,133:8230,134:8224,135:8225,136:710,137:8240,138:352,139:8249,140:338,142:381,145:8216,146:8217,147:8220,148:8221,149:8226,150:8211,151:8212,152:732,153:8482,154:353,155:8250,156:339,158:382,159:376};
+  const plain=String(value || '').replace(/<[^>]*>/g,' ');
+  return text(plain.replace(/&(?:#(x[0-9a-f]+|[0-9]+)|(nbsp|amp|lt|gt|quot|apos));/gi,(match,numeric,name)=>{
+    if(name)return named[name.toLowerCase()];
+    let cp=numeric[0].toLowerCase()==='x'?parseInt(numeric.slice(1),16):parseInt(numeric,10);
+    if(!Number.isFinite(cp)||cp===0||cp>0x10ffff||(cp>=0xd800&&cp<=0xdfff))cp=0xfffd;
+    return String.fromCodePoint(legacy[cp]||cp);
+  }),limit);
+}
 function unique(items) { const ids=new Set(); return items.filter(i=>{let key=['changed','removed'].includes(i.kind) ? i.id : (i.url || i.id || (i.sourceId+'::'+i.title)); if(ids.has(key))return false; ids.add(key); return true;}); }
 function filterMatch(item, rule) {
   let blob = (item.title+' '+(item.summary||'')).toLocaleLowerCase();
