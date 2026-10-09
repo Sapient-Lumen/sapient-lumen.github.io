@@ -648,7 +648,8 @@ function ingestPage(state,source,capture){
       for(const card of delta.removed)state.items.unshift({id:uid('gone'),sourceId:source.id,title:card.title+' removed',url:card.url||source.url,summary:'Previously watched card no longer appears in the selected region.',published:'',observedAt:now,kind:'removed'});
     }
     state.snapshots[source.id]={mode:'cards',keys:next.map(c=>c.key),entries:next,capturedAt:now};
-    state.items=unique(state.items).slice(0,LIMIT.items);
+    // Keep source witnesses and prior feed revisions; display composition handles URL grouping.
+    state.items=state.items.slice(0,LIMIT.items);
     return {added:delta.added.length+delta.changed.length+delta.removed.length,baseline:!prev,delta};
   }
   const delta=diffText(prev?.text||'',capture.content,source.threshold||1,Boolean(source.ignoreNumbers));
