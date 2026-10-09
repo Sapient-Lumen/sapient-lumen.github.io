@@ -471,6 +471,14 @@ function filterMatch(item, rule) {
 }
 function getChild(el, name) { return Array.from(el?.children||[]).find(n=>n.localName?.toLowerCase()===name.toLowerCase())||null; }
 function childText(el,name) { return getChild(el,name)?.textContent?.trim()||''; }
+function atomText(el,limit=1200) {
+  if(!el)return '';
+  // XML parsing has already resolved XML references. Atom text (including the
+  // default type) and XHTML textContent must not be parsed as HTML again.
+  const type=(el.getAttribute('type')||'text').toLowerCase();
+  const value=el.textContent||'';
+  return type==='html'||(el.localName==='content'&&type==='text/html')?htmlText(value,limit):text(value,limit);
+}
 function bestDate(val) { let n=Date.parse(val||''); return Number.isFinite(n) ? new Date(n).toISOString() : ''; }
 function parseFeed(raw, url) {
   if(typeof raw!=='string' || raw.length>LIMIT.characters)throw Error('Feed exceeds 2MB text limit');
@@ -490,10 +498,10 @@ function parseFeed(raw, url) {
   const local=doc.localName?.toLowerCase();
   if(local==='feed') {
     let entries=Array.from(doc.children).filter(x=>x.localName==='entry');
-    return {title:text(childText(doc,'title')||origin,180),type:'atom',items:entries.slice(0,250).map((e,i)=>{
+    return {title:atomText(getChild(doc,'title'),180)||origin,type:'atom',items:entries.slice(0,250).map((e,i)=>{
       let linkEl=Array.from(e.children).filter(x=>x.localName==='link').find(x=>!x.getAttribute('rel')||x.getAttribute('rel')==='alternate');
       let href=linkEl?.getAttribute('href')||'';let link='';try{if(href)link=safeUrl(href,origin);}catch{}
-      return {key:childText(e,'id')||link||('entry-'+i),title:text(childText(e,'title')||'Untitled update',240),summary:htmlText(childText(e,'summary')||childText(e,'content')),published:bestDate(childText(e,'published')||childText(e,'updated')),url:link};
+      return {key:childText(e,'id')||link||('entry-'+i),title:atomText(getChild(e,'title'),240)||'Untitled update',summary:atomText(getChild(e,'summary'))||atomText(getChild(e,'content')),published:bestDate(childText(e,'published')||childText(e,'updated')),url:link};
     })};
   }
   let channel=local==='rss'?getChild(doc,'channel'):(local==='rdf'?doc:null);
