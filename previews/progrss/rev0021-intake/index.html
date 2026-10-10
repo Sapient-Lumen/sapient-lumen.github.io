@@ -3323,6 +3323,10 @@ function saveCollection(e){e.preventDefault();clearDialogError('collection-dialo
   }catch(error){if(old)state.collections=state.collections.map(c=>c.id===id?old:c);else state.collections=state.collections.filter(c=>c.id!==id);return reportDialogError('collection-dialog','Cannot save collection: '+error.message)}
   routedCollectionFocusReturn=null;close('collection-dialog');save();go('collections');focusAction('collection-edit:'+id);}
 let pasteReadToken=0;
+// Check and Capture share latest admitted intent; failure or cancellation never revives older work.
+const acquisitionIntents=new WeakMap();
+function admitAcquisition(s){const intent={};acquisitionIntents.set(s,intent);return intent;}
+function ownsAcquisition(s,intent){return acquisitionIntents.get(s)===intent;}
 function openPaste(s){pasteReadToken++;$('paste-form').reset();$('paste-source-id').value=s.id;$('paste-title').textContent='Capture: '+s.title;show('paste-dialog');}
 function processContent(s,body){let added=0;
   if(s.type==='rss'){
@@ -3337,18 +3341,19 @@ function processContent(s,body){let added=0;
 $('paste-form').addEventListener('submit',async e=>{e.preventDefault();clearDialogError('paste-dialog');
   const dialog=$('paste-dialog'),s=state.sources.find(x=>x.id===$('paste-source-id').value);if(!dialog.open||!s)return;
   const token=++pasteReadToken,library=state,version=s.version,file=$('paste-file').files[0];
+  let value=$('paste-raw').value;
+  const acquisition=(file||value.trim())?admitAcquisition(s):null;
   try{
-    let value=$('paste-raw').value;
     if(file)try{value=await file.text();}catch(error){
-      if(token!==pasteReadToken||!dialog.open||state!==library||state.sources.find(x=>x.id===s.id)!==s||s.version!==version||($('paste-file').files[0]||null)!==file)return;
+      if(!ownsAcquisition(s,acquisition)||token!==pasteReadToken||!dialog.open||state!==library||state.sources.find(x=>x.id===s.id)!==s||s.version!==version||($('paste-file').files[0]||null)!==file)return;
       throw error;
     }
-    if(token!==pasteReadToken||!dialog.open)return;
+    if((acquisition&&!ownsAcquisition(s,acquisition))||token!==pasteReadToken||!dialog.open)return;
     if(state!==library||state.sources.find(x=>x.id===s.id)!==s||s.version!==version)throw Error('Library or Lens changed while reading. Open Capture again.');
     if(($('paste-file').files[0]||null)!==(file||null))throw Error('Selected file changed while reading. Process the snapshot again.');
     if(!value.trim())throw Error('Paste content or select a file');
     processContent(s,value);close('paste-dialog');focusAction('lens-paste:'+s.id);
-  }catch(error){if(token===pasteReadToken&&dialog.open)reportDialogError('paste-dialog','Snapshot: '+error.message)}
+  }catch(error){if((!acquisition||ownsAcquisition(s,acquisition))&&token===pasteReadToken&&dialog.open)reportDialogError('paste-dialog','Snapshot: '+error.message)}
 });
 async function detectBridge(){if(location.protocol!=='http:'||location.hostname!=='127.0.0.1'){setBridge(false);return}try{const r=await fetch('/api/status',{credentials:'omit',cache:'no-store'});let x=await r.json();setBridge(Boolean(r.ok&&x.project==='ProgRSS'&&x.broker))}catch{setBridge(false)}}
 function setBridge(ok){bridge=ok;$('bridge-dot').classList.toggle('online',ok);$('bridge-status').textContent=ok?'Local CLI fetch bridge connected':'Webpage-only · CORS applies'}
@@ -3397,9 +3402,9 @@ async function checkSource(s,{manual=false}={}){
   if(!s||!state.sources.includes(s))return;
   if(!s.enabled)return notify('This Lens is paused. Enable it explicitly before fetching.',true);
   if(manual&&s.pulse?.needsReview&&!confirm('The server asked for a very long delay. Override the automatic hold and check '+s.title+' now?'))return;
-  const library=state,sourceId=s.id,version=s.version,recipe=refreshRecipeKey(s),attempt={};
+  const library=state,sourceId=s.id,version=s.version,recipe=refreshRecipeKey(s),attempt=admitAcquisition(s);
   refreshAttempts.set(s,attempt);
-  const current=()=>state===library&&state.sources.find(x=>x.id===sourceId)===s&&s.version===version&&refreshRecipeKey(s)===recipe&&refreshAttempts.get(s)===attempt;
+  const current=()=>state===library&&state.sources.find(x=>x.id===sourceId)===s&&s.version===version&&refreshRecipeKey(s)===recipe&&refreshAttempts.get(s)===attempt&&ownsAcquisition(s,attempt);
   try{
     notify('Checking '+s.title+'…');const response=await requestRemote(s.url,bridge?(s.httpCache||{}):{});
     if(!current())return;
