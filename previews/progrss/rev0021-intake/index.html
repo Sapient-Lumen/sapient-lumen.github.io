@@ -3256,7 +3256,9 @@ function reportDialogError(id,message){
   const dialog=$(id),summary=dialog.querySelector('[data-form-error]');
   if(!summary||!dialog.open)return;
   const label=id==='lens-dialog'?'Lens error: ':id==='collection-dialog'?'Collection error: ':'';
-  summary.textContent=label+message;summary.hidden=false;summary.focus();
+  summary.textContent=label+message;summary.hidden=false;
+  summary.focus({preventScroll:true});
+  dialog.scrollTop=0;
 }
 function show(id){clearDialogError(id);$(id).showModal()}
 function close(id){$(id).close()}
