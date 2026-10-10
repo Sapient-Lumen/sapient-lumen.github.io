@@ -3363,6 +3363,7 @@ async function requestRemote(url,validators={}){
     return json;
   }
   const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),13000);
+  let sizeError=null;
   try {
     // Let the browser perform cache validation automatically. Cross-origin
     // ETags are inaccessible unless a publisher exposes the response headers.
@@ -3370,9 +3371,16 @@ async function requestRemote(url,validators={}){
     if(r.status===304)return {url:target,status:304,notModified:true,body:'',etag:r.headers.get('ETag')||'',lastModified:r.headers.get('Last-Modified')||'',linkHeader:r.headers.get('Link')||'',cacheControl:r.headers.get('Cache-Control')||''};
     if(r.status===429||r.status===503)return {url:target,status:r.status,notModified:false,body:'',cacheControl:r.headers.get('Cache-Control')||'',retryAfter:r.headers.get('Retry-After')||''};
     if(!r.ok)throw Error('HTTP '+r.status);
-    const raw=await r.text();if(raw.length>C.LIMIT.characters)throw Error('Resource too large');
+    const raw=await r.text();
+    if(raw.length>C.LIMIT.characters){
+      sizeError=Error('Fetched content exceeds the '+C.LIMIT.characters.toLocaleString('en-US')+'-character limit (UTF-16 code units). Use a smaller feed/page URL or a smaller saved file of the matching type. Pasting this full response will also fail.');
+      throw sizeError;
+    }
     return {url:target,status:r.status,notModified:false,body:raw,etag:r.headers.get('ETag')||'',lastModified:r.headers.get('Last-Modified')||'',linkHeader:r.headers.get('Link')||'',cacheControl:r.headers.get('Cache-Control')||''};
-  }catch(error){throw Error('Direct browser fetch failed (possibly CORS): '+error.message+'. Use Paste or `bash ProgRSS.html serve` for a local bridge.');}
+  }catch(error){
+    if(sizeError&&error===sizeError)throw error;
+    throw Error('Direct browser fetch failed (possibly CORS): '+error.message+'. Use Paste or `bash ProgRSS.html serve` for a local bridge.');
+  }
   finally{clearTimeout(timeout)}
 }
 function cleanHttpCache(response,previous={},notModified=false){
