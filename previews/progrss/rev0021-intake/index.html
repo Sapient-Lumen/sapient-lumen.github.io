@@ -134,6 +134,12 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 #view-home .layout-grid>*,#view-home .side-stack>*,#view-home .side-panel .field{min-width:0}
 #view-home .side-stack{grid-template-columns:minmax(0,1fr)}
 #view-home .side-panel select{width:100%;min-width:0}
+
+/* Persistent dependency guidance: preserve the graph until explicitly edited. */
+.dependency-list{padding-left:24px;margin:16px 0}.dependency-list li{margin:12px 0;overflow-wrap:anywhere}.dependency-list code{display:block;overflow-wrap:anywhere}.dependency-list p{margin:3px 0}.dependency-summary{overflow-wrap:anywhere}.dependency-summary:focus{outline:2px solid var(--lime);outline-offset:3px}
+
+/* Ordinary modal form errors stay inside the active dialog. */
+.dialog-error{margin:18px 22px 0;padding:12px 16px;border:1px solid #bb7772;border-radius:9px;background:#422d2c;color:var(--ink);overflow-wrap:anywhere}.dialog-error:focus{outline:2px solid var(--lime);outline-offset:3px}
 </style>
 </head>
 <body>
@@ -143,9 +149,9 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
   <div class="rail-label">Your observatory</div>
   <nav class="nav" aria-label="Main sections">
     <button data-view="home" aria-current="page"><span class="symbol">⌘</span> Observatory <span class="counter" id="nav-items">0</span></button>
-    <button data-view="sources"><span class="symbol">◉</span> Lenses <span class="counter" id="nav-sources">0</span></button>
+    <button data-view="sources" data-focus-key="nav:sources"><span class="symbol">◉</span> Lenses <span class="counter" id="nav-sources">0</span></button>
     <button id="nav-scout" data-view="scout"><span class="symbol">⌁</span> Site Scout <span class="counter">NEW</span></button>
-    <button data-view="collections"><span class="symbol">⌗</span> Collections <span class="counter" id="nav-collections">0</span></button>
+    <button data-view="collections" data-focus-key="nav:collections"><span class="symbol">⌗</span> Collections <span class="counter" id="nav-collections">0</span></button>
     <button data-view="commons"><span class="symbol">✦</span> Feed Commons <span class="counter" id="nav-commons">0</span></button>
     <button data-view="lineage"><span class="symbol">↟</span> Lineage Room <span class="counter" id="nav-lineage">0</span></button>
     <button data-view="recovery"><span class="symbol">✜</span> Recovery Circle <span class="counter">NEW</span></button>
@@ -163,12 +169,12 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
   <div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div>
   <div class="topline"><div class="crumb">PROJECT / <b>PROGRSS</b> / <span id="crumb-view">OBSERVATORY</span></div><div class="actions"><button class="btn ghost sm" id="top-scout">⌁ Discover</button><button class="btn ghost sm" id="top-import">↥ Import</button><button class="btn ghost sm" id="top-export">↧ Share recipes</button><button class="btn primary sm" id="top-add">＋ New lens</button></div></div>
   <section class="view" id="view-home">
-    <div class="hero"><div class="hero-copy"><p class="eyebrow">A new kind of feed / Early experiment 019</p><h1>Follow the parts of the internet <em>that matter.</em></h1><p class="lede">Turn any public page into a Lens. Combine RSS, watched regions and the collections of friends. Prove your filters with reproducible snapshots. No feed server or extension required.</p><div class="hero-links"><button class="btn primary" id="hero-add">＋ Make your first Lens</button><button class="btn ghost" id="hero-demo">Try the offline demo ↗</button></div></div><div class="hero-art" aria-hidden="true"><div class="art-line"></div><span class="orb a"></span><span class="orb b"></span><span class="orb c"></span><span class="orb d"></span><div class="art-label">public web → <b>observation</b><br>observation → <b>collective lens</b><br>collective lens → <b>your attention</b></div></div></div>
-    <div class="metrics"><div class="metric"><div><span>Watching lenses</span><strong id="stat-sources">0</strong></div><span class="glyph">◉</span></div><div class="metric"><div><span>Shared collections</span><strong id="stat-collections">0</strong></div><span class="glyph">⌗</span></div><div class="metric"><div><span>Observed events</span><strong id="stat-items">0</strong></div><span class="glyph">↗</span></div></div>
+    <div class="hero"><div class="hero-copy"><p class="eyebrow">A new kind of feed / Early experiment 019</p><h1>Follow the parts of the internet <em>that matter.</em></h1><p class="lede">Watch selected parts of pages you can fetch or supply as HTML. Combine RSS, watched regions and the collections of friends. Prove your filters with reproducible snapshots. No feed server or extension required.</p><div class="hero-links"><button class="btn primary" id="hero-add">＋ Make your first Lens</button><button class="btn ghost" id="hero-demo">Try the offline demo ↗</button></div></div><div class="hero-art" aria-hidden="true"><div class="art-line"></div><span class="orb a"></span><span class="orb b"></span><span class="orb c"></span><span class="orb d"></span><div class="art-label">public web → <b>observation</b><br>observation → <b>collective lens</b><br>collective lens → <b>your attention</b></div></div></div>
+    <div class="metrics"><div class="metric"><div><span>Watching lenses</span><strong id="stat-sources">0</strong></div><span class="glyph">◉</span></div><div class="metric"><div><span>Collections</span><strong id="stat-collections">0</strong></div><span class="glyph">⌗</span></div><div class="metric"><div><span>Observed events</span><strong id="stat-items">0</strong></div><span class="glyph">↗</span></div></div>
     <div class="section-title"><div><h2>The signal</h2><p>Only observations you or your circles choose to keep.</p></div><div class="toolbar-small"><button class="btn sm ghost" id="refresh-due">◷ Check due</button><button class="btn sm ghost" id="refresh-all">↻ Check all now</button><button class="btn sm ghost" id="export-feed" aria-describedby="feed-export-scope feed-export-error">↧ Export collection feed</button></div></div>
     <p class="section-note" id="feed-export-scope">Collection feed export includes saved observations and is not limited by search.</p>
     <p class="banner warning" id="feed-export-error" role="alert" hidden></p>
-    <div class="layout-grid"><div class="content-panel"><div class="panel-tools"><input id="search-items" placeholder="Search observations..." aria-label="Search observations"><div class="toolbar-small"><select id="collection-choice" aria-label="Filter to collection"><option value="all">Every lens</option></select><select id="auto-interval" aria-label="Autocheck while this page is open"><option value="0">Manual check</option><option value="5">Look for due every 5 min*</option><option value="15">Look for due every 15 min*</option><option value="60">Look for due every hour*</option></select></div></div><div class="feed-list" id="feed-list" aria-live="polite"></div></div><aside class="side-stack"><div class="side-panel"><p class="eyebrow">How it works</p><h3>Any page → any feed.</h3><div class="step"><strong>01</strong><span>Make a Lens for an RSS URL or any CSS-selected webpage region.</span></div><div class="step"><strong>02</strong><span>Check updates. Meaningful changes become feed items.</span></div><div class="step"><strong>03</strong><span>Combine, intersect or subtract Lenses; exchange reviewable recipe files.</span></div><p class="mini">* Auto-check runs only while this tab is open and the browser permits it.</p></div><div class="side-panel"><p class="eyebrow">Signal microscope / rev0007</p><h3>Why was this included—or excluded?</h3><p>Inspect an observation against a selected collection. Witness paths represent source provenance, not independent verification of claims.</p><div class="field"><label for="trace-choose">Observation to inspect</label><select id="trace-choose"><option value="">Choose an observation</option></select></div><button class="btn sm ghost" id="trace-run" style="margin-top:9px">Show decision path</button><pre class="trace-result" id="trace-output" aria-live="polite">Select an observation to inspect its routing.</pre></div><div class="side-panel"><p class="eyebrow">Local, on purpose</p><h3>Feeds, not surveillance.</h3><p>The basic page works offline for imports, pasted snapshots, regression tests and collections. Direct fetching obeys browser CORS. The optional Bash companion can fetch public feeds without a third-party proxy.</p><button class="btn sm ghost" id="home-docs">Read the field notes ↗</button></div></aside></div>
+    <div class="layout-grid"><div class="content-panel"><div class="panel-tools"><input id="search-items" placeholder="Search observations..." aria-label="Search observations"><div class="toolbar-small"><select id="collection-choice" aria-label="Filter to collection"><option value="all">Every lens</option></select><select id="auto-interval" aria-label="Autocheck while this page is open"><option value="0">Manual check</option><option value="5">Look for due every 5 min*</option><option value="15">Look for due every 15 min*</option><option value="60">Look for due every hour*</option></select></div></div><div class="feed-list" id="feed-list" aria-live="polite"></div></div><aside class="side-stack"><div class="side-panel"><p class="eyebrow">How it works</p><h3>Pages and feeds → one view.</h3><div class="step"><strong>01</strong><span>Make a Lens for a feed URL or a CSS-selected webpage region.</span></div><div class="step"><strong>02</strong><span>Check updates. Meaningful changes become feed items.</span></div><div class="step"><strong>03</strong><span>Combine, intersect or subtract Lenses; exchange reviewable recipe files.</span></div><p class="mini">* Auto-check runs only while this tab is open and the browser permits it.</p></div><div class="side-panel"><p class="eyebrow">Signal microscope / rev0007</p><h3>Why was this included—or excluded?</h3><p>Inspect an observation against a selected collection. Witness paths represent source provenance, not independent verification of claims.</p><div class="field"><label for="trace-choose">Observation to inspect</label><select id="trace-choose"><option value="">Choose an observation</option></select></div><button class="btn sm ghost" id="trace-run" style="margin-top:9px">Show decision path</button><pre class="trace-result" id="trace-output" aria-live="polite">Select an observation to inspect its routing.</pre></div><div class="side-panel"><p class="eyebrow">Local, on purpose</p><h3>Feeds, not surveillance.</h3><p>The basic page works offline for imports, pasted snapshots, regression tests and collections. Direct fetching obeys browser CORS. The optional Bash companion can fetch public feeds without a third-party proxy.</p><button class="btn sm ghost" id="home-docs">Read the field notes ↗</button></div></aside></div>
   </section>
   <section class="view" id="view-sources" hidden><div class="section-title"><div><p class="eyebrow">01 / Sensing</p><h2>Your Lenses</h2><p>Feed URLs and webpage-watch recipes, versioned and yours.</p></div><button class="btn primary" id="sources-add">＋ Create lens</button></div><p class="section-note">RSS, Atom and JSON Feed are ordinary sources. For page watchers, choose a CSS region or repeated cards. Browser CORS may block arbitrary network fetches; you can always paste HTML or run the optional Bash bridge. Imported recipes begin paused.</p><div class="content-panel pulse-schedule" style="margin-bottom:15px"><div class="panel-tools"><strong>◷ The Patient Web · adaptive Pulse</strong><span class="mini">Quiet doubling · 429 / 503 Retry-After · ETag / Cache-Control · 45s host gap</span></div><p class="section-note" id="pulse-summary">Planning checks locally…</p><p class="mini">Schedules remain off until enabled in Observatory. Manual checks bypass ordinary due dates; extraordinarily long server delays require explicit review. Any page reload retains per-Lens plan dates in the local vault. No cloud scheduler.</p></div><div id="source-list" class="stack"></div></section>
   <section class="view" id="view-scout" hidden>
@@ -192,20 +198,21 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
     <div class="content-panel" style="margin-top:18px" id="proof-workbench">
       <div class="panel-tools"><div><strong>♧ Evidence Garden · proof-carrying discoveries</strong><p class="mini">Discovery claims are unsigned. Recheck against a local snapshot before accepting. No webpage HTML is exported.</p></div><div class="row-actions"><button class="btn sm ghost" id="proof-import-button">↥ Receive evidence JSON</button><input id="proof-import-file" type="file" accept=".json,application/json" hidden></div></div>
       <div class="proof-layout"><div><div id="proof-preview" class="proof-preview">Choose “Make replayable proof” on a Site Scout finding, or open a received discovery from Courier.</div><p class="mini">The witness is a precise HTML/HTTP feed link, a parsed direct-feed result, or a CSS selector and observed match count. It is not proof of site ownership or truth.</p></div>
-      <div><div id="proof-status" class="scout-status" aria-live="polite">No discovery selected.</div><div class="row-actions" style="margin-top:12px"><button class="btn sm ghost" id="proof-replay" disabled>✓ Replay against snapshot</button><button class="btn sm primary" id="proof-adopt" disabled>Create paused Lens</button></div><div class="row-actions" style="margin-top:10px"><button class="btn sm ghost" id="proof-export" disabled>↧ Export proof</button><button class="btn sm ghost" id="proof-capsule" disabled>↧ Courier capsule</button><button class="btn sm ghost" id="proof-send" disabled>↗ Send to peer</button></div><p class="mini">For a received proof: paste the matching site HTML/feed above, and HTTP Link header if applicable, then replay. A successful replay allows explicit adoption; a changed card count requires review.</p></div></div>
+      <div><div id="proof-status" class="scout-status" aria-live="polite">No discovery selected.</div><div class="row-actions" style="margin-top:12px"><button class="btn sm ghost" id="proof-replay" disabled>✓ Replay against snapshot</button><button class="btn sm primary" id="proof-adopt" disabled>Create paused Lens</button></div><div class="row-actions" style="margin-top:10px"><button class="btn sm ghost" id="proof-export" disabled>↧ Export proof</button><button class="btn sm ghost" id="proof-capsule" disabled>↧ Courier capsule</button><button class="btn sm ghost" id="proof-send" disabled hidden inert>↗ Send to peer</button></div><p class="mini">Share proof files manually; live peer connections are deferred. For a received proof: paste the matching site HTML/feed above, and HTTP Link header if applicable, then replay. A successful replay allows explicit adoption; a changed card count requires review.</p></div></div>
     </div>
   </section>
   <section class="view" id="view-collections" hidden><div class="section-title"><div><p class="eyebrow">02 / Weaving</p><h2>Collections</h2><p>Union, intersect, subtract—and explain every witness path.</p></div><button class="btn primary" id="collections-add">＋ New collection</button></div><p class="section-note">Collections can union, intersect, or subtract their members. Intersections require the same canonical HTTP(S) URL across at least two distinct originating Lenses. Subtraction keeps the first selected member, excluding matches from the rest. Missing URLs are not treated as consensus. Every signal has an explainable path; cycles are refused.</p><div id="collection-list" class="stack"></div><p class="section-note">Want to follow somebody else's changing collection? Visit the <button class="btn sm ghost" id="collections-lineage">Lineage Room ↗</button> to publish or pin collections.</p></section>
 
   <section class="view" id="view-lineage" hidden>
     <div class="section-title"><div><p class="eyebrow">02.5 / Curator-to-curator</p><h2>Lineage Room</h2><p>Follow an evolving collection without surrendering your own edits. Every upstream change arrives as a reviewable edition.</p></div><button class="btn ghost" id="lineage-demo">✳ Try a two-edition demo</button></div>
+    <p class="section-note" id="lineage-file-sharing">Share exported Courier files manually; live peer connections are deferred in this working edition.</p>
     <div class="banner warning" style="margin-bottom:18px"><strong>Signed ≠ verified human.</strong> Signatures authenticate continuity of a public key, not the real-world person controlling it. Confirm the fingerprint out-of-band. The first accepted signed edition pins a key; unsigned downgrades and unexpected replacement keys are blocked. Existing unsigned editions remain explicitly labeled untrusted. New and retargeted Lenses stay paused.</div>
     <div class="trust-key-panel"><strong>⟡ Trust Keys · local signing identity</strong><p class="mini">Ed25519 where supported, otherwise ECDSA P-256. A non-exportable signing key lives in this browser origin's IndexedDB, separate from JSON backups and the Vibechat donor. Losing this origin loses the signing key.</p><pre id="trust-key-status" aria-live="polite">Checking local signing identity…</pre><div class="row-actions"><button class="btn sm primary" id="trust-key-create">＋ Create curator signing key</button><button class="btn sm ghost" id="trust-key-refresh">↻ Check identity</button></div><p class="mini">Share your displayed fingerprint through an independent trusted channel. Backups of ProgRSS recipes do not carry your private signing key; do not regenerate a missing key under an existing channel.</p></div>
     <div class="trust-key-panel key-bridge-panel" style="margin-bottom:18px"><strong>⇄ Key Bridge · jointly authorized rotation</strong>
-      <p class="mini">To replace an aging signing key, stage a new non-exportable key and export a certificate <b>signed by both the old and new keys</b>. Exchange it through Courier or experimental WebRTC. Recipients inspect which existing exact-key curator and patch-contributor pins would change, then approve. No automatic trust transfer.</p>
+      <p class="mini">To replace an aging signing key, stage a new non-exportable key and export a certificate <b>signed by both the old and new keys</b>. Exchange the exported Courier file manually. Recipients inspect which existing exact-key curator and patch-contributor pins would change, then approve. No automatic trust transfer.</p>
       <div class="field"><label for="key-bridge-note">Reason to rotate (included in the signed statement)</label><input id="key-bridge-note" maxlength="240" placeholder="Routine key rotation · migrating to a new browser profile"></div>
       <pre class="lineage-report" id="key-bridge-status" aria-live="polite">Inspecting signing keys…</pre>
-      <div class="lineage-actions"><button type="button" class="btn sm primary" id="key-bridge-stage">1. Stage and export dual-signed proof</button><button type="button" class="btn sm ghost" id="key-bridge-send" disabled>Share proof over WebRTC</button><button type="button" class="btn sm danger" id="key-bridge-activate" disabled>2. Activate replacement key</button></div>
+      <div class="lineage-actions"><button type="button" class="btn sm primary" id="key-bridge-stage">1. Stage and export dual-signed proof</button><button type="button" class="btn sm ghost" id="key-bridge-send" disabled hidden inert>Share proof over WebRTC</button><button type="button" class="btn sm danger" id="key-bridge-activate" disabled>2. Activate replacement key</button></div>
       <p class="mini"><b>Save the certificate before activation.</b> The old signing key is retired on activation. Signed publication channels need a new edition under the replacement key. If the old key is already lost, dual-signature rotation is impossible: re-establish trust out of band instead. There is deliberately no automatic lost-key recovery.</p>
       <div class="content-panel" style="margin-top:15px"><div class="panel-tools"><div><strong>Incoming key rotation · exact-pin review</strong><p class="mini">Open a Key Bridge capsule from Courier to verify two signatures and preview pinned collection channels + watched URLs. No snapshots or secret keys are shared.</p></div></div>
         <pre class="lineage-report" id="key-bridge-review" aria-live="polite">Import a dual-signed certificate to review a rotation here.</pre>
@@ -216,11 +223,11 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
       <div class="peer-card"><h3>↗ Publish a collection edition</h3><p>Snapshot a collection's complete, declarative recipe graph. Sources, private observations, raw HTML and test specimens are never included.</p>
         <div class="field"><label for="lineage-root">Collection to publish</label><select id="lineage-root"><option value="">Choose a collection</option></select></div>
         <div class="field"><label for="lineage-note">What's changed? (shown to recipients; not authenticated)</label><input id="lineage-note" maxlength="300" placeholder="Added a new researcher's projects Lens"></div>
-        <div class="lineage-actions"><button class="btn primary sm" id="lineage-publish">↧ Publish signed edition</button><button class="btn ghost sm" id="lineage-publish-legacy">Publish legacy unsigned</button><button class="btn ghost sm" id="lineage-send" disabled>↗ Send last edition by WebRTC</button></div>
+        <div class="lineage-actions"><button class="btn primary sm" id="lineage-publish">↧ Publish signed edition</button><button class="btn ghost sm" id="lineage-publish-legacy">Publish legacy unsigned</button><button class="btn ghost sm" id="lineage-send" disabled hidden inert>↗ Send last edition by WebRTC</button></div>
         <p class="mini">Publishing downloads a Courier capsule. Signed publication requires a persistent local key. An unsigned compatibility export is explicitly marked untrusted. Each edition links to its predecessor; unchanged graphs cannot be reissued.</p>
         <div id="lineage-publications" class="lineage-shelf" aria-live="polite"></div>
       </div>
-      <div class="peer-card"><h3>↙ Follow pinned collections</h3><p>Subscriber mirrors keep stable local IDs, maintain a bounded revision history, and respect your custom filters. No polling for upstream editions yet: exchange is file/WebRTC, then review.</p>
+      <div class="peer-card"><h3>↙ Follow pinned collections</h3><p>Subscriber mirrors keep stable local IDs, maintain a bounded revision history, and respect your custom filters. No polling for upstream editions yet: exchange exported files, then review.</p>
         <div class="lineage-actions"><button class="btn sm ghost" id="lineage-import-button">↥ Import an edition</button><button class="btn sm ghost" id="lineage-open-courier">Open Courier Inbox</button></div><input type="file" id="lineage-import-file" accept=".json,application/json" hidden>
         <div id="lineage-subscriptions" class="lineage-shelf" aria-live="polite"></div>
       </div>
@@ -232,6 +239,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
   </section>
   <section class="view" id="view-recovery" hidden>
     <div class="section-title"><div><p class="eyebrow">02.6 / Continuity of trust</p><h2>Recovery Circle</h2><p>Pre-authorize guardians while your key still exists. Later, distinct signatures can help re-establish trust — never without a recipient's consent.</p></div><button class="btn ghost" id="recovery-open-courier">Open Courier Inbox ↗</button></div>
+    <p class="section-note" id="recovery-file-sharing">Share exported Courier files manually; live peer connections are deferred in this working edition.</p>
     <div class="banner warning" style="margin-bottom:18px"><strong>Guardians cannot reconstruct your private key.</strong> Recovery transfers an explicitly pinned public trust relationship to a new key; it cannot restore lost observations or your old signature. Recipients must have pre-registered your owner-signed charter. Never accept a newly invented policy as a substitute. Confirm guardians and successor out of band.</div>
     <div class="lineage-grid">
       <div class="peer-card"><h3>① Prepare a recovery charter · BEFORE loss</h3><p>Each collaborator exports their public Guardian Card, then you paste an array of 2–5 cards. Your CURRENT signing key authorizes the roster, scope, and threshold. Save and send the resulting charter to your followers for advance pinning.</p>
@@ -245,7 +253,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
         <div class="field"><label for="recovery-reason">Request message · signed by replacement key</label><input id="recovery-reason" maxlength="240" placeholder="Old browser profile lost; please verify my identity out of band"></div>
         <div class="lineage-actions"><button class="btn primary sm" id="recovery-request">↧ Create replacement-key request</button><button class="btn sm ghost" id="recovery-vote">↧ Sign guardian vote</button></div>
         <p class="mini">You can use an existing staged replacement key for rehearsal, or your new active key in a new browser profile. Guardian votes never replace proof that the old key authorized the charter.</p>
-        <div class="lineage-actions"><button class="btn sm ghost" id="recovery-file-button">↥ Import charter / packet</button><button class="btn sm ghost" id="recovery-export" disabled>↧ Export current artifact</button><button class="btn sm ghost" id="recovery-peer" disabled>↗ Send over WebRTC</button></div>
+        <div class="lineage-actions"><button class="btn sm ghost" id="recovery-file-button">↥ Import charter / packet</button><button class="btn sm ghost" id="recovery-export" disabled>↧ Export current artifact</button><button class="btn sm ghost" id="recovery-peer" disabled hidden inert>↗ Send over WebRTC</button></div>
         <input type="file" id="recovery-file" accept=".json,application/json" hidden>
       </div>
     </div>
@@ -263,7 +271,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
           <p class="mini">Uses the locally pinned charter head, or the signed charter/change currently loaded. For replacement, enter new guardian cards above. Only your active old key can authorize this.</p>
           <div class="field"><label for="ledger-action">Change type</label><select id="ledger-action"><option value="revoke">Revoke old recovery charter</option><option value="replace">Replace guardian charter</option></select></div>
           <div class="field"><label for="ledger-note">Why this changed (signed)</label><input id="ledger-note" maxlength="240" placeholder="Guardian unavailable · authorize new circle"></div>
-          <div class="lineage-actions"><button class="btn primary sm" id="ledger-create">↧ Sign and export change</button><button class="btn sm ghost" id="ledger-export" disabled>↧ Export claim</button><button class="btn sm ghost" id="ledger-send" disabled>↗ Send WebRTC</button></div>
+          <div class="lineage-actions"><button class="btn primary sm" id="ledger-create">↧ Sign and export change</button><button class="btn sm ghost" id="ledger-export" disabled>↧ Export claim</button><button class="btn sm ghost" id="ledger-send" disabled hidden inert>↗ Send WebRTC</button></div>
         </div>
         <div class="peer-card"><h3>Verify and review the claim</h3>
           <p class="mini">Verify the owner's signature, then compare exact predecessor hash and sequence with YOUR pinned policy. Competing valid signatures for the same predecessor create a fork alert and block adoption.</p>
@@ -287,7 +295,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
         </div>
         <div class="peer-card"><h3>Import / compare / store</h3>
           <p class="mini">Verify both signatures, compare with the LOCAL pinned history, and keep contradictory signed statements for explicit review. Never change subscriptions or identity pins via gossip.</p>
-          <div class="lineage-actions"><button class="btn sm ghost" id="gossip-file-button">↥ Import postcard</button><button class="btn sm ghost" id="gossip-export" disabled>↧ Export capsule</button><button class="btn sm ghost" id="gossip-send" disabled>↗ Send WebRTC</button></div>
+          <div class="lineage-actions"><button class="btn sm ghost" id="gossip-file-button">↥ Import postcard</button><button class="btn sm ghost" id="gossip-export" disabled>↧ Export capsule</button><button class="btn sm ghost" id="gossip-send" disabled hidden inert>↗ Send WebRTC</button></div>
           <input type="file" id="gossip-file" accept=".json,application/json" hidden>
           <div class="lineage-actions"><button class="btn primary sm" id="gossip-record" disabled>＋ Record verified postcard</button><button class="btn sm ghost" id="gossip-pin" disabled>⟡ Pin witness key</button></div>
         </div>
@@ -308,7 +316,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
         </div>
         <div class="peer-card"><h3>Inspect, compare and review</h3>
           <p>Receive a signed head, consistency packet or inclusion proof. A naked newer head is not sufficient to advance a prior pin. Pinning never changes feeds or recovery policies.</p>
-          <div class="lineage-actions"><button class="btn sm ghost" id="merkle-file-button">↥ Import head / proof</button><button class="btn sm ghost" id="merkle-export" disabled>↧ Export capsule</button><button class="btn sm ghost" id="merkle-send" disabled>↗ Send WebRTC</button></div>
+          <div class="lineage-actions"><button class="btn sm ghost" id="merkle-file-button">↥ Import head / proof</button><button class="btn sm ghost" id="merkle-export" disabled>↧ Export capsule</button><button class="btn sm ghost" id="merkle-send" disabled hidden inert>↗ Send WebRTC</button></div>
           <input type="file" id="merkle-file" accept=".json,application/json" hidden>
           <div class="lineage-actions"><button class="btn primary sm" id="merkle-pin" disabled>Approve checkpoint after review →</button><button class="btn sm ghost" id="merkle-demo">✳ Local proof demo</button></div>
         </div>
@@ -331,7 +339,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
         </div>
         <div class="peer-card"><h3>Examine / exchange</h3>
           <p class="mini">Import a request, reply or fork dossier through Courier or JSON. Verify replies, then pass the proof into Merkle Observatory for the normal human approval step. Observe a signed head to detect same-size forks across your local witnesses and pins.</p>
-          <div class="lineage-actions"><button class="btn sm ghost" id="exchange-import-button">↥ Import file</button><button class="btn sm ghost" id="exchange-export" disabled>↧ Export capsule</button><button class="btn sm ghost" id="exchange-send" disabled>↗ Send WebRTC</button></div>
+          <div class="lineage-actions"><button class="btn sm ghost" id="exchange-import-button">↥ Import file</button><button class="btn sm ghost" id="exchange-export" disabled>↧ Export capsule</button><button class="btn sm ghost" id="exchange-send" disabled hidden inert>↗ Send WebRTC</button></div>
           <input type="file" id="exchange-import-file" accept=".json,application/json" hidden>
           <div class="lineage-actions"><button class="btn primary sm" id="exchange-review" disabled>✓ Review reply in Merkle Observatory</button><button class="btn sm ghost" id="exchange-observe">◉ Observe loaded signed head</button><button class="btn sm ghost" id="exchange-record" disabled>⟡ Record fork dossier</button><button class="btn sm ghost" id="exchange-open-fork" disabled>⚑ Open latest local fork</button></div>
         </div>
@@ -388,7 +396,8 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
       <label class="inline-check"><input type="checkbox" id="garden-attest"> I reviewed every text field and constructed these examples for public sharing; this is not a real snapshot or private data.</label>
       <p class="mini">Only whitelisted elements, invented relative /fictional/ links, classes, IDs, and text are accepted. A checksum does NOT prove authorship or that text is fictional.</p></div>
     <div><div class="row-actions"><button class="btn sm ghost" id="garden-check">✓ Verify pack</button><button class="btn sm ghost" id="garden-run">⚔ Replay locally</button><button class="btn sm ghost" id="garden-save">＋ Keep in vault</button></div>
-      <div class="row-actions" style="margin-top:9px"><button class="btn sm ghost" id="garden-export">↧ Export Courier pack</button><button class="btn sm ghost" id="garden-share">↗ Send via WebRTC</button><button class="btn sm ghost" id="garden-import">↥ Import JSON</button><input type="file" id="garden-file" accept=".json,application/json" hidden></div>
+      <p class="section-note" id="garden-file-sharing">Share exported Courier files manually; live peer connections are deferred in this working edition.</p>
+    <div class="row-actions" style="margin-top:9px"><button class="btn sm ghost" id="garden-export">↧ Export Courier pack</button><button class="btn sm ghost" id="garden-share" disabled hidden inert>↗ Send via WebRTC</button><button class="btn sm ghost" id="garden-import">↥ Import JSON</button><input type="file" id="garden-file" accept=".json,application/json" hidden></div>
       <pre id="garden-report" class="clinic-result" aria-live="polite">No pack loaded. Start with entirely fictional examples; they never contact a site.</pre>
       <h4>Saved synthetic packs</h4><div id="garden-library" class="stack"></div></div>
   </div>
@@ -438,10 +447,11 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
   <div class="footer"><span>ProgRSS / rev0021 / FIXTURE GARDEN + REPLAYABLE SYNTHETIC PACKS</span><span>A single webpage, a hackable Bash companion, no extension.</span></div>
 </main>
 </div>
-<dialog id="lens-dialog" aria-labelledby="lens-title"><div class="dialog-head"><div><h2 id="lens-title">Make a Lens</h2><p>One way to sense a piece of the web.</p></div><button class="xbtn" type="button" data-close="lens-dialog" aria-label="Close">×</button></div><form id="lens-form"><div class="dialog-content fields"><input type="hidden" id="lens-id"><div class="field wide"><label for="lens-name">A human name</label><input id="lens-name" required maxlength="130" placeholder="e.g. Independent Web Notes"></div><div class="field"><label for="lens-type">What are we watching?</label><select id="lens-type"><option value="rss">RSS / Atom / JSON Feed</option><option value="page">Webpage</option></select></div><div class="field"><label for="lens-url">Public HTTP(S) URL</label><input id="lens-url" type="url" required placeholder="https://example.org/feed.xml"></div><div class="field wide page-only" hidden><label for="lens-selector">CSS selector (optional for region mode)</label><input id="lens-selector" placeholder="main article, .updates, #news-list"><small>For cards, choose the repeating element. For regions, empty means main or the whole body.</small></div><div class="field page-only" hidden><label for="lens-mode">Observation type</label><select id="lens-mode"><option value="region">Watch text changes</option><option value="cards">Extract repeated cards</option></select></div><div class="field card-only" hidden><label for="lens-title-selector">Title inside each card (CSS)</label><input id="lens-title-selector" placeholder="h2"></div><div class="field card-only" hidden><label for="lens-link-selector">Link inside each card (CSS)</label><input id="lens-link-selector" placeholder="a[href]"></div><div class="field page-only" hidden><label for="lens-threshold">Changed characters threshold</label><input id="lens-threshold" type="number" min="0" max="10000" value="24"></div><div class="field page-only" hidden><label class="inline-check"><input type="checkbox" id="lens-ignore-numbers"> Ignore changing numbers when diffing</label></div><div class="field"><label for="lens-include">Only show if text contains (comma-separated)</label><input id="lens-include" placeholder="optional: security, release, notes"></div><div class="field"><label for="lens-exclude">Ignore if text contains</label><input id="lens-exclude" placeholder="optional: ads, sponsored"></div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="lens-dialog">Cancel</button><button class="btn primary" type="submit">Save Lens</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div></dialog>
-<dialog id="collection-dialog" aria-labelledby="collection-title"><div class="dialog-head"><div><h2 id="collection-title">Weave a collection</h2><p>Feeds from feeds, not just a folder of URLs.</p></div><button class="xbtn" type="button" data-close="collection-dialog" aria-label="Close">×</button></div><form id="collection-form"><div class="dialog-content fields"><input id="collection-id" type="hidden"><div class="field wide"><label for="collection-name">Collection name</label><input id="collection-name" required maxlength="130" placeholder="e.g. My weird little research network"></div><div class="field"><label for="collection-include">Include (comma-separated)</label><input id="collection-include" placeholder="release, tools"></div><div class="field"><label for="collection-exclude">Exclude (comma-separated)</label><input id="collection-exclude" placeholder="sponsored, sale"></div><div class="field wide"><label for="collection-mode">Algebraic operator</label><select id="collection-mode"><option value="union">∪ Union — show any member</option><option value="intersection">∩ Intersection — require every member AND 2 distinct sources</option><option value="subtract">− Subtract — begin with base member, remove the others</option></select><small>Only HTTP(S) permalinks can corroborate across Lenses; item IDs without links remain source-local.</small></div><div class="field wide"><label>Members — select sources and/or collections</label><div class="member-list" id="collection-members"></div></div><div class="field wide" id="collection-base-field" hidden><label for="collection-base">Subtraction base — keep signals from this member, then subtract the remaining members</label><select id="collection-base"><option value="">Choose a base member</option></select></div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="collection-dialog">Cancel</button><button class="btn primary" type="submit">Save collection</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div></dialog>
-<dialog id="paste-dialog" aria-labelledby="paste-title"><div class="dialog-head"><div><h2 id="paste-title">Paste a snapshot</h2><p>Works entirely offline. The simplest way to watch anything.</p></div><button class="xbtn" type="button" data-close="paste-dialog" aria-label="Close">×</button></div><form id="paste-form"><div class="dialog-content"><input id="paste-source-id" type="hidden"><div class="field"><label for="paste-raw">RSS, JSON Feed, or complete page HTML</label><textarea id="paste-raw" rows="11" placeholder="Paste the fetched source of your feed or watched webpage…"></textarea></div><div class="field" style="margin-top:13px"><label for="paste-file">Or choose a local file</label><input id="paste-file" type="file" accept=".html,.htm,.xml,.rss,.atom,.json,.txt,text/html,text/xml,application/json"></div><div class="banner" style="margin-top:15px">Pasted HTML is parsed in an inert document and only plain text is displayed. No page scripts are run.</div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="paste-dialog">Cancel</button><button class="btn primary" type="submit">Process snapshot</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div></dialog>
+<dialog id="lens-dialog" aria-labelledby="lens-title"><div class="dialog-head"><div><h2 id="lens-title">Make a Lens</h2><p>One way to sense a piece of the web.</p></div><button class="xbtn" type="button" data-close="lens-dialog" aria-label="Close">×</button></div><form id="lens-form"><p id="lens-form-error" class="dialog-error" data-form-error tabindex="-1" hidden></p><div class="dialog-content fields"><input type="hidden" id="lens-id"><div class="field wide"><label for="lens-name">A human name</label><input id="lens-name" required maxlength="130" placeholder="e.g. Independent Web Notes"></div><div class="field"><label for="lens-type">What are we watching?</label><select id="lens-type"><option value="rss">RSS / Atom / JSON Feed</option><option value="page">Webpage</option></select></div><div class="field"><label for="lens-url">Public HTTP(S) URL</label><input id="lens-url" type="url" required placeholder="https://example.org/feed.xml"></div><div class="field wide page-only" hidden><label for="lens-selector">CSS selector (optional for region mode)</label><input id="lens-selector" placeholder="main article, .updates, #news-list"><small>For cards, choose the repeating element. For regions, empty means main or the whole body.</small></div><div class="field page-only" hidden><label for="lens-mode">Observation type</label><select id="lens-mode"><option value="region">Watch text changes</option><option value="cards">Extract repeated cards</option></select></div><div class="field card-only" hidden><label for="lens-title-selector">Title inside each card (CSS)</label><input id="lens-title-selector" placeholder="h2"></div><div class="field card-only" hidden><label for="lens-link-selector">Link inside each card (CSS)</label><input id="lens-link-selector" placeholder="a[href]"></div><div class="field page-only" hidden><label for="lens-threshold">Changed characters threshold</label><input id="lens-threshold" type="number" min="0" max="10000" value="24"></div><div class="field page-only" hidden><label class="inline-check"><input type="checkbox" id="lens-ignore-numbers"> Ignore changing numbers when diffing</label></div><div class="field"><label for="lens-include">Only show if text contains (comma-separated)</label><input id="lens-include" placeholder="optional: security, release, notes"></div><div class="field"><label for="lens-exclude">Ignore if text contains</label><input id="lens-exclude" placeholder="optional: ads, sponsored"></div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="lens-dialog">Cancel</button><button class="btn primary" type="submit">Save Lens</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div></dialog>
+<dialog id="collection-dialog" aria-labelledby="collection-title"><div class="dialog-head"><div><h2 id="collection-title">Weave a collection</h2><p>Feeds from feeds, not just a folder of URLs.</p></div><button class="xbtn" type="button" data-close="collection-dialog" aria-label="Close">×</button></div><form id="collection-form"><p id="collection-form-error" class="dialog-error" data-form-error tabindex="-1" hidden></p><div class="dialog-content fields"><input id="collection-id" type="hidden"><div class="field wide"><label for="collection-name">Collection name</label><input id="collection-name" required maxlength="130" placeholder="e.g. My weird little research network"></div><div class="field"><label for="collection-include">Include (comma-separated)</label><input id="collection-include" placeholder="release, tools"></div><div class="field"><label for="collection-exclude">Exclude (comma-separated)</label><input id="collection-exclude" placeholder="sponsored, sale"></div><div class="field wide"><label for="collection-mode">Algebraic operator</label><select id="collection-mode"><option value="union">∪ Union — show any member</option><option value="intersection">∩ Intersection — require every member AND 2 distinct sources</option><option value="subtract">− Subtract — begin with base member, remove the others</option></select><small>Only HTTP(S) permalinks can corroborate across Lenses; item IDs without links remain source-local.</small></div><div class="field wide"><label>Members — select sources and/or collections</label><div class="member-list" id="collection-members"></div></div><div class="field wide" id="collection-base-field" hidden><label for="collection-base">Subtraction base — keep signals from this member, then subtract the remaining members</label><select id="collection-base"><option value="">Choose a base member</option></select></div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="collection-dialog">Cancel</button><button class="btn primary" type="submit">Save collection</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div></dialog>
+<dialog id="paste-dialog" aria-labelledby="paste-title"><div class="dialog-head"><div><h2 id="paste-title">Paste a snapshot</h2><p>Works entirely offline. The simplest way to watch anything.</p></div><button class="xbtn" type="button" data-close="paste-dialog" aria-label="Close">×</button></div><form id="paste-form"><p id="paste-form-error" class="dialog-error" data-form-error tabindex="-1" hidden></p><div class="dialog-content"><input id="paste-source-id" type="hidden"><div class="field"><label for="paste-raw">RSS, JSON Feed, or complete page HTML</label><textarea id="paste-raw" rows="11" placeholder="Paste the fetched source of your feed or watched webpage…"></textarea></div><div class="field" style="margin-top:13px"><label for="paste-file">Or choose a local file</label><input id="paste-file" type="file" accept=".html,.htm,.xml,.rss,.atom,.json,.txt,text/html,text/xml,application/json"></div><div class="banner" style="margin-top:15px">Pasted HTML is parsed in an inert document and only plain text is displayed. No page scripts are run.</div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="paste-dialog">Cancel</button><button class="btn primary" type="submit">Process snapshot</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div></dialog>
 <input type="file" id="import-file" accept=".json,.opml,.xml,application/json,text/xml" hidden>
+<dialog id="deletion-dependency-dialog" aria-labelledby="deletion-dependency-title"><div class="dialog-head"><div><h2 id="deletion-dependency-title">Review collection dependencies</h2><p>Nothing has been deleted.</p></div><button class="xbtn" type="button" data-close="deletion-dependency-dialog" aria-label="Close dependency guidance">×</button></div><div class="dialog-content"><p id="deletion-dependency-summary" class="dependency-summary" tabindex="-1" autofocus></p><p>Use the matching Edit button below, or close this message and open Collections, to edit each collection listed below and remove or replace this member. Changes stay in the editor until you save. Save those changes, then try Delete again.</p><p>Intersection and Subtraction require at least two members: choose replacements or explicitly change the operator. For Subtraction, review the base member before saving; removing the old base can select another member in the editor.</p><ol id="deletion-dependency-list" class="dependency-list"></ol></div><div class="dialog-footer"><button class="btn primary" type="button" data-close="deletion-dependency-dialog">Close</button></div></dialog>
 <dialog id="trace-dialog" aria-labelledby="trace-dialog-title"><div class="dialog-head"><div><h2 id="trace-dialog-title">Why this signal?</h2><p>Local derivation path; no external verification implied.</p></div><button class="xbtn" type="button" data-close="trace-dialog" aria-label="Close">×</button></div><pre id="trace-dialog-result" class="trace-full"></pre><div class="dialog-footer"><button class="btn ghost" type="button" data-close="trace-dialog">Close</button></div><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div></dialog>
 <div id="toast" role="status" aria-live="polite" hidden></div>
 <script id="progrss-core">
@@ -3101,7 +3111,17 @@ function renderVault(){
 V.onStatusChange(renderVault);
 function notify(message,error=false){const t=$('toast');t.textContent=message;t.classList.toggle('error',error);t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.hidden=true,6500)}
 function save(){const pending=persist();render();return pending;}
-function action(label,fn,kind='ghost'){return h('button',{class:'btn sm '+kind, type:'button',text:label,onclick:fn})}
+function action(label,fn,kind='ghost',accessibleName='',focusKey=''){return h('button',{class:'btn sm '+kind, type:'button',text:label,onclick:fn,...(accessibleName?{'aria-label':accessibleName}:{}),...(focusKey?{'data-focus-key':focusKey}:{})})}
+function focusAction(key){
+  const target=typeof key==='string'?[...document.querySelectorAll('[data-focus-key]')].find(el=>el.dataset.focusKey===key&&!el.disabled&&!el.closest('[hidden],[inert]')):key;
+  if(!target?.isConnected||target.disabled||target.closest('[hidden],[inert]'))return false;
+  target.focus();return true;
+}
+let dependencyFocusReturn=null,routedCollectionFocusReturn=null;
+function restoreActionFocus(target){
+  if(!target||document.querySelector('dialog[open]'))return false;
+  return focusAction(target.opener)||focusAction(target.fallbackKey);
+}
 function originTitle(item){return state.sources.find(s=>s.id===item.sourceId)?.title||'Unknown source'}
 function relative(iso){const d=Date.parse(iso);if(!d)return 'undated';const sec=Math.max(0,Math.round((Date.now()-d)/1000));return sec<60?'just now':sec<3600?Math.floor(sec/60)+'m ago':sec<86400?Math.floor(sec/3600)+'h ago':new Date(d).toLocaleDateString();}
 function updateSelector(){const select=$('collection-choice'),keep=activeCollection;select.replaceChildren(h('option',{value:'all',text:'Every lens'}));state.collections.forEach(c=>select.append(h('option',{value:c.id,text:c.title})));if(keep!=='all'&&!state.collections.some(c=>c.id===keep))activeCollection='all';select.value=activeCollection;}
@@ -3128,7 +3148,7 @@ function renderHome(){
       h('span',{class:'feed-bullet '+(item.kind==='removed'?'removed':item.kind==='changed'?'changed':'')}),
       h('div',{class:'feed-inner'},[
         h('div',{class:'feed-top'},[h('span',{class:'feed-origin',text:originTitle(item)}),h('span',{class:'feed-date',text:relative(item.observedAt)})]),title,h('p',{text:item.summary||'No summary. Open the original source to read more.'}),...(['changed','removed'].includes(item.kind)?[h('span',{class:'feed-tag '+(item.kind==='removed'?'removed':''),text:item.kind==='removed'?'CARD REMOVED':'CHANGE DETECTED'})]:[]),
-        h('div',{class:'witness-tools'},[h('span',{class:'mini',text:'WITNESSES '+new Set(witnesses.map(w=>w.sourceId)).size+' source(s)'}),action('Why here? ↗',()=>openTrace(item.id))])
+        h('div',{class:'witness-tools'},[h('span',{class:'mini',text:'WITNESSES '+new Set(witnesses.map(w=>w.sourceId)).size+' source(s)'}),action('Why here? ↗',()=>openTrace(item.id),'ghost','Why here? '+item.title)])
       ])
     ]);
   }));
@@ -3146,6 +3166,25 @@ function renderTraceChoices(){const select=$('trace-choose'),old=select.value;se
 }
 function traceSelected(){const id=$('trace-choose').value;if(!id){$('trace-output').textContent='Choose any local observation, including one excluded from this collection.';return;}
   $('trace-output').textContent=traceText(C.explainItem(state,id,activeCollection));}
+function collectionDeletionBlocked(kind,id,opener=null){
+  const dependents=state.collections.filter(c=>(c.members||[]).some(m=>m.kind===kind&&m.id===id));
+  if(!dependents.length)return false;
+  const target=(kind==='source'?state.sources:state.collections).find(x=>x.id===id);
+  $('deletion-dependency-summary').textContent='Cannot delete '+(kind==='source'?'Lens':'collection')+' “'+(target?.title||id)+'” ('+id+'): directly used by '+dependents.length+' collection'+(dependents.length===1?'':'s')+'.';
+  $('deletion-dependency-list').replaceChildren(...dependents.map(c=>{
+    const mode=c.mode||'union',index=c.members.findIndex(m=>m.kind===kind&&m.id===id);
+    const role=mode==='subtract'?(index===0?'Subtraction base':'Subtraction exclusion'):mode==='intersection'?'Intersection member':'Union member';
+    return h('li',{},[h('strong',{text:c.title}),h('code',{text:'Collection ID: '+c.id}),h('p',{text:role}),
+      h('button',{class:'btn sm ghost',type:'button',text:'Edit this collection','aria-label':'Edit '+c.title+' (collection '+c.id+')',onclick:()=>{
+        const current=state.collections.find(x=>x.id===c.id);
+        if(current!==c){$('deletion-dependency-summary').textContent='This collection changed or was removed. Close this message and try Delete again to refresh the dependency list.';$('deletion-dependency-summary').focus();return;}
+        const returnTarget=dependencyFocusReturn;dependencyFocusReturn=null;
+        close('deletion-dependency-dialog');restoreActionFocus(returnTarget);openCollection(current);routedCollectionFocusReturn=returnTarget;
+      }})]);
+  }));
+  dependencyFocusReturn={opener,fallbackKey:kind==='source'?'nav:sources':'nav:collections'};
+  show('deletion-dependency-dialog');return true;
+}
 function renderSources(){const list=$('source-list');if(!state.sources.length){list.replaceChildren(h('div',{class:'empty content-panel'},[h('span',{class:'symbol',text:'◉'}),h('h3',{text:'No lenses yet.'}),h('p',{text:'Every independent observation begins with one page or one feed.'}),action('Create your first Lens',()=>openLens(),'primary')]));return;}
   list.replaceChildren(...state.sources.map(s=>h('article',{class:'row-card'},[
     h('div',{},[h('h3',{},[h('span',{class:'small-tag '+(s.enabled?'':'paused'),text:s.enabled?'LIVE':'PAUSED'}),h('span',{text:s.title})]),
@@ -3154,9 +3193,9 @@ function renderSources(){const list=$('source-list');if(!state.sources.length){l
       h('p',{class:'pulse-forecast',text:P.format(s.pulse)}),
     ]),
     h('div',{class:'row-actions'},[
-      action('↻ Check',()=>checkSource(s,{manual:true})),action('↥ Paste',()=>openPaste(s)),...(s.type==='page'?[action('♢ Clinic',()=>{go('clinic');clinicSelect(s.id)})]:[]),action('Edit',()=>openLens(s)),
-      action(s.enabled?'Pause':'Enable',()=>{if(!s.enabled&&!confirm('Enable future checks for '+s.title+'? Your browser will contact '+s.url+' only when you manually check or enable an open-tab schedule.'))return;s.enabled=!s.enabled;save()}),
-      action('×',()=>{if(!confirm('Delete Lens and its saved observations?'))return;state.sources=state.sources.filter(x=>x.id!==s.id);state.items=state.items.filter(x=>x.sourceId!==s.id);delete state.snapshots[s.id];state.collections.forEach(c=>c.members=c.members.filter(m=>!(m.kind==='source'&&m.id===s.id)));save()},'danger')
+      action('↻ Check',()=>checkSource(s,{manual:true}),'ghost','Check Lens: '+s.title),action('↥ Paste',()=>openPaste(s),'ghost','Paste snapshot for Lens: '+s.title,'lens-paste:'+s.id),...(s.type==='page'?[action('♢ Clinic',()=>{go('clinic');clinicSelect(s.id)},'ghost','Clinic for Lens: '+s.title)]:[]),action('Edit',()=>openLens(s),'ghost','Edit Lens: '+s.title,'lens-edit:'+s.id),
+      action(s.enabled?'Pause':'Enable',()=>{if(!s.enabled&&!confirm('Enable future checks for '+s.title+'? Your browser will contact '+s.url+' only when you manually check or enable an open-tab schedule.'))return;s.enabled=!s.enabled;save()},'ghost',(s.enabled?'Pause':'Enable')+' Lens: '+s.title),
+      action('×',event=>{if(collectionDeletionBlocked('source',s.id,event?.currentTarget))return;if(!confirm('Delete Lens and its saved observations?'))return;state.sources=state.sources.filter(x=>x.id!==s.id);state.items=state.items.filter(x=>x.sourceId!==s.id);delete state.snapshots[s.id];save()},'danger','Delete Lens: '+s.title)
     ])
   ])));
 }
@@ -3164,8 +3203,8 @@ function renderCollections(){const list=$('collection-list');if(!state.collectio
   list.replaceChildren(...state.collections.map(c=>h('article',{class:'row-card'},[
     h('div',{},[h('h3',{},[h('span',{class:'small-tag',text:'GRAPH'}),h('span',{text:c.title})]),h('p',{text:c.members.length+' members · '+C.compose(state,c.id).length+' matching observations · '+(c.mode||'union').toUpperCase()+' · rev '+(c.version||1)}),h('p',{class:'mono',text:'include: '+(c.include||'everything')+' / exclude: '+(c.exclude||'nothing')})]),
     h('div',{class:'row-actions'},[
-      action('View feed',()=>{activeCollection=c.id;go('home')}),action('Edit',()=>openCollection(c)),action('Share',()=>{activeCollection=c.id;downloadRecipes()}),
-      action('×',()=>{if(!confirm('Delete collection '+c.title+'? Its sources remain.'))return;state.collections=state.collections.filter(x=>x.id!==c.id);state.collections.forEach(group=>group.members=group.members.filter(m=>!(m.kind==='collection'&&m.id===c.id)));save()},'danger')
+      action('View feed',()=>{activeCollection=c.id;go('home')},'ghost','View feed for collection: '+c.title),action('Edit',()=>openCollection(c),'ghost','Edit collection: '+c.title,'collection-edit:'+c.id),action('Share',()=>{activeCollection=c.id;downloadRecipes()},'ghost','Share collection: '+c.title),
+      action('×',event=>{if(collectionDeletionBlocked('collection',c.id,event?.currentTarget))return;if(!confirm('Delete collection '+c.title+'? Its sources remain.'))return;state.collections=state.collections.filter(x=>x.id!==c.id);save()},'danger','Delete collection: '+c.title)
     ])
   ])));
 }
@@ -3208,22 +3247,33 @@ function render(){
 }
 const viewNames={home:'OBSERVATORY',sources:'LENSES',scout:'SITE SCOUT',collections:'COLLECTIONS',commons:'FEED COMMONS',lineage:'LINEAGE ROOM',recovery:'TRUST & WITNESSES',clinic:'PATCH CLINIC',peers:'EXCHANGE',docs:'FIELD NOTES'};
 function go(page){currentView=page;Object.keys(viewNames).forEach(name=>$('view-'+name).hidden=page!==name);document.querySelectorAll('[data-view]').forEach(b=>{if(b.dataset.view===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});$('crumb-view').textContent=viewNames[page];if(page==='docs')$('doc-render').textContent=$('progrss-docs').textContent.trim();if(page==='peers')renderImportPreview();if(page==='clinic')clinicSelect($('clinic-source').value);render();}
-function show(id){$(id).showModal()}
+function clearDialogError(id){
+  const summary=$(id).querySelector('[data-form-error]');if(!summary)return;
+  summary.hidden=true;summary.textContent='';
+}
+function reportDialogError(id,message){
+  notify(message,true);
+  const dialog=$(id),summary=dialog.querySelector('[data-form-error]');
+  if(!summary||!dialog.open)return;
+  const label=id==='lens-dialog'?'Lens error: ':id==='collection-dialog'?'Collection error: ':'';
+  summary.textContent=label+message;summary.hidden=false;summary.focus();
+}
+function show(id){clearDialogError(id);$(id).showModal()}
 function close(id){$(id).close()}
 function openLens(s=null){const f=$('lens-form');f.reset();$('lens-id').value=s?.id||'';$('lens-name').value=s?.title||'';$('lens-url').value=s?.url||'';$('lens-type').value=s?.type||'rss';$('lens-mode').value=s?.mode||'region';$('lens-selector').value=s?.selector||'';$('lens-title-selector').value=s?.titleSelector||'';$('lens-link-selector').value=s?.linkSelector||'';$('lens-include').value=s?.include||'';$('lens-exclude').value=s?.exclude||'';$('lens-threshold').value=s?(s.threshold??1):24;$('lens-ignore-numbers').checked=Boolean(s?.ignoreNumbers);$('lens-title').textContent=s?'Revise Lens':'Make a Lens';toggleLensFields();show('lens-dialog');}
 function toggleLensFields(){let page=$('lens-type').value==='page';document.querySelectorAll('.page-only').forEach(el=>el.hidden=!page);document.querySelectorAll('.card-only').forEach(el=>el.hidden=!page||$('lens-mode').value!=='cards');}
-function saveLens(e){e.preventDefault();let id=$('lens-id').value;const old=state.sources.find(s=>s.id===id);if(!id)id=C.uid('lens');let s;
-  try {s=C.cleanRecipe({id,title:$('lens-name').value,type:$('lens-type').value,url:$('lens-url').value,mode:$('lens-mode').value,selector:$('lens-selector').value,titleSelector:$('lens-title-selector').value,linkSelector:$('lens-link-selector').value,threshold:$('lens-threshold').value,ignoreNumbers:$('lens-ignore-numbers').checked,include:$('lens-include').value,exclude:$('lens-exclude').value,author:old?.author||'local',version:old?(old.version||1)+1:1});}catch(error){return notify(error.message,true)}
-  if(!old&&state.sources.length>=C.LIMIT.source)return notify('The lens limit is 200',true);
+function saveLens(e){e.preventDefault();clearDialogError('lens-dialog');let id=$('lens-id').value;const old=state.sources.find(s=>s.id===id);if(!id)id=C.uid('lens');let s;
+  try {s=C.cleanRecipe({id,title:$('lens-name').value,type:$('lens-type').value,url:$('lens-url').value,mode:$('lens-mode').value,selector:$('lens-selector').value,titleSelector:$('lens-title-selector').value,linkSelector:$('lens-link-selector').value,threshold:$('lens-threshold').value,ignoreNumbers:$('lens-ignore-numbers').checked,include:$('lens-include').value,exclude:$('lens-exclude').value,author:old?.author||'local',version:old?(old.version||1)+1:1});}catch(error){return reportDialogError('lens-dialog',error.message)}
+  if(!old&&state.sources.length>=C.LIMIT.source)return reportDialogError('lens-dialog','The lens limit is 200');
   if(old){
     let changed=true;try{const prior=C.cleanRecipe(old);changed=['type','url','mode','selector','titleSelector','linkSelector','threshold','ignoreNumbers','include','exclude'].some(key=>prior[key]!==s[key]);}catch{}
     Object.assign(old,s);
     if(changed){old.lastError='';delete old.pulse;delete old.httpCache;delete state.snapshots[id];notify('Recipe revised. Its page baseline and polling plan were reset.')}
     else notify('Lens details revised. Its saved baseline and polling plan were kept.');
   }else state.sources.push({...s,enabled:true,lastScan:'',lastError:'',origin:'local'});
-  close('lens-dialog');save();go('sources');
+  close('lens-dialog');save();go('sources');focusAction('lens-edit:'+id);
 }
-function openCollection(col=null){$('collection-form').reset();$('collection-id').value=col?.id||'';$('collection-name').value=col?.title||'';$('collection-include').value=col?.include||'';$('collection-exclude').value=col?.exclude||'';$('collection-mode').value=col?.mode||'union';$('collection-title').textContent=col?'Revise collection':'Weave a collection';
+function openCollection(col=null){routedCollectionFocusReturn=null;$('collection-form').reset();$('collection-id').value=col?.id||'';$('collection-name').value=col?.title||'';$('collection-include').value=col?.include||'';$('collection-exclude').value=col?.exclude||'';$('collection-mode').value=col?.mode||'union';$('collection-title').textContent=col?'Revise collection':'Weave a collection';
   let members=$('collection-members');members.replaceChildren();const chosen=new Set((col?.members||[]).map(m=>m.kind+':'+m.id));const candidates=[...state.sources.map(s=>({kind:'source',id:s.id,title:s.title})),...state.collections.filter(c=>c.id!==col?.id).map(c=>({kind:'collection',id:c.id,title:c.title}))];
   for (const m of candidates){const check=h('input',{type:'checkbox',value:m.kind+':'+m.id,checked:chosen.has(m.kind+':'+m.id)});check.addEventListener('change',refreshCollectionBase);members.append(h('label',{},[check,h('span',{text:(m.kind==='collection'?'⌗ ':'◉ ')+m.title})]));}
   if(!candidates.length)members.append(h('p',{class:'section-note',text:'Add at least one Lens first.'}));refreshCollectionBase();if(col?.members?.length)$('collection-base').value=col.members[0].kind+':'+col.members[0].id;show('collection-dialog');}
@@ -3233,15 +3283,15 @@ function refreshCollectionBase(){
   for(const input of $('collection-members').querySelectorAll('input:checked')){const label=input.closest('label');select.append(h('option',{value:input.value,text:label?.textContent||input.value}));}
   if([...select.options].some(o=>o.value===old))select.value=old;else if(select.options.length>1)select.selectedIndex=1;
 }
-function saveCollection(e){e.preventDefault();const old=state.collections.find(c=>c.id===$('collection-id').value);const id=old?.id||C.uid('group');let memberIds=Array.from($('collection-members').querySelectorAll('input:checked')).map(x=>x.value);
-  const mode=$('collection-mode').value;if(['intersection','subtract'].includes(mode)&&memberIds.length<2)return notify('Intersection/subtraction requires at least two members.',true);
-  if(mode==='subtract'){const base=$('collection-base').value;if(!memberIds.includes(base))return notify('Select an included base member.',true);memberIds=[base,...memberIds.filter(v=>v!==base)];}
+function saveCollection(e){e.preventDefault();clearDialogError('collection-dialog');const old=state.collections.find(c=>c.id===$('collection-id').value);const id=old?.id||C.uid('group');let memberIds=Array.from($('collection-members').querySelectorAll('input:checked')).map(x=>x.value);
+  const mode=$('collection-mode').value;if(['intersection','subtract'].includes(mode)&&memberIds.length<2)return reportDialogError('collection-dialog','Intersection/subtraction requires at least two members.');
+  if(mode==='subtract'){const base=$('collection-base').value;if(!memberIds.includes(base))return reportDialogError('collection-dialog','Select an included base member.');memberIds=[base,...memberIds.filter(v=>v!==base)];}
   const candidate={id,title:$('collection-name').value,mode,include:$('collection-include').value,exclude:$('collection-exclude').value,author:old?.author||'local',version:old?(old.version||1)+1:1,members:memberIds.map(v=>{const [kind,...rest]=v.split(':');return{kind,id:rest.join(':')}})};
   try{
     const clean=C.cleanCollection(candidate);if(old)state.collections=state.collections.map(c=>c.id===id?clean:c);else{if(state.collections.length>=C.LIMIT.collection)throw Error('Collection limit reached');state.collections.push(clean)};
     C.validateBackupRecipes({schema:C.SCHEMA,sources:state.sources.map(C.cleanRecipe),collections:state.collections.map(C.cleanCollection)});
-  }catch(error){if(old)state.collections=state.collections.map(c=>c.id===id?old:c);else state.collections=state.collections.filter(c=>c.id!==id);return notify('Cannot save collection: '+error.message,true)}
-  close('collection-dialog');save();go('collections');}
+  }catch(error){if(old)state.collections=state.collections.map(c=>c.id===id?old:c);else state.collections=state.collections.filter(c=>c.id!==id);return reportDialogError('collection-dialog','Cannot save collection: '+error.message)}
+  routedCollectionFocusReturn=null;close('collection-dialog');save();go('collections');focusAction('collection-edit:'+id);}
 let pasteReadToken=0;
 function openPaste(s){pasteReadToken++;$('paste-form').reset();$('paste-source-id').value=s.id;$('paste-title').textContent='Capture: '+s.title;show('paste-dialog');}
 function processContent(s,body){let added=0;
@@ -3254,7 +3304,7 @@ function processContent(s,body){let added=0;
   }
   save();return added;
 }
-$('paste-form').addEventListener('submit',async e=>{e.preventDefault();
+$('paste-form').addEventListener('submit',async e=>{e.preventDefault();clearDialogError('paste-dialog');
   const dialog=$('paste-dialog'),s=state.sources.find(x=>x.id===$('paste-source-id').value);if(!dialog.open||!s)return;
   const token=++pasteReadToken,library=state,version=s.version,file=$('paste-file').files[0];
   try{
@@ -3267,8 +3317,8 @@ $('paste-form').addEventListener('submit',async e=>{e.preventDefault();
     if(state!==library||state.sources.find(x=>x.id===s.id)!==s||s.version!==version)throw Error('Library or Lens changed while reading. Open Capture again.');
     if(($('paste-file').files[0]||null)!==(file||null))throw Error('Selected file changed while reading. Process the snapshot again.');
     if(!value.trim())throw Error('Paste content or select a file');
-    processContent(s,value);close('paste-dialog');
-  }catch(error){if(token===pasteReadToken&&dialog.open)notify('Snapshot: '+error.message,true)}
+    processContent(s,value);close('paste-dialog');focusAction('lens-paste:'+s.id);
+  }catch(error){if(token===pasteReadToken&&dialog.open)reportDialogError('paste-dialog','Snapshot: '+error.message)}
 });
 async function detectBridge(){if(location.protocol!=='http:'||location.hostname!=='127.0.0.1'){setBridge(false);return}try{const r=await fetch('/api/status',{credentials:'omit',cache:'no-store'});let x=await r.json();setBridge(Boolean(r.ok&&x.project==='ProgRSS'&&x.broker))}catch{setBridge(false)}}
 function setBridge(ok){bridge=ok;$('bridge-dot').classList.toggle('online',ok);$('bridge-status').textContent=ok?'Local CLI fetch bridge connected':'Webpage-only · CORS applies'}
@@ -3408,7 +3458,7 @@ function resetRestoredWorkbenches(){
 function previewImport(bundle){try{let plan=C.importPreview(bundle,state);if(plan.sources.length+state.sources.length>C.LIMIT.source || plan.collections.length+state.collections.length>C.LIMIT.collection)throw Error('Import would exceed library limits');pending={plan,bundle,parcelId:null};renderImportPreview();go('peers');notify('Review incoming recipes before adding them.')}catch(error){notify('Import rejected: '+error.message,true)}}
 function renderImportPreview(){const slot=$('import-preview');if(!pending){slot.className='empty';slot.replaceChildren(h('span',{class:'symbol',text:'↧'}),h('h3',{text:'No incoming recipes yet.'}),h('p',{text:'A received bundle appears here for manual review. Imported watchers will start paused.'}));return;}
   const {plan}=pending;slot.className='';slot.replaceChildren(h('div',{style:'padding:20px'},[
-    h('h3',{text:plan.sources.length+' source recipes / '+plan.collections.length+' collections waiting'}),h('p',{class:'section-note',text:'Review these URL destinations. Nothing has been fetched, run, or saved. New sources will be paused.'}),
+    h('h3',{id:'import-preview-title','data-focus-key':'import-preview-title',tabindex:'-1',text:plan.sources.length+' source recipes / '+plan.collections.length+' collections waiting'}),h('p',{class:'section-note',text:'Review these URL destinations. Nothing has been fetched, run, or saved. New sources will be paused.'}),
     h('div',{class:'stack'},plan.sources.map(s=>h('div',{class:'row-card'},[h('div',{},[h('strong',{text:s.title}),h('p',{class:'mono',text:s.url}),h('p',{text:s.type+(s.selector?' · '+s.selector:'')})])]))),
     h('div',{class:'row-actions',style:'margin-top:18px;justify-content:flex-start'},[
       action('Import paused recipes',()=>{try{
@@ -3893,7 +3943,7 @@ async function signStagedPatch(){
     const signed=await G.sign(stagedProposal);stagedSignedPatch=signed;pendingProposal=C.validateProposal(stagedProposal);pendingSignedPatch=signed;pendingPatchInbound=false;pendingPatchCourierId=null;
     $('proposal-export-signed').disabled=false;
     $('proposal-sign-status').textContent='SIGNED · '+signed.algorithm+'\n'+signed.keyId+'\nExact staged patch; no raw snapshots included.';
-    await renderProposalReview();notify('Signed patch ready. Review and export, or send over WebRTC.');
+    await renderProposalReview();notify('Signed patch ready. Review and export the signed file.');
   }catch(error){notify('Signing failed: '+error.message,true);$('proposal-sign-status').textContent='Not signed: '+error.message;}
 }
 function exportSignedPatch(){try{
@@ -3966,7 +4016,7 @@ function receiveCourier(packet,via='file'){
 function renderInbox(){
   const slot=$('courier-inbox'),history=$('courier-receipts');
   slot.replaceChildren();
-  if(!state.inbox?.length)slot.append(h('div',{class:'empty'},[h('h3',{text:'The Courier Inbox is empty.'}),h('p',{text:'Import a recipe/patch capsule, or receive one over WebRTC. Decisions persist when your browser storage does.'})]));
+  if(!state.inbox?.length)slot.append(h('div',{class:'empty'},[h('h3',{text:'The Courier Inbox is empty.'}),h('p',{text:'Import a recipe or patch capsule file to review it here. Decisions persist when your browser storage does.'})]));
   for(const e of state.inbox||[]){
     let label='UNREADABLE',good=false,count='';
     try{const p=Q.validateCapsule(e.capsule);good=true;label=p.kind==='fixture-pack'?'Fictional regression pack (VERIFY BEFORE SAVING)':p.kind==='recipes'?'Recipe collection':p.kind==='patch'?'Unsigned repair patch':p.kind==='signed-patch'?'Signed repair patch (VERIFY ON REVIEW)':p.kind==='recovery-charter'?'Recovery Circle · owner-signed charter (VERIFY ON REVIEW)':p.kind==='recovery-packet'?'Recovery Circle · guardian packet (VERIFY ON REVIEW)':p.kind==='charter-change'?'Trust Ledger · signed charter change (VERIFY ON REVIEW)':p.kind.startsWith('merkle-')?'Merkle · signed tree/proof (VERIFY BEFORE PINNING)':['proof-request','proof-reply','fork-dossier'].includes(p.kind)?'Proof Exchange · '+p.kind+' (REVIEW FIRST)':p.kind==='trust-head'?'Signed publisher trust head (VERIFY ON REVIEW)':p.kind==='trust-sighting'?'Witness signed trust head (VERIFY ON REVIEW)':p.kind==='key-rotation'?'Key Bridge · DOUBLE signature (VERIFY ON REVIEW)':['edition','signed-edition'].includes(p.kind)?(p.kind==='signed-edition'?'Signed curator edition (UNVERIFIED until reviewed)':'Unsigned collection edition'):'Discovery evidence';count=p.kind==='fixture-pack'?p.payload.title+' · '+p.payload.cases.length+' fabricated cases':p.kind==='recipes'?p.payload.sources.length+' Lenses / '+p.payload.collections.length+' collections':p.kind==='patch'?p.payload.target.title:p.kind==='signed-patch'?p.payload.patch.target.title+' · '+p.payload.keyId:p.kind==='recovery-charter'?p.payload.subject.keyId.slice(0,25)+'… · '+p.payload.threshold+' of '+p.payload.guardians.length+' guardians':p.kind==='recovery-packet'?p.payload.request.successor.keyId.slice(0,25)+'… · '+p.payload.votes.length+' votes':p.kind==='charter-change'?p.payload.subject.keyId.slice(0,24)+'… · '+p.payload.action+' #'+p.payload.sequence:p.kind.startsWith('merkle-')?(p.payload.subject||p.payload.current?.subject||p.payload.head?.subject)?.keyId.slice(0,22)+'… · cryptographic proof':['proof-request','proof-reply','fork-dossier'].includes(p.kind)?(p.payload.previous||p.payload.request?.previous||p.payload.left)?.subject.keyId.slice(0,22)+'… · bounded public commitment':p.kind==='trust-head'?p.payload.subject.keyId.slice(0,22)+'… · #'+p.payload.sequence:p.kind==='trust-sighting'?p.payload.head.subject.keyId.slice(0,22)+'… · witnessed #'+p.payload.head.sequence:p.kind==='key-rotation'?p.payload.from.keyId.slice(0,27)+'… → '+p.payload.to.keyId.slice(0,27)+'…':['edition','signed-edition'].includes(p.kind)?'Channel '+(p.kind==='signed-edition'?p.payload.edition:p.payload).channel+' · #'+(p.kind==='signed-edition'?p.payload.edition:p.payload).sequence+' · '+(p.kind==='signed-edition'?p.payload.keyId:'UNSIGNED') :p.payload.candidate.url;}
@@ -3993,7 +4043,7 @@ async function reviewCourier(id){
     }else if(pkg.kind==='recipes'){
       const plan=C.importPreview(pkg.payload,state);
       if(plan.sources.length+state.sources.length>C.LIMIT.source||plan.collections.length+state.collections.length>C.LIMIT.collection)throw Error('Library source/collection capacity exceeded');
-      pending={plan,bundle:pkg.payload,parcelId:id};go('peers');renderImportPreview();
+      pending={plan,bundle:pkg.payload,parcelId:id};go('peers');renderImportPreview();focusAction('import-preview-title');
     }else if(pkg.kind==='patch'||pkg.kind==='signed-patch'){
       pendingPatchCourierId=id;acceptIncomingProposal(pkg.kind==='signed-patch'?pkg.payload.patch:pkg.payload,pkg.kind==='signed-patch'?pkg.payload:null);go('clinic');notify('Patch opened in Patch Clinic. Signature verification and local regression checks required.');
     }else if(pkg.kind==='edition'||pkg.kind==='signed-edition'){
@@ -4086,7 +4136,7 @@ async function renderKeyBridge(){
         'No pending replacement. Your active identity remains in use.');
     $('key-bridge-stage').disabled=!active;
     $('key-bridge-activate').disabled=!local;
-    $('key-bridge-send').disabled=!(latestLocalRotationCapsule()&&channel?.readyState==='open');
+    $('key-bridge-send').disabled=true;
   }catch(e){slot.textContent='Key Bridge storage unavailable: '+e.message;$('key-bridge-stage').disabled=true;$('key-bridge-activate').disabled=true;$('key-bridge-send').disabled=true;}
 }
 async function stageKeyRotation(){
@@ -4207,7 +4257,7 @@ function renderLineage(){
     ]);subs.append(row);
   }
   renderLineageReview();renderRotationReview();renderKeyBridge();
-  $('lineage-send').disabled=!(channel?.readyState==='open'&&state.publications.length);
+  $('lineage-send').disabled=true;
 }
 async function renderLineageReview(){
   const myToken=++trustReviewToken,slot=$('lineage-review'),approve=$('lineage-apply');approve.disabled=true;trustVerified=null;
@@ -4371,7 +4421,8 @@ function demoScout(){
 // it, or accepts an incoming capsule after locally replaying the claim.
 function renderProofWorkbench(){
   const slot=$('proof-preview'),status=$('proof-status'),has=Boolean(activeProof);
-  for(const id of ['proof-replay','proof-export','proof-capsule','proof-send'])$(id).disabled=!has;
+  for(const id of ['proof-replay','proof-export','proof-capsule'])$(id).disabled=!has;
+  $('proof-send').disabled=true;
   $('proof-adopt').disabled=!(has&&proofReplay?.pass);
   if(!has){slot.textContent='Choose a Scout finding or review a discovery capsule from Courier.';status.textContent='No discovery selected.';return;}
   const p=D.validateProof(activeProof);
@@ -4451,7 +4502,7 @@ async function renderRecovery(){
   $('recovery-pins').textContent=policies.length?'ADVANCE-PINNED CHARTERS ('+policies.length+'):\n'+policies.map(p=>p.subjectKeyId.slice(0,31)+'… · '+p.digest+'\n  '+p.charter.threshold+'/'+p.charter.guardians.length+' guardians · '+(p.status==='revoked'?'REVOKED':'active')+' · expires '+p.charter.expiresAt).join('\n'):'No pinned Recovery Circle policies. Your trust pins will not change from a recovered request without advance registration.';
   if(receipts.length)$('recovery-pins').textContent+='\n\nRECOVERY RECEIPTS:\n'+receipts.slice(0,8).map(x=>x.at+' · '+x.from.slice(0,22)+'… → '+x.to.slice(0,22)+'… · '+x.quorum).join('\n');
   $('recovery-pin').disabled=true;$('recovery-apply').disabled=true;
-  $('recovery-export').disabled=!recoveryArtifact;$('recovery-peer').disabled=!recoveryArtifact||channel?.readyState!=='open';
+  $('recovery-export').disabled=!recoveryArtifact;$('recovery-peer').disabled=true;
   if(!recoveryArtifact){slot.textContent='No selected artifact. Issue or import an owner-signed charter, or import a signed recovery packet.';return;}
   try{
     if(recoveryArtifact.schema===H.CHARTER){const checked=await H.verifyCharter(recoveryArtifact);if(token!==recoveryToken)return;
@@ -4525,7 +4576,7 @@ async function ledgerLoad(raw,parcelId=null){
 }
 async function renderLedger(){
   const token=++ledgerToken,view=$('ledger-status'),log=$('ledger-history');
-  $('ledger-approve').disabled=true;$('ledger-export').disabled=!ledgerArtifact;$('ledger-send').disabled=!ledgerArtifact||channel?.readyState!=='open';
+  $('ledger-approve').disabled=true;$('ledger-export').disabled=!ledgerArtifact;$('ledger-send').disabled=true;
   const changes=state.charterHistory||[],claims=state.charterClaims||[];
   const forks=[];for(let i=0;i<claims.length;i++)for(let j=i+1;j<claims.length;j++)if(claims[i].subjectKeyId===claims[j].subjectKeyId&&claims[i].priorDigest===claims[j].priorDigest&&claims[i].sequence===claims[j].sequence&&claims[i].digest!==claims[j].digest)forks.push([claims[i],claims[j]]);
   log.textContent='ACCEPTED LOCAL HISTORY · '+changes.length+' entries\n'+changes.slice(-22).map(e=>'#'+e.sequence+' · '+e.action.toUpperCase()+' · '+e.subjectKeyId.slice(0,24)+'…\n  '+e.digest+'\n  parent '+(e.priorDigest||'(genesis)')).join('\n')+'\n\nOBSERVED SIGNED CLAIMS · '+claims.length+' · competing pairs '+forks.length+(forks.length?'\n⚠ Conflicting owner signatures observed. Keep both claims as evidence; verify out of band.':'');
@@ -4578,7 +4629,7 @@ async function renderGossip(){
   const token=++gossipToken,status=$('gossip-status'),history=$('gossip-history');
   W.ensureState(state);
   $('gossip-export').disabled=!gossipArtifact;
-  $('gossip-send').disabled=!gossipArtifact||channel?.readyState!=='open';
+  $('gossip-send').disabled=true;
   $('gossip-witness').disabled=true;$('gossip-record').disabled=true;$('gossip-pin').disabled=true;
   const rows=state.gossipCards.slice(-14).reverse();
   history.textContent='VERIFIED POSTCARDS RECORDED: '+state.gossipCards.length+' / 128 · INDEPENDENTLY PINNED WITNESSES: '+state.witnessPins.length+' / 64\n'+
@@ -4654,7 +4705,7 @@ async function merkleLoad(raw,id=null){
 async function renderMerkle(){
  const token=++merkleToken,status=$('merkle-status'),history=$('merkle-history');M.ensureState(state);
  $('merkle-export').disabled=!merkleArtifact;
- $('merkle-send').disabled=!merkleArtifact||channel?.readyState!=='open';
+ $('merkle-send').disabled=true;
  $('merkle-pin').disabled=true;
  history.textContent='LOCAL TREE PINS: '+state.merklePins.length+' / 32 · REVIEWED CONSISTENCY RECEIPTS: '+state.merkleReceipts.length+' / 96+'+'\n'+
    (state.merklePins.length?state.merklePins.map(r=>r.subjectKeyId+'\n  '+r.head.treeSize+' leaves · '+r.head.rootDigest+'\n  last approved '+r.pinnedAt).join('\n'):'No trusted checkpoints. Confirm fingerprints out of band before first pinning.');
@@ -4766,7 +4817,7 @@ async function exchangeLoad(raw,id=null){
 }
 async function renderExchange(){
  const token=++exchangeToken,status=$('exchange-status'),history=$('exchange-history');E.ensureState(state);
- $('exchange-export').disabled=!exchangeArtifact;$('exchange-send').disabled=!exchangeArtifact||channel?.readyState!=='open';
+ $('exchange-export').disabled=!exchangeArtifact;$('exchange-send').disabled=true;
  $('exchange-answer').disabled=!exchangeArtifact||exchangeArtifact.schema!==E.REQUEST;
  $('exchange-review').disabled=!exchangeArtifact||exchangeArtifact.schema!==E.REPLY;
  $('exchange-record').disabled=!exchangeArtifact||exchangeArtifact.schema!==E.FORK;
@@ -4782,7 +4833,7 @@ async function renderExchange(){
    (p.first?'\nTREE SIZES: '+p.first+' → '+p.second:'')+
    (p.treeSize?'\nTREE SIZE: '+p.treeSize:'')+
    '\n'+p.meaning+'\n'+(p.kind==='proof-reply'?'\nMATCHES LOCAL OUTSTANDING REQUEST: '+(E.match(state,exchangeArtifact)?'YES':'NO; inspect out of band; cannot adopt as an answered request here.'):'')+
-   '\n\nFile and WebRTC transfers are deliberate. The signed public key and checkpoint sizes will be visible to recipients.';
+   '\n\nFile transfers are deliberate. The signed public key and checkpoint sizes will be visible to recipients.';
  }catch(e){if(token===exchangeToken)status.textContent='PROOF EXCHANGE REJECTED: '+e.message;}
 }
 async function exchangeRequest(){try{
@@ -4859,6 +4910,14 @@ async function exchangeDemo(){try{
 // Wire controls.
 document.querySelectorAll('[data-view]').forEach(el=>el.addEventListener('click',()=>go(el.dataset.view)));
 document.querySelectorAll('[data-close]').forEach(el=>el.addEventListener('click',()=>close(el.dataset.close)));
+$('deletion-dependency-dialog').addEventListener('close',()=>{
+  if($('deletion-dependency-dialog').open)return;
+  const target=dependencyFocusReturn;dependencyFocusReturn=null;restoreActionFocus(target);
+});
+$('collection-dialog').addEventListener('close',()=>{
+  if($('collection-dialog').open)return;
+  const target=routedCollectionFocusReturn;routedCollectionFocusReturn=null;restoreActionFocus(target);
+});
 for(const id of ['rail-add','top-add','hero-add','sources-add'])$(id).addEventListener('click',()=>openLens());
 $('top-scout').addEventListener('click',()=>go('scout'));
 $('proof-replay').addEventListener('click',replayDiscovery);$('proof-adopt').addEventListener('click',adoptDiscovery);
@@ -4890,6 +4949,7 @@ for(const id of ['top-import'])$(id).addEventListener('click',()=>$('import-file
 $('import-file').addEventListener('change',async e=>{await doImport(e.target.files[0]);e.target.value=''});
 $('lens-type').addEventListener('change',toggleLensFields);$('lens-mode').addEventListener('change',toggleLensFields);
 $('lens-form').addEventListener('submit',saveLens);$('collection-form').addEventListener('submit',saveCollection);
+for(const kind of ['lens','collection','paste'])for(const event of ['input','change'])$(kind+'-form').addEventListener(event,()=>clearDialogError(kind+'-dialog'));
 $('refresh-all').addEventListener('click',refreshAll);$('search-items').addEventListener('input',renderHome);
 $('collection-choice').addEventListener('change',e=>{activeCollection=e.target.value;renderHome();traceSelected()});
 $('trace-run').addEventListener('click',traceSelected);$('trace-choose').addEventListener('change',traceSelected);
