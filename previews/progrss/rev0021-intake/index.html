@@ -3236,7 +3236,8 @@ function saveCollection(e){e.preventDefault();const old=state.collections.find(c
     C.validateBackupRecipes({schema:C.SCHEMA,sources:state.sources.map(C.cleanRecipe),collections:state.collections.map(C.cleanCollection)});
   }catch(error){if(old)state.collections=state.collections.map(c=>c.id===id?old:c);else state.collections=state.collections.filter(c=>c.id!==id);return notify('Cannot save collection: '+error.message,true)}
   close('collection-dialog');save();go('collections');}
-function openPaste(s){$('paste-form').reset();$('paste-source-id').value=s.id;$('paste-title').textContent='Capture: '+s.title;show('paste-dialog');}
+let pasteReadToken=0;
+function openPaste(s){pasteReadToken++;$('paste-form').reset();$('paste-source-id').value=s.id;$('paste-title').textContent='Capture: '+s.title;show('paste-dialog');}
 function processContent(s,body){let added=0;
   if(s.type==='rss'){
     const parsed=C.parseFeed(body,s.url);added=C.ingestFeed(state,s,parsed);
@@ -3247,8 +3248,21 @@ function processContent(s,body){let added=0;
   }
   save();return added;
 }
-$('paste-form').addEventListener('submit',async e=>{e.preventDefault();const s=state.sources.find(x=>x.id===$('paste-source-id').value);if(!s)return;
-  try {let value=$('paste-raw').value;if($('paste-file').files.length)value=await $('paste-file').files[0].text();if(!value.trim())throw Error('Paste content or select a file');processContent(s,value);close('paste-dialog');}catch(error){notify('Snapshot: '+error.message,true)}
+$('paste-form').addEventListener('submit',async e=>{e.preventDefault();
+  const dialog=$('paste-dialog'),s=state.sources.find(x=>x.id===$('paste-source-id').value);if(!dialog.open||!s)return;
+  const token=++pasteReadToken,library=state,version=s.version,file=$('paste-file').files[0];
+  try{
+    let value=$('paste-raw').value;
+    if(file)try{value=await file.text();}catch(error){
+      if(token!==pasteReadToken||!dialog.open||state!==library||state.sources.find(x=>x.id===s.id)!==s||s.version!==version||($('paste-file').files[0]||null)!==file)return;
+      throw error;
+    }
+    if(token!==pasteReadToken||!dialog.open)return;
+    if(state!==library||state.sources.find(x=>x.id===s.id)!==s||s.version!==version)throw Error('Library or Lens changed while reading. Open Capture again.');
+    if(($('paste-file').files[0]||null)!==(file||null))throw Error('Selected file changed while reading. Process the snapshot again.');
+    if(!value.trim())throw Error('Paste content or select a file');
+    processContent(s,value);close('paste-dialog');
+  }catch(error){if(token===pasteReadToken&&dialog.open)notify('Snapshot: '+error.message,true)}
 });
 async function detectBridge(){if(location.protocol!=='http:'||location.hostname!=='127.0.0.1'){setBridge(false);return}try{const r=await fetch('/api/status',{credentials:'omit',cache:'no-store'});let x=await r.json();setBridge(Boolean(r.ok&&x.project==='ProgRSS'&&x.broker))}catch{setBridge(false)}}
 function setBridge(ok){bridge=ok;$('bridge-dot').classList.toggle('online',ok);$('bridge-status').textContent=ok?'Local CLI fetch bridge connected':'Webpage-only · CORS applies'}
@@ -3344,6 +3358,17 @@ function exportJSONFeed(){
 }
 function exportBackup(){const data={schema:'progrss.private.v1',exportedAt:new Date().toISOString(),state};download('ProgRSS-private-backup.json',JSON.stringify(data,null,2),'application/json');notify('Private observations included. Keep this file to yourself.')}
 let pending=null, pendingPatchCourierId=null;
+// Successful replacement invalidates completed Clinic/Discovery reviews only.
+// Saved parcels stay in the restored vault; editor text remains a draft.
+function resetRestoredWorkbenches(){
+  pendingProposal=null;pendingPatchCourierId=null;pendingSignedPatch=null;pendingPatchInbound=false;
+  stagedProposal=null;stagedSignedPatch=null;lastClinicAnalysis=null;
+  $('proposal-export-signed').disabled=true;$('proposal-sign-status').textContent='No staged signature.';$('peer-send-proposal').disabled=true;
+  renderProposalReview();resetForge();clearArena();
+  gardenDraft=null;gardenCourierId=null;$('garden-attest').checked=false;gardenDescribe();
+  scoutReport=null;scoutMarkupMemory='';scoutLinkHeader='';activeProof=null;proofReplay=null;pendingDiscoveryCourierId=null;
+  renderScout(null);$('scout-status').textContent='No discovery selected.';renderProofWorkbench();
+}
 function previewImport(bundle){try{let plan=C.importPreview(bundle,state);if(plan.sources.length+state.sources.length>C.LIMIT.source || plan.collections.length+state.collections.length>C.LIMIT.collection)throw Error('Import would exceed library limits');pending={plan,bundle,parcelId:null};renderImportPreview();go('peers');notify('Review incoming recipes before adding them.')}catch(error){notify('Import rejected: '+error.message,true)}}
 function renderImportPreview(){const slot=$('import-preview');if(!pending){slot.className='empty';slot.replaceChildren(h('span',{class:'symbol',text:'↧'}),h('h3',{text:'No incoming recipes yet.'}),h('p',{text:'A received bundle appears here for manual review. Imported watchers will start paused.'}));return;}
   const {plan}=pending;slot.className='';slot.replaceChildren(h('div',{style:'padding:20px'},[
@@ -3370,7 +3395,7 @@ async function doImport(file){if(!file)return;if(file.size>12_000_000)return not
     if(parsed.schema==='progrss.private.v1' && parsed.state){if(!confirm('This is a private backup and will REPLACE your current library. Continue?'))return;
       const b=parsed.state;if(!b||![2,3,4,5,6,7,8,9,10,11].includes(b.version)||!Array.isArray(b.sources)||!Array.isArray(b.collections)||!Array.isArray(b.items)||b.items.length>1200||b.sources.length>200||b.collections.length>200)throw Error('Invalid backup');
       C.validateBackupRecipes({schema:C.SCHEMA,sources:b.sources,collections:b.collections});
-      const validated=V.normalize(b);validated.fixtures=(validated.fixtures||[]).map(C.cleanFixture);Q.initializeState(validated);L.stateInit(validated);for(const e of validated.inbox)Q.validateCapsule(e.capsule);state=validated;pending=null;renderImportPreview();save();notify('Private backup loaded into this tab. Check storage status before leaving.');go('home');return;
+      const validated=V.normalize(b);validated.fixtures=(validated.fixtures||[]).map(C.cleanFixture);Q.initializeState(validated);L.stateInit(validated);for(const e of validated.inbox)Q.validateCapsule(e.capsule);state=validated;pending=null;renderImportPreview();resetRestoredWorkbenches();save();notify('Private backup loaded into this tab. Check storage status before leaving.');go('home');return;
     }
     if([Q.SCHEMA,C.PATCH_SCHEMA,G.SCHEMA,C.SCHEMA,D.SCHEMA,L.SCHEMA,T.SCHEMA,W.HEAD,W.SIGHT,E.REQUEST,E.REPLY,E.FORK,Y.SCHEMA].includes(parsed.schema)){receiveCourier(parsed,'file');return;}
     previewImport(parsed);
