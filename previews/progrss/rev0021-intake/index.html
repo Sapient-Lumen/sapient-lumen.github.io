@@ -4434,7 +4434,7 @@ function addScoutLens(item,report){
     const mode=item.mode||'region',url=C.safeUrl(item.url||report.siteUrl),type=item.kind==='page'?'page':'rss';
     const selector=item.selector||'';
     const duplicate=state.sources.find(s=>s.url===url&&s.type===type&&s.mode===mode&&s.selector===selector);
-    if(duplicate){go('sources');return notify('An equivalent Lens already exists: '+duplicate.title);}
+    if(duplicate){go('sources');focusAction('lens-edit:'+duplicate.id)||focusAction('nav:sources');return notify('An equivalent Lens already exists: '+duplicate.title);}
     const clean=C.cleanRecipe({id:C.uid('lens'),type,url,title:item.title,mode,selector,
       titleSelector:item.titleSelector||'',linkSelector:item.linkSelector||'',threshold:24,author:'local'});
     state.sources.push({...clean,enabled:false,origin:'site-scout',lastScan:'',lastError:'',lastOutcome:'waiting'});
