@@ -3477,6 +3477,7 @@ let pending=null, pendingPatchCourierId=null;
 // Successful replacement invalidates completed Clinic/Discovery reviews only.
 // Saved parcels stay in the restored vault; editor text remains a draft.
 function resetRestoredWorkbenches(){
+  invalidateScoutLoads();
   pendingProposal=null;pendingPatchCourierId=null;pendingSignedPatch=null;pendingPatchInbound=false;
   stagedProposal=null;stagedSignedPatch=null;lastClinicAnalysis=null;
   $('proposal-export-signed').disabled=true;$('proposal-sign-status').textContent='No staged signature.';$('peer-send-proposal').disabled=true;
@@ -4396,6 +4397,13 @@ function lineageDemo(){
 
 // Site Scout has no lasting raw-HTML state and performs no automatic fetching.
 let scoutReport=null,scoutMarkupMemory='',scoutLinkHeader='',activeProof=null,proofReplay=null,pendingDiscoveryCourierId=null;
+let scoutIntent=0,scoutFileRead=null;
+function invalidateScoutLoads(){scoutIntent++;$('scout-fetch').disabled=false;}
+function beginScoutLoad(){
+  invalidateScoutLoads();
+  const token=scoutIntent,library=state,ids=['scout-url','scout-html','scout-header'],values=ids.map(id=>$(id).value);
+  return {token,url:values[0],current:()=>token===scoutIntent&&state===library&&ids.every((id,i)=>$(id).value===values[i])};
+}
 function renderScout(report){
   const slot=$('scout-results');scoutReport=report;
   if(!report){slot.replaceChildren(h('div',{class:'empty'},[h('h3',{text:'No discovery yet'}),h('p',{text:'Paste, load, or fetch a webpage when ready.'})]));return;}
@@ -4425,7 +4433,8 @@ function addScoutLens(item,report){
     save();go('sources');notify('Added PAUSED Lens: '+clean.title+'. Edit and enable it when ready.');
   }catch(err){notify('Scout: '+err.message,true)}
 }
-function analyzeScout(body,linkHeader=''){
+function analyzeScout(body,linkHeader='',fromCurrentLoad=false){
+  if(!fromCurrentLoad)invalidateScoutLoads();
   try{
     const siteUrl=C.safeUrl($('scout-url').value);if(!body||!body.trim())throw Error('Paste content or fetch a webpage first');
     const report=S.scanMarkup(body,siteUrl,{linkHeader:linkHeader||$('scout-header').value});scoutMarkupMemory=body;scoutLinkHeader=linkHeader||$('scout-header').value;proofReplay=null;renderScout(report);renderProofWorkbench();
@@ -4434,12 +4443,14 @@ function analyzeScout(body,linkHeader=''){
 }
 async function fetchScout(){
   const button=$('scout-fetch');if(button.disabled)return;
+  const intent=beginScoutLoad();
   button.disabled=true;$('scout-status').textContent='Fetching the user-selected URL…';
-  try{const result=await requestRemote($('scout-url').value);
+  try{const result=await requestRemote(intent.url);
+    if(!intent.current())return;
     if(result.notModified)throw Error('Unexpected conditional response to an unconditional discovery request');
-    $('scout-html').value=result.body;$('scout-header').value=result.linkHeader||'';analyzeScout(result.body,result.linkHeader||'');
-  }catch(err){$('scout-status').textContent='SCOUT FETCH ERROR: '+err.message;notify('Scout: '+err.message,true)}
-  finally{button.disabled=false}
+    $('scout-html').value=result.body;$('scout-header').value=result.linkHeader||'';analyzeScout(result.body,result.linkHeader||'',true);
+  }catch(err){if(intent.current()){$('scout-status').textContent='SCOUT FETCH ERROR: '+err.message;notify('Scout: '+err.message,true)}}
+  finally{if(intent.token===scoutIntent)button.disabled=false}
 }
 function demoScout(){
   $('scout-url').value='https://demo.example/notes/index.html';$('scout-header').value='';
@@ -4955,9 +4966,17 @@ $('proof-replay').addEventListener('click',replayDiscovery);$('proof-adopt').add
 $('proof-export').addEventListener('click',()=>proofDownload(false));$('proof-capsule').addEventListener('click',()=>proofDownload(true));$('proof-send').addEventListener('click',proofSend);
 $('proof-import-button').addEventListener('click',()=>$('proof-import-file').click());$('proof-import-file').addEventListener('change',async e=>{await importProofFile(e.target.files[0]);e.target.value='';});
 $('scout-fetch').addEventListener('click',fetchScout);$('scout-analyze').addEventListener('click',()=>analyzeScout($('scout-html').value));
-$('scout-demo').addEventListener('click',demoScout);$('scout-clear').addEventListener('click',()=>{$('scout-html').value='';$('scout-header').value='';scoutMarkupMemory='';scoutLinkHeader='';scoutReport=null;activeProof=null;pendingDiscoveryCourierId=null;proofReplay=null;$('scout-status').textContent='Cleared. No content stored.';renderScout(null);renderProofWorkbench()});
-for(const id of ['scout-html','scout-header','scout-url'])$(id).addEventListener('input',()=>{if(proofReplay){proofReplay=null;renderProofWorkbench()}});
-$('scout-file').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{if(file.size>C.LIMIT.characters)throw Error('Local file exceeds 2MB');$('scout-html').value=await file.text();analyzeScout($('scout-html').value);}catch(error){notify('Scout file: '+error.message,true)}finally{e.target.value=''}});
+$('scout-demo').addEventListener('click',demoScout);$('scout-clear').addEventListener('click',()=>{invalidateScoutLoads();$('scout-html').value='';$('scout-header').value='';scoutMarkupMemory='';scoutLinkHeader='';scoutReport=null;activeProof=null;pendingDiscoveryCourierId=null;proofReplay=null;$('scout-status').textContent='Cleared. No content stored.';renderScout(null);renderProofWorkbench()});
+for(const id of ['scout-html','scout-header','scout-url'])$(id).addEventListener('input',()=>{invalidateScoutLoads();$('scout-status').textContent='Draft changed. Analyze or fetch again when ready.';if(proofReplay){proofReplay=null;renderProofWorkbench()}});
+$('scout-file').addEventListener('change',async e=>{
+  const file=e.target.files[0];if(!file)return;
+  const intent=beginScoutLoad();scoutFileRead=intent;$('scout-status').textContent='Reading the selected local file…';
+  try{if(file.size>C.LIMIT.characters)throw Error('Local file exceeds 2MB');const body=await file.text();
+    if(!intent.current())return;
+    $('scout-html').value=body;analyzeScout(body,'',true);
+  }catch(error){if(intent.current()){$('scout-status').textContent='SCOUT FILE ERROR: '+error.message;notify('Scout file: '+error.message,true)}}
+  finally{if(scoutFileRead===intent){if(e.target.files[0]===file)e.target.value='';scoutFileRead=null;}}
+});
 for(const id of ['collections-add'])$(id).addEventListener('click',()=>openCollection());
 $('collections-lineage').addEventListener('click',()=>go('lineage'));
 $('lineage-publish').addEventListener('click',()=>publishEdition(false));$('lineage-publish-legacy').addEventListener('click',()=>publishEdition(true));$('trust-key-create').addEventListener('click',createTrustIdentity);$('trust-key-refresh').addEventListener('click',renderTrustIdentity);$('lineage-send').addEventListener('click',sendLastEdition);
