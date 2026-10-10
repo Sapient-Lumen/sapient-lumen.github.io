@@ -3497,7 +3497,7 @@ function resetRestoredWorkbenches(){
 function previewImport(bundle){try{let plan=C.importPreview(bundle,state);if(plan.sources.length+state.sources.length>C.LIMIT.source || plan.collections.length+state.collections.length>C.LIMIT.collection)throw Error('Import would exceed library limits');pending={plan,bundle,parcelId:null};renderImportPreview();go('peers');notify('Review incoming recipes before adding them.')}catch(error){notify('Import rejected: '+error.message,true)}}
 function renderImportPreview(){const slot=$('import-preview');if(!pending){slot.className='empty';slot.replaceChildren(h('span',{class:'symbol',text:'↧'}),h('h3',{text:'No incoming recipes yet.'}),h('p',{text:'A received bundle appears here for manual review. Imported watchers will start paused.'}));return;}
   const {plan}=pending;slot.className='';slot.replaceChildren(h('div',{style:'padding:20px'},[
-    h('h3',{id:'import-preview-title','data-focus-key':'import-preview-title',tabindex:'-1',text:plan.sources.length+' source recipes / '+plan.collections.length+' collections waiting'}),h('p',{class:'section-note',text:'Review these URL destinations. Nothing has been fetched, run, or saved. New sources will be paused.'}),
+    h('h3',{id:'import-preview-title','data-focus-key':'import-preview-title',tabindex:'-1',text:plan.sources.length+' source recipes / '+plan.collections.length+' collections waiting'}),h('p',{class:'section-note',text:'Review these URL destinations before adding recipes. Imported sources will be paused; importing does not fetch them. '+(pending.parcelId?'This package stays pending in your Courier Inbox when you close the review. Check storage status before leaving.':'Closing this review drops the preview. Import the file again to review it.')}),
     h('div',{class:'stack'},plan.sources.map(s=>h('div',{class:'row-card'},[h('div',{},[h('strong',{text:s.title}),h('p',{class:'mono',text:s.url}),h('p',{text:s.type+(s.selector?' · '+s.selector:'')})])]))),
     h('div',{class:'row-actions',style:'margin-top:18px;justify-content:flex-start'},[
       action('Import paused recipes',()=>{try{
@@ -3511,7 +3511,7 @@ function renderImportPreview(){const slot=$('import-preview');if(!pending){slot.
         if(pending.parcelId)Q.resolve(state,pending.parcelId,'accepted','Imported '+fresh.sources.length+' paused Lenses and '+fresh.collections.length+' collections');
         state.sources.push(...fresh.sources);state.collections.push(...fresh.collections);pending=null;save();renderImportPreview();notify('Recipes imported. New Lenses are paused.');go('sources');
       }catch(error){notify('Import blocked: '+error.message,true)}},'primary'),
-      action('Discard',()=>{pending=null;renderImportPreview()})
+      action('Close review',()=>{const parcelId=pending?.parcelId;pending=null;renderImportPreview();(parcelId&&focusAction('courier-review:'+parcelId))||focusAction($('top-import'));})
     ])
   ]));
 }
@@ -4064,7 +4064,7 @@ function renderInbox(){
       h('div',{class:'courier-top'},[h('div',{},[h('strong',{text:label}),h('span',{class:'courier-status',text:e.status.toUpperCase()+' · '+e.via})]),h('span',{class:'mini',text:relative(e.receivedAt)})]),
       h('p',{text:count}),h('p',{class:'courier-digest',text:e.id}),
       h('div',{class:'row-actions'},[
-        ...(e.status==='pending'&&good?[action('Review contents',()=>reviewCourier(e.id),'primary'),action('Dismiss',()=>dismissCourier(e.id),'ghost')]:[]),
+        ...(e.status==='pending'&&good?[action('Review contents',()=>reviewCourier(e.id),'primary','','courier-review:'+e.id),action('Dismiss',()=>dismissCourier(e.id),'ghost')]:[]),
         ...(good?[action('Export',()=>exportCourier(e.id))]:[]),action('Delete',()=>{if(!confirm('Permanently delete this Courier package? The tiny acceptance/dismissal receipt remains.'))return;Q.deleteEntry(state,e.id);if(pending?.parcelId===e.id)pending=null;if(pendingPatchCourierId===e.id){pendingPatchCourierId=null;pendingProposal=null;pendingSignedPatch=null;pendingPatchInbound=false;}save();renderImportPreview();})
       ])
     ]));
