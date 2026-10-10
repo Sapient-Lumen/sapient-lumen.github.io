@@ -4493,6 +4493,7 @@ function adoptDiscovery(){try{
     Q.resolve(state,e.id,'accepted','Locally replayed; created paused Lens '+source.id);
   }
   state.sources.push(source);pendingDiscoveryCourierId=null;proofReplay=null;save();go('sources');renderProofWorkbench();
+  focusAction('lens-edit:'+source.id)||focusAction('nav:sources');
   notify('Created PAUSED Lens after independent replay. Review it before enabling checks.');
 }catch(error){notify('Discovery adoption refused: '+error.message,true)}}
 function proofDownload(wrap){try{
