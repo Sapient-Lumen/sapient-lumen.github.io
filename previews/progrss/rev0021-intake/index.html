@@ -3210,7 +3210,7 @@ function renderCollections(){const list=$('collection-list');if(!state.collectio
   list.replaceChildren(...state.collections.map(c=>h('article',{class:'row-card'},[
     h('div',{},[h('h3',{},[h('span',{class:'small-tag',text:'GRAPH'}),h('span',{text:c.title})]),h('p',{text:c.members.length+' members · '+C.compose(state,c.id).length+' matching observations · '+(c.mode||'union').toUpperCase()+' · rev '+(c.version||1)}),h('p',{class:'mono',text:'include: '+(c.include||'everything')+' / exclude: '+(c.exclude||'nothing')})]),
     h('div',{class:'row-actions'},[
-      action('View feed',()=>{activeCollection=c.id;go('home')},'ghost','View feed for collection: '+c.title),action('Edit',()=>openCollection(c),'ghost','Edit collection: '+c.title,'collection-edit:'+c.id),action('Share',()=>{activeCollection=c.id;downloadRecipes()},'ghost','Share collection: '+c.title),
+      action('View feed',()=>{activeCollection=c.id;go('home');focusAction($('search-items'))},'ghost','View feed for collection: '+c.title),action('Edit',()=>openCollection(c),'ghost','Edit collection: '+c.title,'collection-edit:'+c.id),action('Share',()=>{activeCollection=c.id;downloadRecipes()},'ghost','Share collection: '+c.title),
       action('×',event=>{if(collectionDeletionBlocked('collection',c.id,event?.currentTarget))return;if(!confirm('Delete collection '+c.title+'? Its sources remain.'))return;state.collections=state.collections.filter(x=>x.id!==c.id);save()},'danger','Delete collection: '+c.title)
     ])
   ])));
