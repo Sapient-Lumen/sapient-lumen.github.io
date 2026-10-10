@@ -141,6 +141,10 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 /* Ordinary modal form errors stay inside the active dialog. */
 .dialog-error{margin:18px 22px 0;padding:12px 16px;border:1px solid #bb7772;border-radius:9px;background:#422d2c;color:var(--ink);overflow-wrap:anywhere}.dialog-error:focus{outline:2px solid var(--lime);outline-offset:3px}
 
+/* Keep collection fields and native controls inside their assigned grid tracks. */
+#collection-dialog .field{min-width:0;grid-template-columns:minmax(0,1fr)}
+#collection-dialog .field>input,#collection-dialog .field>select{min-width:0;width:100%}
+
 /* Short form dialogs need scrollable headers so footer controls stay reachable. */
 @media(max-height:500px){#lens-dialog .dialog-head,#collection-dialog .dialog-head,#paste-dialog .dialog-head{position:static}}
 </style>
@@ -3254,6 +3258,13 @@ function clearDialogError(id){
   const summary=$(id).querySelector('[data-form-error]');if(!summary)return;
   summary.hidden=true;summary.textContent='';
 }
+function revealDialogError(dialog,summary){
+  const header=dialog.querySelector('.dialog-head');
+  if(header&&getComputedStyle(header).position==='static'){
+    const style=getComputedStyle(summary),inset=Math.max(0,parseFloat(style.outlineWidth)||0)+Math.max(0,parseFloat(style.outlineOffset)||0);
+    dialog.scrollTop=Math.max(0,dialog.scrollTop+summary.getBoundingClientRect().top-dialog.getBoundingClientRect().top-dialog.clientTop-inset);
+  }else dialog.scrollTop=0;
+}
 function reportDialogError(id,message){
   notify(message,true);
   const dialog=$(id),summary=dialog.querySelector('[data-form-error]');
@@ -3261,11 +3272,21 @@ function reportDialogError(id,message){
   const label=id==='lens-dialog'?'Lens error: ':id==='collection-dialog'?'Collection error: ':'';
   summary.textContent=label+message;summary.hidden=false;
   summary.focus({preventScroll:true});
-  const header=dialog.querySelector('.dialog-head');
-  if(header&&getComputedStyle(header).position==='static'){
-    const style=getComputedStyle(summary),inset=Math.max(0,parseFloat(style.outlineWidth)||0)+Math.max(0,parseFloat(style.outlineOffset)||0);
-    dialog.scrollTop=Math.max(0,dialog.scrollTop+summary.getBoundingClientRect().top-dialog.getBoundingClientRect().top-dialog.clientTop-inset);
-  }else dialog.scrollTop=0;
+  revealDialogError(dialog,summary);
+}
+function revealFocusedDialogError(){
+  const summary=document.activeElement;if(!summary||summary.hidden)return;
+  for(const id of ['lens-dialog','collection-dialog','paste-dialog']){
+    const dialog=$(id);if(!dialog.open||dialog.querySelector('[data-form-error]')!==summary)continue;
+    const header=dialog.querySelector('.dialog-head'),style=getComputedStyle(summary);
+    const inset=Math.max(0,parseFloat(style.outlineWidth)||0)+Math.max(0,parseFloat(style.outlineOffset)||0);
+    const bounds=summary.getBoundingClientRect(),box=dialog.getBoundingClientRect();
+    const top=Math.max(box.top+dialog.clientTop,header&&getComputedStyle(header).position==='sticky'?header.getBoundingClientRect().bottom:box.top+dialog.clientTop);
+    const bottom=box.top+dialog.clientTop+dialog.clientHeight,visibleHeight=Math.min(bounds.height,Math.max(0,bottom-top-2*inset));
+    // Resize can restore a sticky header over the focused error. Leave other focus and already visible errors alone.
+    if(bounds.top-inset<top||bounds.top+visibleHeight+inset>bottom)revealDialogError(dialog,summary);
+    return;
+  }
 }
 function show(id){clearDialogError(id);$(id).showModal()}
 function close(id){$(id).close()}
@@ -4917,6 +4938,7 @@ async function exchangeDemo(){try{
 }
 
 // Wire controls.
+window.addEventListener('resize',revealFocusedDialogError);
 document.querySelectorAll('[data-view]').forEach(el=>el.addEventListener('click',()=>go(el.dataset.view)));
 document.querySelectorAll('[data-close]').forEach(el=>el.addEventListener('click',()=>close(el.dataset.close)));
 $('deletion-dependency-dialog').addEventListener('close',()=>{
