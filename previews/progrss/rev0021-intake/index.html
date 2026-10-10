@@ -4438,7 +4438,9 @@ function addScoutLens(item,report){
     const clean=C.cleanRecipe({id:C.uid('lens'),type,url,title:item.title,mode,selector,
       titleSelector:item.titleSelector||'',linkSelector:item.linkSelector||'',threshold:24,author:'local'});
     state.sources.push({...clean,enabled:false,origin:'site-scout',lastScan:'',lastError:'',lastOutcome:'waiting'});
-    save();go('sources');notify('Added PAUSED Lens: '+clean.title+'. Edit and enable it when ready.');
+    save();go('sources');
+    focusAction('lens-edit:'+clean.id)||focusAction('nav:sources');
+    notify('Added PAUSED Lens: '+clean.title+'. Edit and enable it when ready.');
   }catch(err){notify('Scout: '+err.message,true)}
 }
 function analyzeScout(body,linkHeader='',fromCurrentLoad=false){
