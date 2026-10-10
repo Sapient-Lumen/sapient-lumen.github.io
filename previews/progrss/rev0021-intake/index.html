@@ -128,6 +128,8 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 .arena-footnote{margin:3px 18px 17px;line-height:1.7}
 @media(max-width:750px){.arena-entry{grid-template-columns:1fr}.arena-controls{padding-left:10px;padding-right:10px}}
 
+/* Persistent storage status stays in main content and inside modal dialogs. */
+.vault-notice{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0;overflow-wrap:anywhere}.vault-notice p{flex:1 1 240px;margin:0;line-height:1.55}.vault-notice .btn{flex:0 1 auto;white-space:normal}dialog>.vault-notice{margin:12px 22px 18px}
 </style>
 </head>
 <body>
@@ -154,6 +156,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
   </div>
 </aside>
 <main><p role="note" style="border:1px solid #efd6a1;padding:12px">Experimental file-first GUI candidate derived from rev0021. Use synthetic data. WebRTC is deferred.</p>
+  <div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div>
   <div class="topline"><div class="crumb">PROJECT / <b>PROGRSS</b> / <span id="crumb-view">OBSERVATORY</span></div><div class="actions"><button class="btn ghost sm" id="top-scout">⌁ Discover</button><button class="btn ghost sm" id="top-import">↥ Import</button><button class="btn ghost sm" id="top-export">↧ Share recipes</button><button class="btn primary sm" id="top-add">＋ New lens</button></div></div>
   <section class="view" id="view-home">
     <div class="hero"><div class="hero-copy"><p class="eyebrow">A new kind of feed / Early experiment 019</p><h1>Follow the parts of the internet <em>that matter.</em></h1><p class="lede">Turn any public page into a Lens. Combine RSS, watched regions and the collections of friends. Prove your filters with reproducible snapshots. No feed server or extension required.</p><div class="hero-links"><button class="btn primary" id="hero-add">＋ Make your first Lens</button><button class="btn ghost" id="hero-demo">Try the offline demo ↗</button></div></div><div class="hero-art" aria-hidden="true"><div class="art-line"></div><span class="orb a"></span><span class="orb b"></span><span class="orb c"></span><span class="orb d"></span><div class="art-label">public web → <b>observation</b><br>observation → <b>collective lens</b><br>collective lens → <b>your attention</b></div></div></div>
@@ -430,11 +433,11 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
   <div class="footer"><span>ProgRSS / rev0021 / FIXTURE GARDEN + REPLAYABLE SYNTHETIC PACKS</span><span>A single webpage, a hackable Bash companion, no extension.</span></div>
 </main>
 </div>
-<dialog id="lens-dialog" aria-labelledby="lens-title"><div class="dialog-head"><div><h2 id="lens-title">Make a Lens</h2><p>One way to sense a piece of the web.</p></div><button class="xbtn" type="button" data-close="lens-dialog" aria-label="Close">×</button></div><form id="lens-form"><div class="dialog-content fields"><input type="hidden" id="lens-id"><div class="field wide"><label for="lens-name">A human name</label><input id="lens-name" required maxlength="130" placeholder="e.g. Independent Web Notes"></div><div class="field"><label for="lens-type">What are we watching?</label><select id="lens-type"><option value="rss">RSS / Atom / JSON Feed</option><option value="page">Webpage</option></select></div><div class="field"><label for="lens-url">Public HTTP(S) URL</label><input id="lens-url" type="url" required placeholder="https://example.org/feed.xml"></div><div class="field wide page-only" hidden><label for="lens-selector">CSS selector (optional for region mode)</label><input id="lens-selector" placeholder="main article, .updates, #news-list"><small>For cards, choose the repeating element. For regions, empty means main or the whole body.</small></div><div class="field page-only" hidden><label for="lens-mode">Observation type</label><select id="lens-mode"><option value="region">Watch text changes</option><option value="cards">Extract repeated cards</option></select></div><div class="field card-only" hidden><label for="lens-title-selector">Title inside each card (CSS)</label><input id="lens-title-selector" placeholder="h2"></div><div class="field card-only" hidden><label for="lens-link-selector">Link inside each card (CSS)</label><input id="lens-link-selector" placeholder="a[href]"></div><div class="field page-only" hidden><label for="lens-threshold">Changed characters threshold</label><input id="lens-threshold" type="number" min="0" max="10000" value="24"></div><div class="field page-only" hidden><label class="inline-check"><input type="checkbox" id="lens-ignore-numbers"> Ignore changing numbers when diffing</label></div><div class="field"><label for="lens-include">Only show if text contains (comma-separated)</label><input id="lens-include" placeholder="optional: security, release, notes"></div><div class="field"><label for="lens-exclude">Ignore if text contains</label><input id="lens-exclude" placeholder="optional: ads, sponsored"></div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="lens-dialog">Cancel</button><button class="btn primary" type="submit">Save Lens</button></div></form></dialog>
-<dialog id="collection-dialog" aria-labelledby="collection-title"><div class="dialog-head"><div><h2 id="collection-title">Weave a collection</h2><p>Feeds from feeds, not just a folder of URLs.</p></div><button class="xbtn" type="button" data-close="collection-dialog" aria-label="Close">×</button></div><form id="collection-form"><div class="dialog-content fields"><input id="collection-id" type="hidden"><div class="field wide"><label for="collection-name">Collection name</label><input id="collection-name" required maxlength="130" placeholder="e.g. My weird little research network"></div><div class="field"><label for="collection-include">Include (comma-separated)</label><input id="collection-include" placeholder="release, tools"></div><div class="field"><label for="collection-exclude">Exclude (comma-separated)</label><input id="collection-exclude" placeholder="sponsored, sale"></div><div class="field wide"><label for="collection-mode">Algebraic operator</label><select id="collection-mode"><option value="union">∪ Union — show any member</option><option value="intersection">∩ Intersection — require every member AND 2 distinct sources</option><option value="subtract">− Subtract — begin with base member, remove the others</option></select><small>Only HTTP(S) permalinks can corroborate across Lenses; item IDs without links remain source-local.</small></div><div class="field wide"><label>Members — select sources and/or collections</label><div class="member-list" id="collection-members"></div></div><div class="field wide" id="collection-base-field" hidden><label for="collection-base">Subtraction base — keep signals from this member, then subtract the remaining members</label><select id="collection-base"><option value="">Choose a base member</option></select></div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="collection-dialog">Cancel</button><button class="btn primary" type="submit">Save collection</button></div></form></dialog>
-<dialog id="paste-dialog" aria-labelledby="paste-title"><div class="dialog-head"><div><h2 id="paste-title">Paste a snapshot</h2><p>Works entirely offline. The simplest way to watch anything.</p></div><button class="xbtn" type="button" data-close="paste-dialog" aria-label="Close">×</button></div><form id="paste-form"><div class="dialog-content"><input id="paste-source-id" type="hidden"><div class="field"><label for="paste-raw">RSS, JSON Feed, or complete page HTML</label><textarea id="paste-raw" rows="11" placeholder="Paste the fetched source of your feed or watched webpage…"></textarea></div><div class="field" style="margin-top:13px"><label for="paste-file">Or choose a local file</label><input id="paste-file" type="file" accept=".html,.htm,.xml,.rss,.atom,.json,.txt,text/html,text/xml,application/json"></div><div class="banner" style="margin-top:15px">Pasted HTML is parsed in an inert document and only plain text is displayed. No page scripts are run.</div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="paste-dialog">Cancel</button><button class="btn primary" type="submit">Process snapshot</button></div></form></dialog>
+<dialog id="lens-dialog" aria-labelledby="lens-title"><div class="dialog-head"><div><h2 id="lens-title">Make a Lens</h2><p>One way to sense a piece of the web.</p></div><button class="xbtn" type="button" data-close="lens-dialog" aria-label="Close">×</button></div><form id="lens-form"><div class="dialog-content fields"><input type="hidden" id="lens-id"><div class="field wide"><label for="lens-name">A human name</label><input id="lens-name" required maxlength="130" placeholder="e.g. Independent Web Notes"></div><div class="field"><label for="lens-type">What are we watching?</label><select id="lens-type"><option value="rss">RSS / Atom / JSON Feed</option><option value="page">Webpage</option></select></div><div class="field"><label for="lens-url">Public HTTP(S) URL</label><input id="lens-url" type="url" required placeholder="https://example.org/feed.xml"></div><div class="field wide page-only" hidden><label for="lens-selector">CSS selector (optional for region mode)</label><input id="lens-selector" placeholder="main article, .updates, #news-list"><small>For cards, choose the repeating element. For regions, empty means main or the whole body.</small></div><div class="field page-only" hidden><label for="lens-mode">Observation type</label><select id="lens-mode"><option value="region">Watch text changes</option><option value="cards">Extract repeated cards</option></select></div><div class="field card-only" hidden><label for="lens-title-selector">Title inside each card (CSS)</label><input id="lens-title-selector" placeholder="h2"></div><div class="field card-only" hidden><label for="lens-link-selector">Link inside each card (CSS)</label><input id="lens-link-selector" placeholder="a[href]"></div><div class="field page-only" hidden><label for="lens-threshold">Changed characters threshold</label><input id="lens-threshold" type="number" min="0" max="10000" value="24"></div><div class="field page-only" hidden><label class="inline-check"><input type="checkbox" id="lens-ignore-numbers"> Ignore changing numbers when diffing</label></div><div class="field"><label for="lens-include">Only show if text contains (comma-separated)</label><input id="lens-include" placeholder="optional: security, release, notes"></div><div class="field"><label for="lens-exclude">Ignore if text contains</label><input id="lens-exclude" placeholder="optional: ads, sponsored"></div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="lens-dialog">Cancel</button><button class="btn primary" type="submit">Save Lens</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div></dialog>
+<dialog id="collection-dialog" aria-labelledby="collection-title"><div class="dialog-head"><div><h2 id="collection-title">Weave a collection</h2><p>Feeds from feeds, not just a folder of URLs.</p></div><button class="xbtn" type="button" data-close="collection-dialog" aria-label="Close">×</button></div><form id="collection-form"><div class="dialog-content fields"><input id="collection-id" type="hidden"><div class="field wide"><label for="collection-name">Collection name</label><input id="collection-name" required maxlength="130" placeholder="e.g. My weird little research network"></div><div class="field"><label for="collection-include">Include (comma-separated)</label><input id="collection-include" placeholder="release, tools"></div><div class="field"><label for="collection-exclude">Exclude (comma-separated)</label><input id="collection-exclude" placeholder="sponsored, sale"></div><div class="field wide"><label for="collection-mode">Algebraic operator</label><select id="collection-mode"><option value="union">∪ Union — show any member</option><option value="intersection">∩ Intersection — require every member AND 2 distinct sources</option><option value="subtract">− Subtract — begin with base member, remove the others</option></select><small>Only HTTP(S) permalinks can corroborate across Lenses; item IDs without links remain source-local.</small></div><div class="field wide"><label>Members — select sources and/or collections</label><div class="member-list" id="collection-members"></div></div><div class="field wide" id="collection-base-field" hidden><label for="collection-base">Subtraction base — keep signals from this member, then subtract the remaining members</label><select id="collection-base"><option value="">Choose a base member</option></select></div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="collection-dialog">Cancel</button><button class="btn primary" type="submit">Save collection</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div></dialog>
+<dialog id="paste-dialog" aria-labelledby="paste-title"><div class="dialog-head"><div><h2 id="paste-title">Paste a snapshot</h2><p>Works entirely offline. The simplest way to watch anything.</p></div><button class="xbtn" type="button" data-close="paste-dialog" aria-label="Close">×</button></div><form id="paste-form"><div class="dialog-content"><input id="paste-source-id" type="hidden"><div class="field"><label for="paste-raw">RSS, JSON Feed, or complete page HTML</label><textarea id="paste-raw" rows="11" placeholder="Paste the fetched source of your feed or watched webpage…"></textarea></div><div class="field" style="margin-top:13px"><label for="paste-file">Or choose a local file</label><input id="paste-file" type="file" accept=".html,.htm,.xml,.rss,.atom,.json,.txt,text/html,text/xml,application/json"></div><div class="banner" style="margin-top:15px">Pasted HTML is parsed in an inert document and only plain text is displayed. No page scripts are run.</div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="paste-dialog">Cancel</button><button class="btn primary" type="submit">Process snapshot</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div></dialog>
 <input type="file" id="import-file" accept=".json,.opml,.xml,application/json,text/xml" hidden>
-<dialog id="trace-dialog" aria-labelledby="trace-dialog-title"><div class="dialog-head"><div><h2 id="trace-dialog-title">Why this signal?</h2><p>Local derivation path; no external verification implied.</p></div><button class="xbtn" type="button" data-close="trace-dialog" aria-label="Close">×</button></div><pre id="trace-dialog-result" class="trace-full"></pre><div class="dialog-footer"><button class="btn ghost" type="button" data-close="trace-dialog">Close</button></div></dialog>
+<dialog id="trace-dialog" aria-labelledby="trace-dialog-title"><div class="dialog-head"><div><h2 id="trace-dialog-title">Why this signal?</h2><p>Local derivation path; no external verification implied.</p></div><button class="xbtn" type="button" data-close="trace-dialog" aria-label="Close">×</button></div><pre id="trace-dialog-result" class="trace-full"></pre><div class="dialog-footer"><button class="btn ghost" type="button" data-close="trace-dialog">Close</button></div><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div></dialog>
 <div id="toast" role="status" aria-live="polite" hidden></div>
 <script id="progrss-core">
 /* ProgRSS rev0004: deterministic browser core. No network, DOM mutations or storage on load. */
@@ -1080,6 +1083,8 @@ const DB_NAME='progrss-vault', DB_VERSION=1, STORE='parts', CURRENT='progrss.rev
 const PARTS=['version','sources','collections','items','snapshots','fixtures','inbox','receipts','subscriptions','publications','patchPins','keyRotations','recoveryPolicies','recoveryReceipts','charterHistory','charterClaims','gossipCards','witnessPins','merklePins','merkleReceipts','proofRequests','proofSightings','proofForks','fixturePacks'];
 const blank=()=>({version:11,sources:[],collections:[],items:[],snapshots:{},fixtures:[],inbox:[],receipts:[],subscriptions:[],publications:[],patchPins:[],keyRotations:[],recoveryPolicies:[],recoveryReceipts:[],charterHistory:[],charterClaims:[],gossipCards:[],witnessPins:[],merklePins:[],merkleReceipts:[],proofRequests:[],proofSightings:[],proofForks:[],fixturePacks:[]});
 let db=null,mode='memory',writer=Promise.resolve(),known=new Map(),warning='';
+const statusListeners=new Set();
+function onStatusChange(listener){statusListeners.add(listener);return ()=>statusListeners.delete(listener);}
 function localGet(){
   try{
     const raw=localStorage.getItem(CURRENT)||localStorage.getItem(LEGACY);
@@ -1132,7 +1137,7 @@ function idbWrite(state){
     let tx;
     try{tx=db.transaction(STORE,'readwrite');const store=tx.objectStore(STORE);
       for(const key of changes)store.put(JSON.parse(values.get(key)),key);
-    }catch(err){reject(err);return;}
+    }catch(err){try{tx?.abort();}catch{}reject(err);return;}
     tx.oncomplete=()=>{for(const key of changes)known.set(key,values.get(key));resolve();};
     tx.onerror=()=>reject(tx.error||Error('IndexedDB write failed'));
     tx.onabort=()=>reject(tx.error||Error('IndexedDB write aborted'));
@@ -1151,7 +1156,7 @@ async function init(){
     const state=normalize(saved.exists?saved.state:old);
     if(saved.exists){for(const key of PARTS)if(saved.state[key]!==undefined)known.set(key,JSON.stringify(saved.state[key]));}
     else await idbWrite(state);
-    db.onclose=()=>{db=null;mode='memory';warning='Vault closed unexpectedly. Export a backup.';};
+    db.onclose=()=>{db=null;mode='memory';warning='Vault closed unexpectedly. Export a backup.';for(const listener of statusListeners)try{listener();}catch{}};
     return state;
   }catch(err){try{db?.close();}catch{}db=null;
     warning='IndexedDB not available ('+String(err?.message||err).slice(0,100)+'). Browser storage varies on file://.';
@@ -1160,7 +1165,7 @@ async function init(){
   }
 }
 function save(state){
-  if(mode==='indexeddb'&&db)return idbWrite(state).catch(err=>{warning='Vault write failed: '+String(err?.message||err).slice(0,100)+'; export a private backup.';throw err;});
+  if(mode==='indexeddb'&&db)return idbWrite(state).then(()=>{warning='';return true;},err=>{warning='Vault write failed: '+String(err?.message||err).slice(0,100)+'; export a private backup.';throw err;});
   if(mode==='localStorage')return Promise.resolve(localSave(state));
   return Promise.resolve(false);
 }
@@ -1169,7 +1174,7 @@ async function requestPersistence(){
   return Boolean(await root.navigator.storage.persist());
 }
 function info(){return {mode,warning};}
-root.ProgRSSVault=Object.freeze({init,save,info,requestPersistence,normalize});
+root.ProgRSSVault=Object.freeze({init,save,info,requestPersistence,normalize,onStatusChange});
 })(globalThis);
 
 </script>
@@ -3060,10 +3065,37 @@ const emptyState=()=>({version:11,sources:[],collections:[],items:[],snapshots:{
 let trustReviewToken=0,pendingSignedEdition=null,trustVerified=null;
 let state=emptyState(), currentView='home', activeCollection='all', bridge=false, autoTimer=null, busy=false, toastTimer;
 let lastClinicAnalysis=null;
-function persist(){V.save(state).catch(err=>notify('Vault write failed. Export a private backup: '+String(err.message||err),true));}
-function renderVault(){const info=V.info();$('vault-status').textContent='Local vault: '+info.mode+ (info.mode==='memory'?' · BACKUP REQUIRED':'');$('vault-dot').classList.toggle('online',info.mode==='indexeddb');$('vault-dot').title=info.warning||'Local-only storage';}
+// The latest requested snapshot owns the status. Older completions cannot clear
+// a newer pending/failed write, including synchronous serialization failures.
+let vaultAttempt=0,vaultPhase='idle',vaultSaveError='';
+async function persist(){
+  const attempt=++vaultAttempt;vaultPhase='saving';vaultSaveError='';renderVault();
+  try{
+    const saved=await V.save(state);if(saved===false)throw Error(V.info().warning||'Browser storage is unavailable');
+    if(attempt!==vaultAttempt)return false;
+    vaultPhase='saved';vaultSaveError='';renderVault();return true;
+  }catch(err){
+    if(attempt===vaultAttempt){vaultPhase='failed';vaultSaveError=String(err?.message||err);renderVault();}
+    return false;
+  }
+}
+function renderVault(){
+  const info=V.info(),phase=info.mode==='memory'?'unavailable':vaultPhase,failed=['failed','unavailable'].includes(phase),pending=phase==='saving';
+  const message=phase==='unavailable'?'Browser storage is unavailable. Export a private backup of the current library before leaving this tab.':
+    phase==='failed'?'The latest library update was not saved. Export a private backup of the current library before leaving this tab.':
+    pending?'Saving the current library to browser storage… Keep this tab open until saving finishes.':
+    phase==='saved'?'Latest update saved to browser storage. Keep private backups; browser data can be cleared.':
+    'Browser storage is available. Keep private backups; browser data can be cleared.';
+  $('vault-status').textContent='Local vault: '+info.mode+(failed?' · BACKUP REQUIRED':pending?' · SAVING':'');
+  $('vault-dot').classList.toggle('online',info.mode==='indexeddb'&&!failed&&!pending);
+  $('vault-dot').title=vaultSaveError||info.warning||'Local-only browser storage';
+  for(const node of document.querySelectorAll('[data-vault-message]'))if(node.textContent!==message)node.textContent=message;
+  for(const panel of document.querySelectorAll('[data-vault-panel]'))panel.classList.toggle('warning',failed);
+  for(const button of document.querySelectorAll('[data-vault-backup]'))button.hidden=false;
+}
+V.onStatusChange(renderVault);
 function notify(message,error=false){const t=$('toast');t.textContent=message;t.classList.toggle('error',error);t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.hidden=true,6500)}
-function save(){persist();render()}
+function save(){const pending=persist();render();return pending;}
 function action(label,fn,kind='ghost'){return h('button',{class:'btn sm '+kind, type:'button',text:label,onclick:fn})}
 function originTitle(item){return state.sources.find(s=>s.id===item.sourceId)?.title||'Unknown source'}
 function relative(iso){const d=Date.parse(iso);if(!d)return 'undated';const sec=Math.max(0,Math.round((Date.now()-d)/1000));return sec<60?'just now':sec<3600?Math.floor(sec/60)+'m ago':sec<86400?Math.floor(sec/3600)+'h ago':new Date(d).toLocaleDateString();}
@@ -3338,7 +3370,7 @@ async function doImport(file){if(!file)return;if(file.size>12_000_000)return not
     if(parsed.schema==='progrss.private.v1' && parsed.state){if(!confirm('This is a private backup and will REPLACE your current library. Continue?'))return;
       const b=parsed.state;if(!b||![2,3,4,5,6,7,8,9,10,11].includes(b.version)||!Array.isArray(b.sources)||!Array.isArray(b.collections)||!Array.isArray(b.items)||b.items.length>1200||b.sources.length>200||b.collections.length>200)throw Error('Invalid backup');
       C.validateBackupRecipes({schema:C.SCHEMA,sources:b.sources,collections:b.collections});
-      const validated=V.normalize(b);validated.fixtures=(validated.fixtures||[]).map(C.cleanFixture);Q.initializeState(validated);L.stateInit(validated);for(const e of validated.inbox)Q.validateCapsule(e.capsule);state=validated;pending=null;renderImportPreview();save();notify('Private backup restored');go('home');return;
+      const validated=V.normalize(b);validated.fixtures=(validated.fixtures||[]).map(C.cleanFixture);Q.initializeState(validated);L.stateInit(validated);for(const e of validated.inbox)Q.validateCapsule(e.capsule);state=validated;pending=null;renderImportPreview();save();notify('Private backup loaded into this tab. Check storage status before leaving.');go('home');return;
     }
     if([Q.SCHEMA,C.PATCH_SCHEMA,G.SCHEMA,C.SCHEMA,D.SCHEMA,L.SCHEMA,T.SCHEMA,W.HEAD,W.SIGHT,E.REQUEST,E.REPLY,E.FORK,Y.SCHEMA].includes(parsed.schema)){receiveCourier(parsed,'file');return;}
     previewImport(parsed);
@@ -3503,7 +3535,7 @@ function clinicSaveCase(){try{
   const {recipe,result}=clinicReport();if(state.fixtures.length>=C.LIMIT.fixtures)throw Error('Specimen limit reached (16). Export/archive and remove old cases first.');
   const [before,after]=clinicHtml();const name=$('clinic-test-name').value.trim()||'Case '+(state.fixtures.length+1);
   const fixture=C.cleanFixture({id:C.uid('case'),sourceId:recipe.id,title:name,expected:$('clinic-expected').value,before,after,createdAt:new Date().toISOString(),note:'Observed: '+result.outcome});
-  state.fixtures.push(fixture);save();notify('Stored regression specimen privately. It will not enter recipe sharing.');
+  state.fixtures.push(fixture);save();notify('Regression specimen added to this tab. It will not enter recipe sharing.');
 }catch(error){notify('Could not save specimen: '+error.message,true)}}
 function clinicSuite(){
   try{const recipe=clinicDraft(),fixtures=state.fixtures.filter(f=>f.sourceId===recipe.id);
@@ -3607,7 +3639,7 @@ function gardenSave(){try{const pack=gardenAttested();if(!Array.isArray(state.fi
  if(state.fixturePacks.length>=12)throw Error('Garden shelf full (12 packs)');
  state.fixturePacks.unshift(pack);
  if(gardenCourierId){const row=state.inbox.find(e=>e.id===gardenCourierId&&e.status==='pending');if(row)Q.resolve(state,gardenCourierId,'accepted','Explicitly reviewed fictional DOM pack');}
- gardenCourierId=null;save();notify('Fixture pack saved after explicit review. Nothing changed on your Lenses.');
+ gardenCourierId=null;save();notify('Fixture pack added to this tab after review. Nothing changed on your Lenses.');
 }catch(e){notify('Garden save blocked: '+e.message,true)}}
 function gardenExport(){try{const pack=gardenAttested();
  if(!confirm('SHARE THIS PUBLIC, UNSIGNED FICTIONAL PACK?\n\n'+pack.title+'\n'+pack.cases.length+' cases / '+pack.digest+'\n\nEven fictional text can reveal details if copied from real pages. Confirm you reviewed the ENTIRE JSON.'))return;
@@ -3865,7 +3897,7 @@ async function applyPatch(){
 // Checksums are deliberately NOT signatures or trusted human identities.
 function receiveCourier(packet,via='file'){
   try{const result=Q.receive(state,packet,via);save();go('peers');
-    notify(result.duplicate?'Already in your Courier Inbox (same content digest).':'Courier package saved locally · checksum verified · waiting for review.');
+    notify(result.duplicate?'Already in your Courier Inbox (same content digest).':'Courier package added to this tab · checksum verified · waiting for review.');
     return result;
   }catch(error){notify('Courier refused: '+error.message,true);throw error;}
 }
@@ -3936,7 +3968,7 @@ function dismissCourier(id){
     if(merkleCourierId===id){merkleCourierId=null;merkleArtifact=null;renderMerkle();}
     if(exchangeCourierId===id){exchangeCourierId=null;exchangeArtifact=null;renderExchange();}
     if(gardenCourierId===id){gardenCourierId=null;gardenDraft=null;}
-    save();renderImportPreview();renderProposalReview();notify('Package dismissed; local receipt saved.');
+    save();renderImportPreview();renderProposalReview();notify('Package dismissed in this tab; receipt added to the current library.');
   }catch(error){notify('Dismiss refused: '+error.message,true)}
 }
 function exportCourier(id){try{const e=state.inbox.find(x=>x.id===id);if(!e)throw Error('Package not found');const pkg=Q.validateCapsule(e.capsule);
@@ -4467,7 +4499,7 @@ async function ledgerApprove(){try{
   if(!confirm('APPLY SIGNED CHARTER '+ledgerArtifact.action.toUpperCase()+'?\n\nOld owner: '+ledgerArtifact.subject.keyId+'\nSequence '+ledgerArtifact.sequence+'\nPrevious '+ledgerArtifact.priorDigest+'\n\nThis changes YOUR pinned recovery rules only. Verify issuer and guardian roster out of band. Incoming packets from a revoked charter must fail.'))return;
   await J.approve(state,ledgerArtifact);
   if(ledgerCourierId){const entry=state.inbox.find(e=>e.id===ledgerCourierId&&e.status==='pending');if(entry)Q.resolve(state,entry.id,'accepted','Manually approved signed charter '+ledgerArtifact.action+' #'+ledgerArtifact.sequence);}
-  ledgerCourierId=null;save();await renderLedger();notify('Charter change accepted locally. Signed evidence preserved in your private audit trail.');
+  ledgerCourierId=null;save();await renderLedger();notify('Charter change accepted in this tab. Signed evidence added to the current library.');
 }catch(err){notify('Charter adoption blocked: '+err.message,true)}}
 async function ledgerImport(file){if(!file)return;try{if(file.size>35000)throw Error('Change claim file too large');await ledgerLoad(JSON.parse(await file.text()));notify('Verified signed claim imported for local review. No trust changed.');}catch(err){notify('Import refused: '+err.message,true)}}
 async function ledgerPeer(){try{if(!ledgerArtifact)throw Error('No claim');await sendPayload('progrss.capsule.chunk.v1',Q.makeCapsule(ledgerArtifact,{note:'Trust Ledger; explicit review'}));notify('Signed claim sent for manual review.');}catch(err){notify('WebRTC send blocked: '+err.message,true)}}
@@ -4733,7 +4765,7 @@ async function exchangeRecord(){try{
  if(!confirm('Keep these TWO verified, contradictory signed heads in your private local evidence journal?'))return;
  const result=await E.recordFork(state,exchangeArtifact);
  if(exchangeCourierId){const row=state.inbox.find(x=>x.id===exchangeCourierId&&x.status==='pending');if(row)Q.resolve(state,row.id,'accepted','Signed conflicting heads archived as evidence only');}
- exchangeCourierId=null;persist();await renderExchange();renderInbox();notify(result.duplicate?'Dossier already recorded.':'Signed fork evidence saved locally. No identity pin changed.');
+ exchangeCourierId=null;persist();await renderExchange();renderInbox();notify(result.duplicate?'Dossier already recorded.':'Signed fork evidence added to this tab. No identity pin changed.');
  }catch(e){notify('Dossier refused: '+e.message,true)}
 }
 async function exchangeOpenFork(){try{if(!state.proofForks.length)throw Error('No signed same-size conflict has been recorded');await exchangeLoad(state.proofForks[0].artifact);notify('Latest contradictory signed roots opened. Export manually if you choose.');}catch(e){notify('Fork review: '+e.message,true)}}
@@ -4805,6 +4837,7 @@ $('hero-demo').addEventListener('click',loadDemo);$('home-docs').addEventListene
 $('auto-interval').addEventListener('change',()=>{applySchedule();notify(Number($('auto-interval').value)?'Open-tab scheduling enabled. Only due Lenses are checked, with per-site pacing.':'Scheduled checks disabled.')});
 $('refresh-due').addEventListener('click',refreshDue);
 $('docs-persist').addEventListener('click',async()=>{try{const ok=await V.requestPersistence();notify(ok?'Browser approved durable-origin storage. Keep backups anyway.':'Browser did not grant durable storage (may be unsupported on file://).',!ok)}catch(err){notify('Durable storage: '+err.message,true)}});
+document.querySelectorAll('[data-vault-backup]').forEach(button=>button.addEventListener('click',exportBackup));
 $('docs-backup').addEventListener('click',exportBackup);$('docs-opml').addEventListener('click',()=>download('ProgRSS-feeds.opml',C.makeOPML(state),'text/xml'));
 $('clinic-source').addEventListener('change',e=>clinicSelect(e.target.value));$('clinic-mode').addEventListener('change',()=>{toggleClinicCardFields();resetForge();});$('forge-run').addEventListener('click',runForge);
 $('arena-run').addEventListener('click',runArena);$('arena-demo').addEventListener('click',arenaDemo);$('arena-export').addEventListener('click',exportArena);
