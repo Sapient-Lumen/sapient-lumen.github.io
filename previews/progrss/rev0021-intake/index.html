@@ -540,6 +540,7 @@ function extractPage(raw, source) {
   if(!nodes.length && !selector) nodes=[doc.body];
   if(!nodes.length)throw Error('Selector matched nothing; previous snapshot kept');
   if(source.mode==='cards'){
+    if(nodes.length>200)throw Error('Selector matched '+nodes.length+' cards; limit is 200. Narrow the CSS selector; previous snapshot kept');
     const collisions=new Map();
     return {mode:'cards',cards:nodes.slice(0,200).map((node,index)=>{
       let titleNode,linkNode;
