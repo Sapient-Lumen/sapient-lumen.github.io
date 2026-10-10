@@ -3303,11 +3303,18 @@ function cleanHttpCache(response,previous={},notModified=false){
   const lastModified=validDate(response.lastModified)?response.lastModified:(notModified?previous.lastModified||'':'');
   return {etag,lastModified};
 }
+const refreshAttempts=new WeakMap();
+function refreshRecipeKey(s){try{return JSON.stringify(C.cleanRecipe(s))}catch{return null}}
 async function checkSource(s,{manual=false}={}){
+  if(!s||!state.sources.includes(s))return;
   if(!s.enabled)return notify('This Lens is paused. Enable it explicitly before fetching.',true);
   if(manual&&s.pulse?.needsReview&&!confirm('The server asked for a very long delay. Override the automatic hold and check '+s.title+' now?'))return;
+  const library=state,sourceId=s.id,version=s.version,recipe=refreshRecipeKey(s),attempt={};
+  refreshAttempts.set(s,attempt);
+  const current=()=>state===library&&state.sources.find(x=>x.id===sourceId)===s&&s.version===version&&refreshRecipeKey(s)===recipe&&refreshAttempts.get(s)===attempt;
   try{
     notify('Checking '+s.title+'…');const response=await requestRemote(s.url,bridge?(s.httpCache||{}):{});
+    if(!current())return;
     const now=Date.now(),status=response.status||200;
     s.lastScan=new Date(now).toISOString();s.lastHttpStatus=status;s.checkCount=(Number(s.checkCount)||0)+1;
     if(status===429||status===503){
@@ -3326,24 +3333,25 @@ async function checkSource(s,{manual=false}={}){
     s.pulse=P.advance(s.pulse,count>0?'changed':'quiet',now,response);
     save();
   }catch(error){
+    if(!current())return;
     s.lastError=String(error.message).slice(0,300);s.lastOutcome='error';s.pulse=P.advance(s.pulse,'error',Date.now());
     save();notify('Check failed; '+P.format(s.pulse)+' · '+s.lastError,true);
   }
 }
 async function refreshAll(){
   if(busy)return;
-  const sources=state.sources.filter(s=>s.enabled&&!s.pulse?.needsReview);
+  const library=state,sources=library.sources.filter(s=>s.enabled&&!s.pulse?.needsReview);
   if(!sources.length)return notify('No eligible enabled lenses. Enable a Lens or review a server-imposed hold.');
   busy=true;$('refresh-all').disabled=true;$('refresh-due').disabled=true;
-  try{for(const s of sources){await checkSource(s,{manual:true});if(document.hidden)break;}}
+  try{for(const s of sources){if(state!==library)break;await checkSource(s,{manual:true});if(document.hidden)break;}}
   finally{busy=false;$('refresh-all').disabled=false;$('refresh-due').disabled=false;}
 }
 async function refreshDue(){
   if(busy)return;
-  const plan=P.schedule(state.sources);
+  const library=state,plan=P.schedule(library.sources);
   if(!plan.due.length)return notify('Nothing due now · '+plan.later.length+' waiting · '+plan.held.length+' held.');
   busy=true;$('refresh-all').disabled=true;$('refresh-due').disabled=true;
-  try{for(const s of plan.due){if(document.hidden)break;await checkSource(s);}}
+  try{for(const s of plan.due){if(state!==library||document.hidden)break;await checkSource(s);}}
   finally{busy=false;$('refresh-all').disabled=false;$('refresh-due').disabled=false;}
 }
 function applySchedule(){
