@@ -3077,7 +3077,7 @@ function renderHome(){
   const all=C.composeEvidence(state,activeCollection),filtered=all.filter(r=>!search||((r.item.title||'')+' '+(r.item.summary||'')+' '+originTitle(r.item)).toLocaleLowerCase().includes(search));
   const exportName=activeCollection==='all'?'Every lens':(state.collections.find(c=>c.id===activeCollection)?.title||activeCollection);
   $('feed-export-scope').textContent='Collection feed export: '+Math.min(all.length,250)+' of '+all.length+' entries from "'+exportName+'". Search does not limit this file. Includes saved observation text and links.';
-  renderTraceChoices();
+  renderTraceChoices();traceSelected();
   if(!filtered.length){list.replaceChildren(h('div',{class:'empty'},[
     h('span',{class:'symbol',text:'✳'}),h('h3',{text:all.length?'Nothing matches this search.':'Your observations will appear here.'}),
     h('p',{text:state.sources.length?'Use Check or Paste on a Lens to capture updates. Collection filters may also exclude all items.':'Start with a Lens or try the offline sample to experience feed composition.'}),
@@ -3172,12 +3172,17 @@ const viewNames={home:'OBSERVATORY',sources:'LENSES',scout:'SITE SCOUT',collecti
 function go(page){currentView=page;Object.keys(viewNames).forEach(name=>$('view-'+name).hidden=page!==name);document.querySelectorAll('[data-view]').forEach(b=>{if(b.dataset.view===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});$('crumb-view').textContent=viewNames[page];if(page==='docs')$('doc-render').textContent=$('progrss-docs').textContent.trim();if(page==='peers')renderImportPreview();if(page==='clinic')clinicSelect($('clinic-source').value);render();}
 function show(id){$(id).showModal()}
 function close(id){$(id).close()}
-function openLens(s=null){const f=$('lens-form');f.reset();$('lens-id').value=s?.id||'';$('lens-name').value=s?.title||'';$('lens-url').value=s?.url||'';$('lens-type').value=s?.type||'rss';$('lens-mode').value=s?.mode||'region';$('lens-selector').value=s?.selector||'';$('lens-title-selector').value=s?.titleSelector||'';$('lens-link-selector').value=s?.linkSelector||'';$('lens-include').value=s?.include||'';$('lens-exclude').value=s?.exclude||'';$('lens-threshold').value=s?.threshold??24;$('lens-ignore-numbers').checked=Boolean(s?.ignoreNumbers);$('lens-title').textContent=s?'Revise Lens':'Make a Lens';toggleLensFields();show('lens-dialog');}
+function openLens(s=null){const f=$('lens-form');f.reset();$('lens-id').value=s?.id||'';$('lens-name').value=s?.title||'';$('lens-url').value=s?.url||'';$('lens-type').value=s?.type||'rss';$('lens-mode').value=s?.mode||'region';$('lens-selector').value=s?.selector||'';$('lens-title-selector').value=s?.titleSelector||'';$('lens-link-selector').value=s?.linkSelector||'';$('lens-include').value=s?.include||'';$('lens-exclude').value=s?.exclude||'';$('lens-threshold').value=s?(s.threshold??1):24;$('lens-ignore-numbers').checked=Boolean(s?.ignoreNumbers);$('lens-title').textContent=s?'Revise Lens':'Make a Lens';toggleLensFields();show('lens-dialog');}
 function toggleLensFields(){let page=$('lens-type').value==='page';document.querySelectorAll('.page-only').forEach(el=>el.hidden=!page);document.querySelectorAll('.card-only').forEach(el=>el.hidden=!page||$('lens-mode').value!=='cards');}
 function saveLens(e){e.preventDefault();let id=$('lens-id').value;const old=state.sources.find(s=>s.id===id);if(!id)id=C.uid('lens');let s;
   try {s=C.cleanRecipe({id,title:$('lens-name').value,type:$('lens-type').value,url:$('lens-url').value,mode:$('lens-mode').value,selector:$('lens-selector').value,titleSelector:$('lens-title-selector').value,linkSelector:$('lens-link-selector').value,threshold:$('lens-threshold').value,ignoreNumbers:$('lens-ignore-numbers').checked,include:$('lens-include').value,exclude:$('lens-exclude').value,author:old?.author||'local',version:old?(old.version||1)+1:1});}catch(error){return notify(error.message,true)}
   if(!old&&state.sources.length>=C.LIMIT.source)return notify('The lens limit is 200',true);
-  if(old){Object.assign(old,s);old.lastError='';delete old.pulse;delete old.httpCache;delete state.snapshots[id];notify('Recipe revised. Its page baseline and polling plan were reset.')}else state.sources.push({...s,enabled:true,lastScan:'',lastError:'',origin:'local'});
+  if(old){
+    let changed=true;try{const prior=C.cleanRecipe(old);changed=['type','url','mode','selector','titleSelector','linkSelector','threshold','ignoreNumbers','include','exclude'].some(key=>prior[key]!==s[key]);}catch{}
+    Object.assign(old,s);
+    if(changed){old.lastError='';delete old.pulse;delete old.httpCache;delete state.snapshots[id];notify('Recipe revised. Its page baseline and polling plan were reset.')}
+    else notify('Lens details revised. Its saved baseline and polling plan were kept.');
+  }else state.sources.push({...s,enabled:true,lastScan:'',lastError:'',origin:'local'});
   close('lens-dialog');save();go('sources');
 }
 function openCollection(col=null){$('collection-form').reset();$('collection-id').value=col?.id||'';$('collection-name').value=col?.title||'';$('collection-include').value=col?.include||'';$('collection-exclude').value=col?.exclude||'';$('collection-mode').value=col?.mode||'union';$('collection-title').textContent=col?'Revise collection':'Weave a collection';
@@ -3196,7 +3201,7 @@ function saveCollection(e){e.preventDefault();const old=state.collections.find(c
   const candidate={id,title:$('collection-name').value,mode,include:$('collection-include').value,exclude:$('collection-exclude').value,author:old?.author||'local',version:old?(old.version||1)+1:1,members:memberIds.map(v=>{const [kind,...rest]=v.split(':');return{kind,id:rest.join(':')}})};
   try{
     const clean=C.cleanCollection(candidate);if(old)state.collections=state.collections.map(c=>c.id===id?clean:c);else{if(state.collections.length>=C.LIMIT.collection)throw Error('Collection limit reached');state.collections.push(clean)};
-    C.exportBundle(state,'all');
+    C.validateBackupRecipes({schema:C.SCHEMA,sources:state.sources.map(C.cleanRecipe),collections:state.collections.map(C.cleanCollection)});
   }catch(error){if(old)state.collections=state.collections.map(c=>c.id===id?old:c);else state.collections=state.collections.filter(c=>c.id!==id);return notify('Cannot save collection: '+error.message,true)}
   close('collection-dialog');save();go('collections');}
 function openPaste(s){$('paste-form').reset();$('paste-source-id').value=s.id;$('paste-title').textContent='Capture: '+s.title;show('paste-dialog');}
