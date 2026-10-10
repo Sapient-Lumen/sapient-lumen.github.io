@@ -3311,7 +3311,7 @@ function previewImport(bundle){try{let plan=C.importPreview(bundle,state);if(pla
 function renderImportPreview(){const slot=$('import-preview');if(!pending){slot.className='empty';slot.replaceChildren(h('span',{class:'symbol',text:'↧'}),h('h3',{text:'No incoming recipes yet.'}),h('p',{text:'A received bundle appears here for manual review. Imported watchers will start paused.'}));return;}
   const {plan}=pending;slot.className='';slot.replaceChildren(h('div',{style:'padding:20px'},[
     h('h3',{text:plan.sources.length+' source recipes / '+plan.collections.length+' collections waiting'}),h('p',{class:'section-note',text:'Review these URL destinations. Nothing has been fetched, run, or saved. New sources will be paused.'}),
-    h('div',{class:'stack'},plan.sources.slice(0,35).map(s=>h('div',{class:'row-card'},[h('div',{},[h('strong',{text:s.title}),h('p',{class:'mono',text:s.url}),h('p',{text:s.type+(s.selector?' · '+s.selector:'')})])]))),
+    h('div',{class:'stack'},plan.sources.map(s=>h('div',{class:'row-card'},[h('div',{},[h('strong',{text:s.title}),h('p',{class:'mono',text:s.url}),h('p',{text:s.type+(s.selector?' · '+s.selector:'')})])]))),
     h('div',{class:'row-actions',style:'margin-top:18px;justify-content:flex-start'},[
       action('Import paused recipes',()=>{try{
         let fresh=plan;
@@ -3333,7 +3333,7 @@ async function doImport(file){if(!file)return;if(file.size>12_000_000)return not
     if(parsed.schema==='progrss.private.v1' && parsed.state){if(!confirm('This is a private backup and will REPLACE your current library. Continue?'))return;
       const b=parsed.state;if(!b||![2,3,4,5,6,7,8,9,10,11].includes(b.version)||!Array.isArray(b.sources)||!Array.isArray(b.collections)||!Array.isArray(b.items)||b.items.length>1200||b.sources.length>200||b.collections.length>200)throw Error('Invalid backup');
       C.validateBackupRecipes({schema:C.SCHEMA,sources:b.sources,collections:b.collections});
-      const validated=V.normalize(b);validated.fixtures=(validated.fixtures||[]).map(C.cleanFixture);Q.initializeState(validated);L.stateInit(validated);for(const e of validated.inbox)Q.validateCapsule(e.capsule);state=validated;save();notify('Private backup restored');go('home');return;
+      const validated=V.normalize(b);validated.fixtures=(validated.fixtures||[]).map(C.cleanFixture);Q.initializeState(validated);L.stateInit(validated);for(const e of validated.inbox)Q.validateCapsule(e.capsule);state=validated;pending=null;renderImportPreview();save();notify('Private backup restored');go('home');return;
     }
     if([Q.SCHEMA,C.PATCH_SCHEMA,G.SCHEMA,C.SCHEMA,D.SCHEMA,L.SCHEMA,T.SCHEMA,W.HEAD,W.SIGHT,E.REQUEST,E.REPLY,E.FORK,Y.SCHEMA].includes(parsed.schema)){receiveCourier(parsed,'file');return;}
     previewImport(parsed);
