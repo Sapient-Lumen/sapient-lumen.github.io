@@ -3426,7 +3426,8 @@ function renderImportPreview(){const slot=$('import-preview');if(!pending){slot.
     ])
   ]));
 }
-async function doImport(file){if(!file)return;if(file.size>12_000_000)return notify('Import file exceeds 12MB',true);try{const raw=await file.text();if(/\.opml$|\.xml$/i.test(file.name)){const recipes=C.parseOPML(raw);previewImport({schema:C.SCHEMA,sources:recipes,collections:[]});return;}
+let importReadToken=0;
+async function doImport(file){if(!file)return;const token=++importReadToken;if(file.size>12_000_000)return notify('Import file exceeds 12MB',true);try{const raw=await file.text();if(token!==importReadToken)return;if(/\.opml$|\.xml$/i.test(file.name)){const recipes=C.parseOPML(raw);previewImport({schema:C.SCHEMA,sources:recipes,collections:[]});return;}
     const parsed=JSON.parse(raw);
     if(parsed.schema==='progrss.private.v1' && parsed.state){if(!confirm('This is a private backup and will REPLACE your current library. Continue?'))return;
       const b=parsed.state;if(!b||![2,3,4,5,6,7,8,9,10,11].includes(b.version)||!Array.isArray(b.sources)||!Array.isArray(b.collections)||!Array.isArray(b.items)||b.items.length>1200||b.sources.length>200||b.collections.length>200)throw Error('Invalid backup');
@@ -3435,7 +3436,7 @@ async function doImport(file){if(!file)return;if(file.size>12_000_000)return not
     }
     if([Q.SCHEMA,C.PATCH_SCHEMA,G.SCHEMA,C.SCHEMA,D.SCHEMA,L.SCHEMA,T.SCHEMA,W.HEAD,W.SIGHT,E.REQUEST,E.REPLY,E.FORK,Y.SCHEMA].includes(parsed.schema)){receiveCourier(parsed,'file');return;}
     previewImport(parsed);
-  }catch(error){notify('Import failed: '+error.message,true)}
+  }catch(error){if(token===importReadToken)notify('Import failed: '+error.message,true)}
 }
 function loadDemo(){if(state.sources.some(s=>s.id==='demo-blog'))return notify('Offline demo already present.');const feed={id:'demo-blog',title:'DEMO · Indie web posts',url:'https://example.org/blog.xml',type:'rss',include:'',exclude:'',selector:'',enabled:false,version:1,author:'ProgRSS sample',origin:'demo'};const page={id:'demo-projects',title:'DEMO · Project board changes',url:'https://example.org/projects',type:'page',mode:'cards',selector:'.project',include:'',exclude:'',enabled:false,version:1,author:'ProgRSS sample',origin:'demo'};
   state.sources.push(feed,page);processContent(feed,`<?xml version="1.0"?><rss version="2.0"><channel><title>Offline Sample</title><item><guid>paper-1</guid><title>Making the web observable again</title><link>https://example.org/notes/one</link><description>A thought experiment about local-first publishing.</description><pubDate>Fri, 09 Oct 2026 00:00:00 GMT</pubDate></item><item><guid>paper-2</guid><title>A new open-source filtering engine</title><link>https://example.org/notes/two</link><description>Rule recipes can be maintained collectively.</description></item></channel></rss>`);
