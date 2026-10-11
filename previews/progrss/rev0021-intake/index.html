@@ -3200,7 +3200,7 @@ function renderHome(){
   if(!filtered.length){list.replaceChildren(h('div',{class:'empty'},[
     h('span',{class:'symbol',text:'✳'}),h('h3',{text:all.length?'Nothing matches this search.':'Your observations will appear here.'}),
     h('p',{text:all.length?'Try a different search or clear Search observations. Search applies within the selected collection.':state.sources.length?'Use Check or Paste on a Lens to capture updates. Collection filters may also exclude all items.':'Start with a Lens or try the offline sample to experience feed composition.'}),
-    action(state.sources.length?'View Lenses':'Make a Lens',()=>state.sources.length?go('sources'):openLens(),'primary')
+    action(state.sources.length?'View Lenses':'Make a Lens',()=>{if(state.sources.length){go('sources');focusAction($('sources-add'))}else openLens()},'primary')
   ]));return;}
   list.replaceChildren(...(filtered.length>150?[h('p',{class:'section-note',style:'padding:14px 19px 0;margin-bottom:0',text:'Showing 150 of '+filtered.length+' matching feed entries (shared links are combined). Refine Search observations to narrow the results.'})]:[]),...filtered.slice(0,150).map(({item,witnesses})=>{
     let safeLink='';try{if(item.url)safeLink=C.safeUrl(item.url)}catch{}
