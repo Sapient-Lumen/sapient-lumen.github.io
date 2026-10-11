@@ -48,7 +48,8 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 .scout-results{display:grid;gap:11px;max-height:650px;overflow:auto;padding-right:3px}
 .scout-result{border-radius:9px;border:1px solid var(--line);background:#132018;padding:13px;min-width:0}
 .scout-result h4{font-size:13px;margin:0 0 7px}.scout-result p{color:var(--muted);font-size:11px;margin:5px 0;overflow-wrap:anywhere}
-.scout-result .mini{color:var(--teal)}.scout-result .btn{margin-top:6px}
+.scout-result .mini{color:var(--teal)}.scout-result .btn{margin-top:6px}.scout-result .btn[aria-disabled="true"]{opacity:.55;cursor:progress}
+.scout-intake.dragging{outline:2px dashed var(--lime);outline-offset:5px}.scout-preview{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}.scout-preview ol{padding-left:20px;margin:8px 0}.scout-preview li{margin:8px 0;font-size:12px;overflow-wrap:anywhere}.scout-preview li p{margin:3px 0}.scout-snapshot{margin-top:14px}.scout-snapshot summary{cursor:pointer;color:var(--teal)}.scout-snapshot summary:focus-visible{outline:2px solid var(--lime);outline-offset:3px}.scout-drop-note{font-size:11px;color:var(--muted);margin:7px 0}
 .pulse-health{display:inline-block;color:var(--teal);font:10px var(--mono);margin-right:8px}
 .pulse-health.problem{color:var(--red)}
 @media(max-width:950px){.scout-grid{grid-template-columns:1fr}}
@@ -195,20 +196,25 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
   <section class="view" id="view-sources" hidden><div class="section-title"><div><p class="eyebrow">01 / Sensing</p><h2>Your Lenses</h2><p>Feed URLs and webpage-watch recipes, versioned and yours.</p></div><button class="btn primary" id="sources-add">＋ Create lens</button></div><p class="section-note">RSS, Atom and JSON Feed are ordinary sources. For page watchers, choose a CSS region or repeated cards. Browser CORS may block arbitrary network fetches; you can always paste HTML or run the optional Bash bridge. Imported recipes begin paused.</p><div class="content-panel pulse-schedule" style="margin-bottom:15px"><div class="panel-tools"><strong>◷ The Patient Web · adaptive Pulse</strong><span class="mini">Quiet doubling · 429 / 503 Retry-After · ETag / Cache-Control · 45s host gap</span></div><p class="section-note" id="pulse-summary">Planning checks locally…</p><p class="mini">Schedules remain off until enabled in Observatory. Manual checks bypass ordinary due dates; extraordinarily long server delays require explicit review. Any page reload retains per-Lens plan dates in the local vault. No cloud scheduler.</p></div><div id="source-list" class="stack"></div></section>
   <section class="view" id="view-scout" hidden>
     <div class="section-title"><div><p class="eyebrow">01.5 / Discovery</p><h2>Site Scout</h2><p>From a homepage to its advertised feeds—or a starting point for watching a webpage without RSS.</p></div><button class="btn sm ghost" id="scout-demo">✳ Demonstration</button></div>
-    <div class="banner" style="margin-bottom:18px">Site Scout only reads the page you explicitly scan. Discovered links are NOT fetched automatically. Newly created Lenses begin paused until you choose to enable them.</div>
+    <div class="banner" style="margin-bottom:18px">Only an address you choose to scan or check is fetched. Saved content is analyzed locally, without running its scripts. Creating a Lens is your choice; new Lenses start paused.</div>
     <div class="scout-grid">
-      <div class="peer-card">
-        <h3>Investigate a website</h3><p>Browser fetch works when the site allows ProgRSS to read its response. You can also paste page source or load a saved page/feed below. Those routes need no CLI.</p>
-        <div class="field"><label for="scout-url">Site or feed URL (required for saved content too)</label><input type="url" id="scout-url" placeholder="https://example.org/blog" spellcheck="false"></div>
-        <div class="scout-actions"><button class="btn primary sm" id="scout-fetch">⌁ Fetch &amp; discover</button><button class="btn ghost sm" id="scout-analyze">Analyze pasted content</button><button class="btn ghost sm" id="scout-clear">Clear</button></div>
-        <details id="scout-offline-help" class="scout-offline-help"><summary>How to scan without fetching</summary><ol><li>Open the page in your browser. Copy its final address into Site or feed URL above so relative links resolve correctly.</li><li>Use View Page Source and copy the HTML, or save the page as HTML. For a feed, use its RSS, Atom or JSON contents. Copying only the visible page text loses feed links. Leave HTTP Link header empty unless it came from this page.</li><li>Paste below and choose Analyze pasted content, or choose a saved file below to load and analyze it immediately.</li></ol><p>Use a file under 2 MB and content under 2 million characters. Scout reads the supplied source; it does not run the page's scripts or inspect embedded frames. A saved page may omit content loaded by scripts.</p><p>Opening a site in another tab does not grant ProgRSS cross-site access (CORS). Direct Fetch also rejects redirects and can fail on network or timeout errors. A generic browser error cannot identify the cause. An optional local CLI bridge is a separate route: use the local ProgRSS page it serves, not this hosted preview.</p></details>
-        <div class="field" style="margin-top:14px"><label for="scout-html">Offline HTML / RSS / Atom / JSON Feed</label><textarea id="scout-html" rows="8" spellcheck="false" placeholder="Paste a homepage's HTML, or a feed's contents. This stays in memory only and is not saved to the vault."></textarea></div>
-        <div class="field" style="margin-top:12px"><label for="scout-file">Or load and analyze a saved page or feed</label><input type="file" id="scout-file" accept=".html,.htm,.rss,.atom,.xml,.json,.txt,text/html,text/xml,application/json"></div>
-        <div class="field" style="margin-top:12px"><label for="scout-header">HTTP Link header (optional; needed to replay header proofs)</label><input id="scout-header" spellcheck="false" placeholder="&lt;/feed.xml&gt;; rel=alternate; type=application/rss+xml"></div><p class="mini" style="margin-top:12px">No wildcard URL guessing; declared &lt;link rel=alternate&gt; and HTTP Link headers are preferred. Candidate recipes require your explicit adoption.</p>
+      <div class="peer-card scout-intake" id="scout-intake">
+        <h3>Start with a site or feed</h3><p>Scout finds advertised feeds and previews page watchers. Scan an address, paste saved content, or drop a saved page/feed here.</p>
+        <div class="field"><label for="scout-url">Site or feed address</label><input type="url" id="scout-url" placeholder="https://example.org/blog" spellcheck="false" aria-describedby="scout-address-note"></div>
+        <p id="scout-address-note" class="mini">For saved content, Scout fills this from an explicit source-address hint when available.</p>
+        <div class="scout-actions"><button class="btn primary sm" id="scout-fetch">⌁ Scan address</button><button class="btn ghost sm" id="scout-clear">Clear</button></div>
+        <div class="field" style="margin-top:14px"><label for="scout-file">Load a saved page or feed</label><input type="file" id="scout-file" accept=".html,.htm,.rss,.atom,.xml,.json,.txt,text/html,text/xml,application/json"></div>
+        <p class="scout-drop-note">Or drop one file here. Up to 2 MB. Scout analyzes it automatically.</p>
+        <details id="scout-snapshot" class="scout-snapshot"><summary>Paste or inspect source content</summary>
+          <div class="field" style="margin-top:12px"><label for="scout-html">HTML / RSS / Atom / JSON Feed</label><textarea id="scout-html" rows="8" spellcheck="false" placeholder="Paste source content. Scout analyzes it automatically; it stays in this tab and is not saved to the vault."></textarea></div>
+          <div class="field" style="margin-top:12px"><label for="scout-header">HTTP Link header (optional)</label><input id="scout-header" spellcheck="false" placeholder="&lt;/feed.xml&gt;; rel=alternate; type=application/rss+xml"></div>
+          <button class="btn ghost sm" id="scout-analyze" style="margin-top:12px">Analyze now</button>
+        </details>
+        <details id="scout-offline-help" class="scout-offline-help"><summary>When a site cannot be read</summary><p>Direct scanning works only when the site allows this page to read its response. Browser security can block cross-site reads; opening another tab does not grant access. Redirects are rejected, and network or timeout errors can also stop a scan. A generic browser error cannot identify which happened.</p><ol><li>Save the page as HTML, then drop that file here. Scout uses a saved-address or canonical hint if present. Otherwise, enter the page's final address above.</li><li>Alternatively, use View Page Source and paste the HTML above. Feed contents can be pasted too. Visible page text alone loses feed links.</li></ol><p>Content is limited to 2 million characters. Saved pages may omit content loaded by scripts. HTTP Link headers can be read cross-site only if the publisher exposes them; add a header above only if it belongs to this snapshot. Scout never guesses feed paths or fetches discovered links automatically.</p></details>
       </div>
       <div class="peer-card">
-        <h3>Scout findings</h3><p>Public web feeds are advertised with MIME-typed alternate links. When none are available, try a region or repeated-card watcher and refine it in Patch Clinic.</p>
-        <div id="scout-status" class="scout-status" aria-live="polite">Enter a site URL and fetch, paste HTML, or try the demo.</div>
+        <h3>Scout findings</h3><p>Preview what Scout found before creating a Lens. Advertised feeds can be checked here with one click; page-watch samples come from the content already supplied.</p>
+        <div id="scout-status" class="scout-status" aria-live="polite">Scan an address, drop a saved file, paste source content, or try the demo.</div>
         <button type="button" class="btn ghost sm" id="scout-use-saved" hidden>Use saved content</button><p id="scout-findings-context" class="mini" hidden></p>
         <div id="scout-results" class="scout-results"><div class="empty"><span class="symbol">⌁</span><h3>Nothing scouted yet</h3><p>Every page might contain a feed—or become one.</p></div></div>
       </div>
@@ -461,7 +467,17 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
     <div class="content-panel" style="margin-top:18px"><div class="panel-tools"><strong>Moving targets · edited RSS/Atom/JSON Feed entries</strong><span class="mini">Same entry ID · content changed · dated local events</span></div><div class="stack" id="commons-edits"></div></div>
     <p class="section-note">Select “Draft intersection” to prefill an ordinary collection editor. Review its rules and click Save yourself. A cross-host overlap is a discovery clue, not a proof of independent witnesses; publisher-controlled IDs and redirects are not verified by ProgRSS.</p>
   </section>
-  <section class="view" id="view-docs" hidden><div class="section-title"><div><p class="eyebrow">04 / Expedition journal</p><h2>Field notes</h2><p>Research, design, safety assumptions, donor preservation, test plan and ranked experiments—all carried inside this file.</p></div><div class="toolbar-small"><button class="btn sm ghost" id="docs-backup">↧ Private backup</button><button class="btn sm ghost" id="docs-restore">↥ Restore private backup</button><input id="docs-restore-file" type="file" accept=".json,application/json" hidden><button class="btn sm ghost" id="docs-opml">↧ OPML</button><button class="btn sm ghost" id="docs-persist">Ask for durable storage</button></div></div><div class="banner warning" style="margin-bottom:17px">A page opened with file:// may not keep browser storage consistently across paths and browsers. Export a private backup of your observations. Moving this file to a different origin changes its storage namespace.</div><p class="mini">Private restore accepts JSON backups up to 32,000,000 bytes. This is an input limit, not a memory or storage guarantee. Export your current library before replacing it. Export preserves every serialized JSON state field without checking its contents. Restore validates before replacement; exactness covers the 24 saved JSON state fields only. Views, scheduling choices and signing keys are separate. Files above this limit remain full archives that this app cannot restore.</p><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p><pre class="docs" id="doc-render"></pre></section>
+  <section class="view" id="view-docs" hidden><div class="section-title"><div><p class="eyebrow">04 / Expedition journal</p><h2>Field notes</h2><p>Research, design, safety assumptions, donor preservation, test plan and ranked experiments—all carried inside this file.</p></div><div class="toolbar-small"><button class="btn sm ghost" id="docs-backup">↧ Private backup</button><button class="btn sm ghost" id="docs-restore">↥ Restore private backup</button><input id="docs-restore-file" type="file" accept=".json,application/json" hidden><button class="btn sm ghost" id="docs-opml">↧ OPML</button><button class="btn sm ghost" id="docs-persist">Ask for durable storage</button></div></div><div class="banner warning" style="margin-bottom:17px">A page opened with file:// may not keep browser storage consistently across paths and browsers. Export a private backup of your observations. Moving this file to a different origin changes its storage namespace.</div><p class="mini">Private restore accepts JSON backups up to 32,000,000 bytes. This is an input limit, not a memory or storage guarantee. Export your current library before replacing it. Export preserves every serialized JSON state field without checking its contents. Restore validates before replacement; exactness covers the 24 saved JSON state fields only. Views, scheduling choices and signing keys are separate. Files above this limit remain full archives that this app cannot restore.</p><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p><section class="content-panel" id="private-restore-review" aria-labelledby="private-restore-title" style="margin:18px 0;padding:20px" hidden>
+<h3 id="private-restore-title" data-focus-key="private-restore-title" tabindex="-1">Review private backup</h3>
+<p id="private-restore-file-summary" class="mini" style="overflow-wrap:anywhere"></p>
+<p id="private-restore-incoming" class="dependency-summary"></p>
+<p id="private-restore-current" class="section-note"></p>
+<p id="private-restore-validation" class="banner" style="overflow-wrap:anywhere"></p>
+<details><summary>Review saved state fields</summary><ul id="private-restore-fields" style="overflow-wrap:anywhere"></ul></details>
+<p class="mini">Replacement removes the current library from this tab. Export the current library first if you want to keep it. Restored Lens enabled states are retained; your existing open-tab schedule remains separate. Browser storage can still fail. Keep the original backup private.</p>
+<p class="mini">This review is temporary. Reloading or selecting another Import / Restore file discards it. Reviewing does not fetch sources or change your library.</p>
+<div class="row-actions" style="justify-content:flex-start;margin-top:16px"><button class="btn sm ghost" type="button" id="private-restore-backup-current">Export current private backup</button><button class="btn sm ghost" type="button" id="private-restore-cancel">Discard review</button><button class="btn sm primary" type="button" id="private-restore-apply">Replace with reviewed backup…</button></div>
+</section><pre class="docs" id="doc-render"></pre></section>
   <div class="footer"><span>ProgRSS / rev0021 / FIXTURE GARDEN + REPLAYABLE SYNTHETIC PACKS</span><span>A single webpage, a hackable Bash companion, no extension.</span></div>
 </main>
 </div>
@@ -1004,13 +1020,95 @@ function chooseCandidates(records,siteUrl,options={}){
   out.sort((a,b)=>Number(a.confidence==='verify')-Number(b.confidence==='verify'));
   return out;
 }
+function sourceKind(raw){
+  let start=raw.trimStart();
+  // Identify the root without parsing prolog directives or resolving entities.
+  // This classifier does not make a document safe; the XML guard below does
+  // the separate fail-closed check before a feed parser is called.
+  while(start.startsWith('<')){
+    let end=-1;
+    if(start.startsWith('<!--')){const at=start.indexOf('-->');if(at<0)break;end=at+3;}
+    else if(start.startsWith('<?')){const at=start.indexOf('?>');if(at<0)break;end=at+2;}
+    else if(/^<!doctype\b/i.test(start)){
+      let quote='',brackets=0;
+      for(let i=9;i<start.length;i++){const c=start[i];if(quote){if(c===quote)quote='';continue;}if(c==='"'||c==="'"){quote=c;continue;}if(c==='[')brackets++;else if(c===']')brackets--;else if(c==='>'&&brackets===0){end=i+1;break;}}
+      if(end<0)break;
+    }else break;
+    start=start.slice(end).trimStart();
+  }
+  if(start.startsWith('{'))return 'json';
+  return /^<(?:[\w.-]+:)?(?:rss|feed|rdf)\b/i.test(start)?'xml-feed':'html';
+}
+function prepareFeedXml(raw){
+  // Presentation instructions are irrelevant to feed entries. Remove only real
+  // xml-stylesheet PIs in this parsing copy. Complete comments and CDATA are
+  // matched first and returned verbatim, including any PI-looking examples.
+  const copy=raw.replace(/<!--[\s\S]*?-->|<!\[CDATA\[[\s\S]*?\]\]>|<\?[\s\S]*?\?>/g,part=>
+    /^<\?xml-stylesheet(?:\s|\?>)/.test(part)?'':part);
+  const declarations=copy.replace(/<!--[\s\S]*?-->|<!\[CDATA\[[\s\S]*?\]\]>/g,'');
+  if(/<!(?:doctype|entity)\b|<\?(?!xml(?:\s|\?>))/i.test(declarations))throw Error('Scout does not parse XML feeds with DTD, entity declarations or unsupported processing instructions. Use an RSS/Atom copy without those directives.');
+  return copy;
+}
+
+function scoutFragment(raw){
+  // Template content belongs to a separate inert document. Never adopt, clone
+  // or append these nodes to the live page. Only text and raw attributes leave.
+  const template=root.document?.createElement('template');
+  if(!template?.content)throw Error('This browser cannot safely analyze saved HTML: template support is required.');
+  template.innerHTML=raw;
+  return template.content;
+}
+function scoutHead(raw){
+  const match=raw.match(/<head\b[^>]*>([\s\S]*?)<\/head\s*>/i);
+  return {head:scoutFragment((match?match[1]:raw.slice(0,MAX_HEAD)).slice(0,MAX_HEAD))};
+}
+function pagePreview(doc,candidate,sourceUrl){
+  const nodes=candidate.selector?Array.from(doc.querySelectorAll(candidate.selector)):Array.from(doc.querySelectorAll('main'));
+  if(candidate.mode==='cards')return {kind:'cards',count:nodes.length,items:nodes.slice(0,3).map(node=>{
+    const heading=node.querySelector(candidate.titleSelector||'h1,h2,h3,h4'),link=node.querySelector(candidate.linkSelector||'a[href]');
+    let url='';try{const href=link?.getAttribute('href');if(href)url=C.safeUrl(href,sourceUrl);}catch{}
+    return {title:C.text(heading?.textContent||node.textContent,180),summary:C.text(node.textContent,240),url};
+  })};
+  return {kind:'region',text:C.text((nodes.length?nodes:[doc]).map(node=>node.textContent||'').join(' '),500)};
+}
+function inferSource(raw){
+  if(typeof raw!=='string'||!raw.trim()||raw.length>C.LIMIT.characters)return null;
+  const parsingXml=sourceKind(raw)==='xml-feed'?prepareFeedXml(raw):null;
+  const hint=(values,basis)=>{
+    const urls=[...new Set(values.flatMap(value=>{try{return [C.safeUrl(value)]}catch{return []}}))];
+    return urls.length===1?{url:urls[0],basis}:null;
+  };
+  // Hints are unverified metadata. They never start a request and never replace
+  // an explicitly entered address. File names and base href are not provenance.
+  const saved=raw.slice(0,16000).match(/<!--\s*saved from url=\(\d+\)(https?:\/\/[^\s<>]+)\s*-->/i);
+  if(saved){const found=hint([saved[1]],'saved-page address');if(found)return found;}
+  try{
+    const json=JSON.parse(raw);
+    if(json&&Array.isArray(json.items)&&/^https?:\/\/(www\.)?jsonfeed\.org\/version\/1(\.1)?\/?$/.test(json.version||''))return hint([json.feed_url],'JSON Feed feed_url');
+  }catch{}
+  if(typeof root.DOMParser!=='function')return null;
+  try{
+    const doc=parsingXml!==null?new root.DOMParser().parseFromString(parsingXml,'application/xml'):null,top=doc?.documentElement;
+    if(top&&!doc.querySelector('parsererror')&&['feed','rss','rdf'].includes(top.localName?.toLowerCase())){
+      const channel=top.localName.toLowerCase()==='rss'?Array.from(top.children).find(x=>x.localName?.toLowerCase()==='channel'):top;
+      const links=Array.from(channel?.children||[]).filter(x=>x.localName?.toLowerCase()==='link'&&(x.getAttribute('rel')||'').toLowerCase().split(/\s+/).includes('self'));
+      return hint(links.map(x=>x.getAttribute('href')),'feed self link');
+    }
+    const head=scoutHead(raw);
+    return hint(Array.from(head.head.querySelectorAll('link[rel][href]')).filter(x=>(x.getAttribute('rel')||'').toLowerCase().split(/\s+/).includes('canonical')).map(x=>x.getAttribute('href')),'HTML canonical link');
+  }catch{return null;}
+}
+function feedPreview(feed){return {kind:'feed',count:feed.items.length,items:feed.items.slice(0,3).map(item=>({title:C.text(item.title,180),summary:C.text(item.summary,240),url:item.url||''}))};}
+function previewFeed(raw,url){const kind=sourceKind(raw);if(kind==='html')throw Error('This address did not return RSS, Atom or JSON Feed content');const feed=C.parseFeed(kind==='xml-feed'?prepareFeedXml(raw):raw,url);return {title:feed.title,format:feed.type==='json'?'JSON Feed':feed.type==='atom'?'Atom':'RSS',...feedPreview(feed)};}
 function suggestPageRegions(doc){
-  const suggestions=[];
+  const suggestions=[],groups=[];
   const probes=['main article','article','main .post','main .entry','.h-entry','.post','.entry','.news-item','main li'];
   for(const selector of probes){
-    const n=doc.querySelectorAll(selector).length;
-    if(n>=2&&n<=200){suggestions.push({kind:'page',mode:'cards',selector,titleSelector:'h1,h2,h3,h4',linkSelector:'a[href]',
-      title:'Watch '+selector+' cards',format:'Page watcher',confidence:'heuristic',count:n});}
+    const nodes=Array.from(doc.querySelectorAll(selector)),n=nodes.length;
+    if(n>=2&&n<=200&&!groups.some(group=>group.length===n&&group.every((node,i)=>node===nodes[i]))){
+      groups.push(nodes);suggestions.push({kind:'page',mode:'cards',selector,titleSelector:'h1,h2,h3,h4',linkSelector:'a[href]',
+        title:'Watch '+selector+' cards',format:'Page watcher',confidence:'heuristic',count:n});
+    }
     if(suggestions.length===3)break;
   }
   suggestions.push({kind:'page',mode:'region',selector:doc.querySelector('main')?'main':'',
@@ -1020,31 +1118,30 @@ function suggestPageRegions(doc){
 function scanMarkup(raw,siteUrl,options={}){
   if(typeof raw!=='string'||raw.length>C.LIMIT.characters)throw Error('Site Scout can inspect at most 2 million characters');
   const sourceUrl=C.safeUrl(siteUrl);
-  // Full feed documents are accepted only after actual feed parsing.
-  try{let f=C.parseFeed(raw,sourceUrl);return {siteUrl:sourceUrl,title:f.title,kind:'direct-feed',
-    candidates:[{kind:'feed',url:sourceUrl,title:f.title,format:f.type==='json'?'JSON Feed':f.type==='atom'?'Atom':'RSS',
-      mime:'',confidence:'parsed',origin:'body'}],recommendations:[],count:f.items.length};}
-  catch { /* Not a supported feed: attempt HTML head discovery instead. */ }
-  if(typeof root.DOMParser!=='function')throw Error('Site Scout markup parsing needs DOMParser; use the webpage or CLI scout.');
-  // Parse a HEAD-ONLY surrogate. Remote images, frames and body subresources never
-  // enter this inert parse tree. The original page scripts are never run.
-  const match=raw.match(/<head\b[^>]*>([\s\S]*?)<\/head\s*>/i);
-  const head=(match?match[1]:raw.slice(0,MAX_HEAD)).slice(0,MAX_HEAD)
-    .replace(/<\s*(script|style|iframe|object|svg|template)\b[^>]*>[\s\S]*?<\s*\/\s*\1\s*>/gi,'')
-    .replace(/<\s*(img|source|track|embed|meta)\b[^>]*>/gi,'');
-  const doc=new root.DOMParser().parseFromString('<!doctype html><html><head>'+head+'</head><body></body></html>','text/html');
+  const kind=sourceKind(raw);
+  if(kind!=='html'){
+    const f=C.parseFeed(kind==='xml-feed'?prepareFeedXml(raw):raw,sourceUrl);return {siteUrl:sourceUrl,title:f.title,kind:'direct-feed',
+      candidates:[{kind:'feed',url:sourceUrl,title:f.title,format:f.type==='json'?'JSON Feed':f.type==='atom'?'Atom':'RSS',
+        mime:'',confidence:'parsed',origin:'body',preview:feedPreview(f)}],recommendations:[],count:f.items.length};
+  }
+  if(!/<(?:!doctype\s+html|html|head|body|main|article|section|div|p|ul|ol|h[1-6]|link)\b/i.test(raw))throw Error('This content is not a supported feed or HTML page. Use page source rather than visible text.');
+  const doc=scoutHead(raw);
   const items=Array.from(doc.head.querySelectorAll('link[rel][href]')).slice(0,140).map(el=>({
     href:el.getAttribute('href'),rel:el.getAttribute('rel'),type:el.getAttribute('type'),title:el.getAttribute('title')
   }));
   const baseHref=doc.head.querySelector('base[href]')?.getAttribute('href')||'';
   const title=C.text(doc.head.querySelector('title')?.textContent||new URL(sourceUrl).hostname,150);
-  // Page-region suggestions require a second, still-inert document constructed
-  // from the sanitized HTML used by the existing Patch Clinic.
-  const safeDoc=new root.DOMParser().parseFromString(C.staticHtml(raw),'text/html');
-  const recommendations=suggestPageRegions(safeDoc);
+  const safeDoc=scoutFragment(raw);
+  // Strip non-reading content only after inert parsing; stripping is not the
+  // resource-safety boundary. Nested template content stays outside the scan.
+  for(const node of safeDoc.querySelectorAll('script,style,iframe,object,svg,template,noscript,video,audio,head,title'))node.remove();
+  const recommendations=suggestPageRegions(safeDoc).flatMap(candidate=>{
+    candidate.preview=pagePreview(safeDoc,candidate,sourceUrl);
+    return candidate.preview.kind==='region'&&!candidate.preview.text?[]:[candidate];
+  });
   return {siteUrl:sourceUrl,title,kind:'html',candidates:chooseCandidates(items,sourceUrl,{baseHref,linkHeader:options.linkHeader}),recommendations,count:0};
 }
-root.ProgRSSScout=Object.freeze({scanMarkup,chooseCandidates,splitLinkHeader,suggestPageRegions,relIsAlternate,mimeOf});
+root.ProgRSSScout=Object.freeze({scanMarkup,chooseCandidates,splitLinkHeader,suggestPageRegions,relIsAlternate,mimeOf,inferSource,previewFeed});
 })(globalThis);
 
 </script>
@@ -3197,11 +3294,29 @@ function renderHome(){
   $('feed-export-scope').textContent='Collection feed export: '+Math.min(all.length,250)+' of '+all.length+' entries from "'+exportName+'". Search does not limit this file. Includes saved observation text and links.';
   setFeedExportError(feedExportIdentityIssue(all.slice(0,250).map(r=>r.item)));
   renderTraceChoices();traceSelected();
-  if(!filtered.length){list.replaceChildren(h('div',{class:'empty'},[
-    h('span',{class:'symbol',text:'✳'}),h('h3',{text:all.length?'Nothing matches this search.':'Your observations will appear here.'}),
-    h('p',{text:all.length?'Try a different search or clear Search observations. Search applies within the selected collection.':state.sources.length?'Use Check or Paste on a Lens to capture updates. Collection filters may also exclude all items.':'Start with a Lens or try the offline sample to experience feed composition.'}),
-    action(state.sources.length?'View Lenses':'Make a Lens',()=>{if(state.sources.length){go('sources');focusAction($('sources-add'))}else openLens()},'primary')
-  ]));return;}
+  if(!filtered.length){
+    const wider=!all.length&&activeCollection!=='all'?C.composeEvidence(state,'all'):[];
+    const recovery=all.length?{
+      heading:'Nothing matches this search.',
+      detail:'Clear Search observations to show '+all.length+' feed '+(all.length===1?'entry':'entries')+' in “'+exportName+'”. The selected collection will stay the same.',
+      label:'Clear search',name:'Clear Search observations',run:()=>{$('search-items').value='';renderHome();focusAction($('search-items'))}
+    }:wider.length?{
+      heading:'No feed entries in this collection.',
+      detail:'Every lens currently has '+wider.length+' feed '+(wider.length===1?'entry':'entries')+'. Switch scope to look beyond this collection.'+(search?' Your search will be kept.':''),
+      label:'Show Every lens',run:()=>{activeCollection='all';renderHome();focusAction($('collection-choice'))}
+    }:state.items.length?{
+      heading:'Saved observations are not visible in this view.',
+      detail:'Lens and collection rules can exclude saved observations. Choose an observation in the decision-path panel to inspect why it is included or excluded.',
+      label:'Inspect saved observations',run:()=>focusAction($('trace-choose'))
+    }:null;
+    list.replaceChildren(h('div',{class:'empty'},[
+      h('span',{class:'symbol',text:'✳'}),h('h3',{text:recovery?recovery.heading:'Your observations will appear here.'}),
+      h('p',{text:recovery?recovery.detail:state.sources.length?'Use Check or Paste on a Lens to capture updates. Collection filters may also exclude all items.':'Start with a Lens or try the offline sample to experience feed composition.'}),
+      h('div',{class:'row-actions',style:'justify-content:center'},[
+        ...(recovery?[action(recovery.label,recovery.run,'primary',recovery.name||'')]:[]),
+        action(state.sources.length?'View Lenses':'Make a Lens',()=>{if(state.sources.length){go('sources');focusAction($('sources-add'))}else openLens()},recovery?'ghost':'primary')
+      ])
+    ]));return;}
   list.replaceChildren(...(filtered.length>150?[h('p',{class:'section-note',style:'padding:14px 19px 0;margin-bottom:0',text:'Showing 150 of '+filtered.length+' matching feed entries (shared links are combined). Refine Search observations to narrow the results.'})]:[]),...filtered.slice(0,150).map(({item,witnesses})=>{
     let safeLink='';try{if(item.url)safeLink=C.safeUrl(item.url)}catch{}
     const title= h('h3',{},[safeLink ? h('a',{href:safeLink,target:'_blank',rel:'noopener noreferrer',text:item.title}) : h('span',{text:item.title})]);
@@ -3302,7 +3417,7 @@ function renderPulsePanel(){
   $('pulse-summary').textContent='ADAPTIVE PULSE · '+counters.due.length+' due now · '+counters.later.length+' waiting · '+counters.held.length+' held for review. Each auto sweep contacts at most one Lens per host. Offline here means no network checks occur.';
 }
 function render(){
-  renderPulsePanel();
+  renderPulsePanel();renderPrivateRestoreReview();
   $('nav-items').textContent=state.items.length;$('nav-sources').textContent=state.sources.length;$('nav-collections').textContent=state.collections.length;
   $('nav-fixtures').textContent=state.fixtures.length;$('nav-courier').textContent=(state.inbox||[]).filter(x=>x.status==='pending').length;$('nav-lineage').textContent=(state.subscriptions||[]).length;if(currentView==='lineage')renderLineage();if(currentView==='recovery'){renderRecovery();renderLedger();renderGossip();renderExchange();}if(currentView==='peers'){renderInbox();renderRecipeSharing()}if(currentView==='home')renderHome();if(currentView==='sources')renderSources();if(currentView==='collections')renderCollections();if(currentView==='commons')renderCommons();if(currentView==='clinic'){renderClinicCases();renderGardenShelf();}
 }
@@ -3646,7 +3761,7 @@ function renderImportPreview(){const slot=$('import-preview');if(!pending){slot.
     ])
   ]));
 }
-let importReadToken=0;
+let importReadToken=0,privateRestoreReview=null;
 // Recovery policy v003: a bounded exact-current-state route, separate from ordinary import.
 // These are input budgets, not guarantees about browser memory or durable storage.
 const PRIVATE_RECOVERY_BYTES=32_000_000, ORDINARY_IMPORT_BYTES=12_000_000;
@@ -3729,25 +3844,70 @@ function readImportText(file,token){
     }else startImportRead(job);
   });
 }
+function privateLibrarySummary(library){
+  return library.sources.length+' Lenses / '+library.collections.length+' collections / '+library.items.length+' observations / '+(library.inbox||[]).length+' Inbox parcels';
+}
+function privateFieldMeasure(value){
+  if(Array.isArray(value))return value.length+' entries';
+  if(value&&typeof value==='object')return Object.keys(value).length+' keys';
+  return value===undefined?'absent':value===null?'null':typeof value;
+}
+function clearPrivateRestoreReview(){
+  privateRestoreReview=null;$('private-restore-review').hidden=true;
+  for(const id of ['file-summary','incoming','current','validation'])$('private-restore-'+id).textContent='';
+  $('private-restore-fields').replaceChildren();
+}
+function renderPrivateRestoreReview(){
+  if(!privateRestoreReview)return;
+  const node=$('private-restore-current'),message='Current library now: '+privateLibrarySummary(state)+'. These will be replaced, not merged.';
+  if(node.textContent!==message)node.textContent=message;
+}
+function stagePrivateRestore(parsed,file,route,token,selectionSectionGeneration,selectionFocus){
+  if(token!==importReadToken)return;
+  const validated=validatePrivateState(parsed.state),differences=privateStateDifferences(parsed.state,validated),legacy=parsed.state.version!==11;
+  if(route==='exact'&&differences.length&&!legacy)throw Error('Exact restore would change these state fields: '+differences.join(', ')+'. Keep this full archive. Ordinary Import can read files up to 12,000,000 bytes using legacy normalization');
+  const filename=C.text(file.name||'Unnamed file',220),timestamp=C.text(parsed.exportedAt||'Not supplied',80);
+  privateRestoreReview={validated,differences,legacy,route,token,filename};
+  $('private-restore-file-summary').textContent='Selected file: '+filename+' · '+file.size.toLocaleString('en-US')+' bytes · Export time claimed by file: '+timestamp+'. Filename and time are not verified provenance.';
+  $('private-restore-incoming').textContent='Validated replacement: '+privateLibrarySummary(validated)+'.';
+  const changed=differences.slice(0,30).map(key=>C.text(key,80)).join(', ')+(differences.length>30?' … ('+differences.length+' fields total)':'');
+  $('private-restore-validation').textContent=differences.length?
+    (legacy?'Older backup upgrade':'Ordinary Import normalization')+' will change these fields: '+changed+'. Values may be changed or removed. Keep the original archive.':
+    'The 24 saved JSON state fields passed exact comparison. Views, scheduling choices and signing keys are separate. This does not verify the author or guarantee browser storage.';
+  $('private-restore-fields').replaceChildren(...[...new Set([...Object.keys(parsed.state),...Object.keys(validated)])].slice(0,100).map(key=>h('li',{text:C.text(key,80)+': file '+privateFieldMeasure(Object.prototype.hasOwnProperty.call(parsed.state,key)?parsed.state[key]:undefined)+' → replacement '+privateFieldMeasure(Object.prototype.hasOwnProperty.call(validated,key)?validated[key]:undefined)+(differences.includes(key)?' (changed)':'')})));
+  if(new Set([...Object.keys(parsed.state),...Object.keys(validated)]).size>100)$('private-restore-fields').append(h('li',{text:'Only the first 100 field names are shown. Keep the original archive for the complete content.'}));
+  $('private-restore-review').hidden=false;renderPrivateRestoreReview();
+  privateRecoveryFeedback('Private backup validated for review in Field notes. Nothing has been replaced.');
+  if(selectionSectionGeneration===sectionNavigationGeneration&&document.activeElement===selectionFocus&&!document.querySelector('dialog[open]')){go('docs');focusAction('private-restore-title');}
+}
+function discardPrivateRestore(){
+  clearPrivateRestoreReview();privateRecoveryFeedback('Private backup review discarded. The current library is unchanged.');
+  if(currentView==='docs'&&!document.querySelector('dialog[open]'))focusAction($('docs-restore'));
+}
+function applyPrivateRestore(){
+  const review=privateRestoreReview;
+  if(!review||review.token!==importReadToken){clearPrivateRestoreReview();return privateRecoveryFeedback('This backup review is no longer current. Select the file again. Nothing was replaced.',true);}
+  let replaced=false;
+  try{
+    renderPrivateRestoreReview();
+    if(!confirm('Replace the current library ('+privateLibrarySummary(state)+') with "'+review.filename+'" ('+privateLibrarySummary(review.validated)+')?'+(review.differences.length?' Reviewed normalization changes will apply.':'')+' This is not a merge. Browser storage can still fail. Continue?'))return;
+    if(review!==privateRestoreReview||review.token!==importReadToken)return;
+    state=review.validated;replaced=true;clearPrivateRestoreReview();pending=null;renderImportPreview();resetRestoredWorkbenches();save();
+    privateRecoveryFeedback((review.differences.length?'Reviewed private backup loaded with the listed normalization changes':'The 24 saved JSON state fields were loaded exactly')+' into this tab. Transient view and scheduling choices are separate. Check storage status before leaving; keep the original file.');go('home');
+  }catch(error){privateRecoveryFeedback(replaced?'The replacement library is loaded in this tab, but restore follow-up failed: '+error.message+'. Keep the original file and check storage status.':'Private restore failed: '+error.message+'. The current library is unchanged.',true);}
+}
 async function restorePrivateFile(file){
   if(!file)return;
-  const token=++importReadToken;
+  const token=++importReadToken,selectionSectionGeneration=sectionNavigationGeneration,selectionFocus=document.activeElement;clearPrivateRestoreReview();
   if(!Number.isSafeInteger(file.size)||file.size<0||file.size>PRIVATE_RECOVERY_BYTES)return privateRecoveryFeedback('Private restore accepts files up to '+PRIVATE_RECOVERY_BYTES.toLocaleString('en-US')+' bytes. This file was not read; the current library is unchanged. Keep your full archive.',true);
   if(file.size>ORDINARY_IMPORT_BYTES&&!confirm('Read this '+file.size.toLocaleString('en-US')+'-byte private backup? Export the current library first. Reading and restoring a large file can use much more memory than its file size and may interrupt this tab. Continue?'))return;
-  let replaced=false;
   try{
     const raw=await readImportText(file,token);if(token!==importReadToken)return;
     if(privateByteLength(raw)>PRIVATE_RECOVERY_BYTES)throw Error('File text exceeds the private restore byte limit');
     const parsed=JSON.parse(raw);
     if(parsed?.schema!=='progrss.private.v1'||!parsed.state)throw Error('Choose a ProgRSS private backup. Names and file types do not establish its format');
-    const validated=validatePrivateState(parsed.state),differences=privateStateDifferences(parsed.state,validated),legacy=parsed.state.version!==11;
-    if(differences.length&&!legacy)throw Error('Exact restore would change these state fields: '+differences.join(', ')+'. Keep this full archive. Ordinary Import can read files up to 12,000,000 bytes using legacy normalization');
-    const migration=legacy?' This older backup will be upgraded; these fields will change: '+differences.join(', ')+'.':'';
-    if(!confirm('This private backup will REPLACE your current library.'+migration+' Browser storage can still fail after loading. Continue?'))return;
-    if(token!==importReadToken)return;
-    state=validated;replaced=true;pending=null;renderImportPreview();resetRestoredWorkbenches();save();
-    privateRecoveryFeedback((legacy?'Older private backup upgraded and loaded':'The 24 saved JSON state fields were loaded exactly')+' into this tab. Transient view and scheduling choices are separate. Check storage status before leaving; keep the original file.');go('home');
-  }catch(error){if(token===importReadToken)privateRecoveryFeedback(replaced?'The replacement library is loaded in this tab, but restore follow-up failed: '+error.message+'. Keep the original file and check storage status.':'Private restore failed: '+error.message+'. The current library is unchanged.',true);}
+    stagePrivateRestore(parsed,file,'exact',token,selectionSectionGeneration,selectionFocus);
+  }catch(error){if(token===importReadToken)privateRecoveryFeedback('Private restore failed: '+error.message+'. The current library is unchanged.',true);}
 }
 
 function rejectedXMLFeedGuidance(raw){
@@ -3767,15 +3927,11 @@ function rejectedXMLFeedGuidance(raw){
   }catch{return '';}
 }
 
-async function doImport(file){if(!file)return;const token=++importReadToken,selectionSectionGeneration=sectionNavigationGeneration;if(file.size>ORDINARY_IMPORT_BYTES)return notify('Import file exceeds 12MB (12,000,000 bytes). For a private backup, use Field notes → Restore private backup (up to 32,000,000 bytes).',true);let raw;try{raw=await readImportText(file,token);if(token!==importReadToken)return;if(/\.opml$|\.xml$/i.test(file.name)){const recipes=C.parseOPML(raw);previewImport({schema:C.SCHEMA,sources:recipes,collections:[]});return;}
+async function doImport(file){if(!file)return;const token=++importReadToken,selectionSectionGeneration=sectionNavigationGeneration,selectionFocus=document.activeElement;clearPrivateRestoreReview();if(file.size>ORDINARY_IMPORT_BYTES)return notify('Import file exceeds 12MB (12,000,000 bytes). For a private backup, use Field notes → Restore private backup (up to 32,000,000 bytes).',true);let raw;try{raw=await readImportText(file,token);if(token!==importReadToken)return;if(/\.opml$|\.xml$/i.test(file.name)){const recipes=C.parseOPML(raw);previewImport({schema:C.SCHEMA,sources:recipes,collections:[]});return;}
     const parsed=JSON.parse(raw);
     if(parsed&&Array.isArray(parsed.items)&&typeof parsed.version==='string'&&/^https?:\/\/(www\.)?jsonfeed\.org\/version\/1(\.1)?\/?$/.test(parsed.version)){notify('This is a JSON Feed of observations. Use Lenses → Paste on an RSS / Atom / JSON Feed Lens, choose this file, then Process snapshot. No recipes or observations were imported.',true);return;}
     if(parsed.schema==='progrss.private.v1' && parsed.state){
-      const validated=validatePrivateState(parsed.state),differences=privateStateDifferences(parsed.state,validated);
-      const changes=differences.length?' Legacy normalization will change these fields: '+differences.join(', ')+'. Values may be changed or removed; keep the original archive.':'';
-      if(!confirm('This is a private backup and will REPLACE your current library.'+changes+' Continue?'))return;
-      if(token!==importReadToken)return;
-      state=validated;pending=null;renderImportPreview();resetRestoredWorkbenches();save();notify('Private backup loaded into this tab. Check storage status before leaving.');go('home');return;
+      stagePrivateRestore(parsed,file,'ordinary',token,selectionSectionGeneration,selectionFocus);return;
     }
     if([Q.SCHEMA,C.PATCH_SCHEMA,G.SCHEMA,C.SCHEMA,D.SCHEMA,L.SCHEMA,T.SCHEMA,W.HEAD,W.SIGHT,E.REQUEST,E.REPLY,E.FORK,Y.SCHEMA].includes(parsed.schema)){receiveCourier(parsed,'file',{openExchange:selectionSectionGeneration===sectionNavigationGeneration});return;}
     previewImport(parsed);
@@ -4658,32 +4814,77 @@ function lineageDemo(){
   }catch(e){notify('Lineage demo: '+e.message,true)}
 }
 
-// Site Scout has no lasting raw-HTML state and performs no automatic fetching.
+// Site Scout keeps source content in memory. Network requests always require
+// an explicit Scan address or Check feed action; local edits never fetch.
 let scoutReport=null,scoutMarkupMemory='',scoutLinkHeader='',activeProof=null,proofReplay=null,pendingDiscoveryCourierId=null;
-let scoutIntent=0,scoutFileRead=null;
-function invalidateScoutLoads(){scoutIntent++;$('scout-fetch').disabled=false;$('scout-use-saved').hidden=true;}
+let scoutIntent=0,scoutFileRead=null,scoutAnalyzeTimer=null,scoutUrlHint=null,scoutAwaitingAddress=false,scoutCheckActive=null;
+function setScoutCheckBusy(button,busy){
+  // Keep the same control focusable while a request is pending. Native disabled
+  // blurs a focused button; no later focus restoration should override a user.
+  if(busy){button.setAttribute('aria-disabled','true');button.setAttribute('aria-busy','true');}
+  else{button.removeAttribute('aria-disabled');button.removeAttribute('aria-busy');}
+}
+function invalidateScoutLoads(){
+  scoutIntent++;clearTimeout(scoutAnalyzeTimer);scoutAnalyzeTimer=null;
+  $('scout-fetch').disabled=false;$('scout-use-saved').hidden=true;
+  if(scoutCheckActive){setScoutCheckBusy(scoutCheckActive.button,false);scoutCheckActive.button.textContent='Check feed';scoutCheckActive.status.textContent='Check retired after newer input. Check again when ready.';scoutCheckActive=null;}
+}
 function beginScoutLoad(){
   invalidateScoutLoads();
   const token=scoutIntent,library=state,ids=['scout-url','scout-html','scout-header'],values=ids.map(id=>$(id).value);
   return {token,url:values[0],current:()=>token===scoutIntent&&state===library&&ids.every((id,i)=>$(id).value===values[i])};
 }
+function scoutAddressNote(){
+  $('scout-address-note').textContent=scoutUrlHint?'Address inferred from '+scoutUrlHint.basis+'. Check that it matches this snapshot; you can edit it. No address was fetched.':'For saved content, Scout fills this from an explicit source-address hint when available.';
+}
+function renderScoutPreview(slot,preview){
+  slot.replaceChildren();if(!preview){slot.hidden=true;return;}slot.hidden=false;
+  if(preview.kind==='region'){slot.append(h('p',{class:'mini',text:'Text-region sample · from this snapshot'}),h('p',{text:preview.text}));return;}
+  slot.append(h('p',{class:'mini',text:preview.kind==='feed'?'Parsed '+(preview.format||'feed')+' sample · '+preview.count+' usable entries from up to the first 250 source records · up to 3 shortened excerpts':'Matched cards · '+preview.count+' cards · up to 3 shortened excerpts'}));
+  if(!preview.items.length){slot.append(h('p',{text:'No usable entries in this parsed sample.'}));return;}
+  slot.append(h('ol',{},preview.items.map(item=>h('li',{},[h('strong',{text:item.title||'Untitled update'}),...(item.summary?[h('p',{text:item.summary})]:[]),...(item.url?[h('p',{class:'mono',text:item.url})]:[])]))));
+}
 function renderScout(report){
   const slot=$('scout-results');scoutReport=report;
   $('scout-findings-context').hidden=!report;$('scout-findings-context').textContent=report?'Last completed scan: '+report.siteUrl:'';
-  if(!report){slot.replaceChildren(h('div',{class:'empty'},[h('h3',{text:'No discovery yet'}),h('p',{text:'Paste, load, or fetch a webpage when ready.'})]));return;}
+  if(!report){slot.replaceChildren(h('div',{class:'empty'},[h('h3',{text:'No discovery yet'}),h('p',{text:'Scan an address, paste source content, or drop a saved page/feed.'})]));return;}
   const candidates=[...report.candidates,...report.recommendations];
-  $('scout-status').textContent=report.kind==='direct-feed'?'Valid feed detected · '+report.count+' entries':'Site: '+report.title+' · '+report.candidates.length+' declared feed(s) · '+report.recommendations.length+' suggested page watch(es)';
-  const cards=candidates.map((candidate,i)=>h('article',{class:'scout-result'},[
-    h('span',{class:'mini',text:(i+1)+' · '+candidate.format+' · '+candidate.confidence}),
-    h('h4',{text:candidate.title}),
-    h('p',{class:'mono',text:candidate.url||report.siteUrl}),
-    ...(candidate.selector?[h('p',{text:'Suggested CSS: '+candidate.selector+(candidate.count?' · '+candidate.count+' matches':'' )})]:[]),
-    h('div',{class:'row-actions'},[action(candidate.kind==='page'?'Create paused page Lens':'Create paused feed Lens',()=>addScoutLens(candidate,report),'ghost'),
-      action('♧ Make replayable proof',()=>selectScoutProof(report,candidate),'primary')])
-  ]));
-  if(!cards.length)cards.push(h('div',{class:'empty'},[h('h3',{text:'No advertised feed found'}),h('p',{text:'Try creating a page Lens to monitor a selected region.'})]));
+  $('scout-status').textContent=report.kind==='direct-feed'?'Valid feed detected · '+report.count+' parsed entries from up to the first 250 source records':'Site: '+report.title+' · '+report.candidates.length+' declared feed(s) · '+report.recommendations.length+' suggested page watch(es)';
+  const cards=candidates.map((candidate,i)=>{
+    const preview=h('div',{class:'scout-preview'}),status=h('p',{class:'mini','aria-live':'polite'}),actions=[];
+    renderScoutPreview(preview,candidate.preview);
+    if(candidate.kind==='feed'&&candidate.origin!=='body'){
+      const check=action('Check feed',()=>checkScoutFeed(candidate,report,check,status,preview),'primary');actions.push(check);
+      status.textContent=candidate.preview?'Feed parsed in this tab.':'Advertised by this page; contents have not been checked.';
+    }
+    actions.push(action(candidate.kind==='page'?'Create paused page Lens':'Create paused feed Lens',()=>addScoutLens(candidate,report),'ghost'),action('♧ Make replayable proof',()=>selectScoutProof(report,candidate),'ghost'));
+    return h('article',{class:'scout-result'},[
+      h('span',{class:'mini',text:(i+1)+' · '+candidate.format+' · '+candidate.confidence}),h('h4',{text:candidate.title}),
+      h('p',{class:'mono',text:candidate.url||report.siteUrl}),
+      ...(candidate.selector?[h('p',{text:'Suggested CSS: '+candidate.selector+(candidate.count?' · '+candidate.count+' matches':'' )})]:[]),
+      h('div',{class:'row-actions'},actions),status,preview
+    ]);
+  });
+  if(!cards.length)cards.push(h('div',{class:'empty'},[h('h3',{text:'No feed or readable page region found'}),h('p',{text:'The saved source may be incomplete or rely on scripts. Try the page’s complete source or a direct feed URL.'})]));
   slot.replaceChildren(...cards);
 }
+async function checkScoutFeed(candidate,report,button,status,preview){
+  if(report!==scoutReport||button.disabled||scoutCheckActive?.button===button)return;
+  if(scoutCheckActive){notify('A feed check is already running. Wait for it to finish.');return;}
+  const token=scoutIntent,library=state,job={button,status};scoutCheckActive=job;
+  const current=()=>scoutCheckActive===job&&token===scoutIntent&&library===state&&report===scoutReport;
+  setScoutCheckBusy(button,true);button.textContent='Checking…';status.textContent='Reading this feed address…';
+  try{
+    const result=await requestRemote(candidate.url);if(!current())return;
+    if(result.notModified)throw Error('Unexpected conditional response. Try again.');
+    if(result.status===429||result.status===503)throw Error('HTTP '+result.status+'. Try again later.');
+    if(typeof result.body!=='string'||!result.body.trim())throw Error('The response contained no feed content.');
+    const parsed=S.previewFeed(result.body,candidate.url);candidate.preview=parsed;
+    renderScoutPreview(preview,parsed);status.textContent='✓ Parsed as '+parsed.format+'. '+parsed.count+' usable entries from up to the first 250 source records. Proof still replays the original advertisement.';
+  }catch(error){if(current())status.textContent='Could not check this feed: '+scoutFetchDetail(error)+'. The advertised recipe is still available.';}
+  finally{if(scoutCheckActive===job){setScoutCheckBusy(button,false);button.textContent='Check feed again';scoutCheckActive=null;}}
+}
+
 function addScoutLens(item,report){
   try{
     if(state.sources.length>=C.LIMIT.source)throw Error('Source limit reached');
@@ -4699,13 +4900,38 @@ function addScoutLens(item,report){
     notify('Added PAUSED Lens: '+clean.title+'. Edit and enable it when ready.');
   }catch(err){notify('Scout: '+err.message,true)}
 }
-function analyzeScout(body,linkHeader='',fromCurrentLoad=false){
+function analyzeScout(body,linkHeader='',fromCurrentLoad=false,quiet=false){
   if(!fromCurrentLoad)invalidateScoutLoads();
+  proofReplay=null;renderProofWorkbench();
   try{
-    const siteUrl=C.safeUrl($('scout-url').value);if(!body||!body.trim())throw Error('Paste content or fetch a webpage first');
-    const report=S.scanMarkup(body,siteUrl,{linkHeader:linkHeader||$('scout-header').value});scoutMarkupMemory=body;scoutLinkHeader=linkHeader||$('scout-header').value;proofReplay=null;renderScout(report);renderProofWorkbench();
+    if(!body||!body.trim())throw Error('Paste content or scan a webpage first');
+    if(body.length>C.LIMIT.characters)throw Error('Site Scout can inspect at most 2 million characters');
+    if(!$('scout-url').value.trim()){
+      const hint=S.inferSource(body);
+      if(!hint){scoutAwaitingAddress=true;throw Error('Content is ready. Enter its original site or feed address above so links resolve correctly.');}
+      $('scout-url').value=hint.url;scoutUrlHint=hint;scoutAddressNote();
+    }
+    const siteUrl=C.safeUrl($('scout-url').value),header=linkHeader||$('scout-header').value;
+    const report=S.scanMarkup(body,siteUrl,{linkHeader:header});scoutAwaitingAddress=false;scoutMarkupMemory=body;scoutLinkHeader=header;renderScout(report);renderProofWorkbench();
     return report;
-  }catch(err){$('scout-status').textContent='SCOUT ERROR: '+err.message;notify('Scout: '+err.message,true);return null}
+  }catch(err){$('scout-status').textContent='SCOUT: '+err.message;if(!quiet)notify('Scout: '+err.message,true);return null;}
+}
+function scheduleScoutAnalysis(){
+  const token=scoutIntent,library=state;
+  scoutAnalyzeTimer=setTimeout(()=>{scoutAnalyzeTimer=null;if(token!==scoutIntent||state!==library)return;analyzeScout($('scout-html').value,'',false,true);},400);
+}
+async function loadScoutFile(file){
+  if(!file)return;
+  const intent=beginScoutLoad();scoutFileRead=intent;$('scout-status').textContent='Reading and analyzing the selected local file…';
+  try{
+    if(file.size>C.LIMIT.characters)throw Error('Local file exceeds 2 MB');
+    const body=await file.text();if(!intent.current())return;
+    if(!body.trim())throw Error('The selected file contained no page or feed content. Your previous draft is unchanged.');
+    if(body.length>C.LIMIT.characters)throw Error('Local content exceeds 2 million characters');
+    if(scoutUrlHint&&$('scout-url').value===scoutUrlHint.url){$('scout-url').value='';scoutUrlHint=null;scoutAddressNote();}
+    $('scout-html').value=body;$('scout-header').value='';analyzeScout(body,'',true);
+  }catch(error){if(intent.current()){$('scout-status').textContent='SCOUT FILE ERROR: '+error.message;notify('Scout file: '+error.message,true);}}
+  finally{if(scoutFileRead===intent)scoutFileRead=null;}
 }
 function scoutFetchDetail(error){
   const message=String(error?.message||error),prefix='Direct browser fetch failed (possibly CORS): ',suffix='. Use Paste or `bash ProgRSS.html serve` for a local bridge.';
@@ -4722,11 +4948,13 @@ async function fetchScout(){
     if(result.notModified)throw Error('Unexpected conditional response to an unconditional discovery request');
     if(result.status===429||result.status===503)throw Error('HTTP '+result.status+': '+(result.status===429?'the site asked for fewer requests':'the site is temporarily unavailable')+'. Try again later.');
     if(typeof result.body!=='string'||!result.body.trim())throw Error('The response contained no page or feed content.');
+    const responseUrl=C.safeUrl(result.url||intent.url);$('scout-url').value=responseUrl;scoutUrlHint=null;scoutAddressNote();
     $('scout-html').value=result.body;$('scout-header').value=result.linkHeader||'';analyzeScout(result.body,result.linkHeader||'',true);
-  }catch(err){if(intent.current()){const detail=scoutFetchDetail(err);$('scout-status').textContent='SCOUT FETCH ERROR: '+detail+'\nUse saved content to continue without a CLI. Your draft'+(scoutReport?' and earlier findings are':' is')+' unchanged.';$('scout-offline-help').open=true;$('scout-use-saved').hidden=false;notify('Scout: '+detail,true)}}
+  }catch(err){if(intent.current()){const detail=scoutFetchDetail(err);$('scout-status').textContent='SCOUT FETCH ERROR: '+detail+'\nDrop a saved page/feed here or paste its source to continue in this browser. Your draft'+(scoutReport?' and earlier findings are':' is')+' unchanged.';$('scout-offline-help').open=true;$('scout-use-saved').hidden=false;notify('Scout: '+detail,true)}}
   finally{if(intent.token===scoutIntent)button.disabled=false}
 }
 function demoScout(){
+  scoutUrlHint=null;scoutAddressNote();
   $('scout-url').value='https://demo.example/notes/index.html';$('scout-header').value='';
   $('scout-html').value='<!doctype html><html><head><title>The Small Web</title><link rel="alternate" type="application/rss+xml" title="Tiny notes RSS" href="/feed.xml"><link rel="alternate" type="application/feed+json" title="Tiny projects JSON Feed" href="/projects.json"><link rel="stylesheet" href="/style.css"></head><body><main><article><h2>Wooden laptop</h2></article><article><h2>Radio garden</h2></article><article><h2>Shared gardens</h2></article></main></body></html>';
   analyzeScout($('scout-html').value);
@@ -4751,8 +4979,8 @@ function selectScoutProof(report,candidate){try{
 }catch(error){notify('Discovery evidence: '+error.message,true)}}
 function replayDiscovery(){try{
   if(!activeProof)throw Error('Choose a discovery');
-  let raw=$('scout-html').value||scoutMarkupMemory;
-  proofReplay=D.evaluateProof(activeProof,raw,{linkHeader:$('scout-header').value||scoutLinkHeader});
+  const raw=$('scout-html').value;
+  proofReplay=D.evaluateProof(activeProof,raw,{linkHeader:$('scout-header').value});
   renderProofWorkbench();notify('Replay: '+proofReplay.status+' — '+proofReplay.detail,!proofReplay.pass);
 }catch(error){proofReplay=null;renderProofWorkbench();notify('Replay failed: '+error.message,true)}}
 function adoptDiscovery(){try{
@@ -5240,18 +5468,28 @@ $('top-scout').addEventListener('click',()=>go('scout'));
 $('proof-replay').addEventListener('click',replayDiscovery);$('proof-adopt').addEventListener('click',adoptDiscovery);
 $('proof-export').addEventListener('click',()=>proofDownload(false));$('proof-capsule').addEventListener('click',()=>proofDownload(true));$('proof-send').addEventListener('click',proofSend);
 $('proof-import-button').addEventListener('click',()=>$('proof-import-file').click());$('proof-import-file').addEventListener('change',async e=>{await importProofFile(e.target.files[0]);e.target.value='';});
-$('scout-use-saved').addEventListener('click',()=>{$('scout-offline-help').open=true;$('scout-html').focus()});
+$('scout-use-saved').addEventListener('click',()=>{$('scout-offline-help').open=true;$('scout-snapshot').open=true;$('scout-html').focus()});
 $('scout-fetch').addEventListener('click',fetchScout);$('scout-analyze').addEventListener('click',()=>analyzeScout($('scout-html').value));
-$('scout-demo').addEventListener('click',demoScout);$('scout-clear').addEventListener('click',()=>{invalidateScoutLoads();$('scout-html').value='';$('scout-header').value='';scoutMarkupMemory='';scoutLinkHeader='';scoutReport=null;activeProof=null;pendingDiscoveryCourierId=null;proofReplay=null;$('scout-status').textContent='Cleared. No content stored.';renderScout(null);renderProofWorkbench()});
-for(const id of ['scout-html','scout-header','scout-url'])$(id).addEventListener('input',()=>{invalidateScoutLoads();$('scout-status').textContent='Draft changed. Analyze or fetch again when ready.';if(proofReplay){proofReplay=null;renderProofWorkbench()}});
-$('scout-file').addEventListener('change',async e=>{
-  const file=e.target.files[0];if(!file)return;
-  const intent=beginScoutLoad();scoutFileRead=intent;$('scout-status').textContent='Reading the selected local file…';
-  try{if(file.size>C.LIMIT.characters)throw Error('Local file exceeds 2MB');const body=await file.text();
-    if(!intent.current())return;
-    $('scout-html').value=body;analyzeScout(body,'',true);
-  }catch(error){if(intent.current()){$('scout-status').textContent='SCOUT FILE ERROR: '+error.message;notify('Scout file: '+error.message,true)}}
-  finally{if(scoutFileRead===intent){if(e.target.files[0]===file)e.target.value='';scoutFileRead=null;}}
+$('scout-url').addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();fetchScout();}});
+$('scout-demo').addEventListener('click',demoScout);$('scout-clear').addEventListener('click',()=>{invalidateScoutLoads();$('scout-url').value='';$('scout-html').value='';$('scout-header').value='';$('scout-file').value='';scoutUrlHint=null;scoutAwaitingAddress=false;scoutAddressNote();scoutMarkupMemory='';scoutLinkHeader='';scoutReport=null;activeProof=null;pendingDiscoveryCourierId=null;proofReplay=null;$('scout-status').textContent='Cleared. No source content stored.';renderScout(null);renderProofWorkbench()});
+for(const id of ['scout-html','scout-header','scout-url'])$(id).addEventListener('input',()=>{
+  invalidateScoutLoads();
+  if(id==='scout-url'){scoutUrlHint=null;scoutAddressNote();}
+  else if(id==='scout-html'){
+    $('scout-header').value='';
+    if(scoutUrlHint&&$('scout-url').value===scoutUrlHint.url){$('scout-url').value='';scoutUrlHint=null;scoutAddressNote();}
+  }
+  $('scout-status').textContent='Draft changed.';if(proofReplay){proofReplay=null;renderProofWorkbench();}
+  if(id!=='scout-url'||scoutAwaitingAddress){if($('scout-html').value.trim()){$('scout-status').textContent='Analyzing saved content…';scheduleScoutAnalysis();}}
+  else $('scout-status').textContent='Address changed. Scan it when ready, or analyze the saved content with this address.';
+});
+$('scout-file').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;await loadScoutFile(file);if(event.target.files[0]===file)event.target.value='';});
+$('scout-intake').addEventListener('dragover',event=>{if(Array.from(event.dataTransfer?.types||[]).includes('Files')){event.preventDefault();$('scout-intake').classList.add('dragging');}});
+$('scout-intake').addEventListener('dragleave',()=>$('scout-intake').classList.remove('dragging'));
+$('scout-intake').addEventListener('drop',event=>{
+  const files=Array.from(event.dataTransfer?.files||[]);if(!files.length)return;event.preventDefault();$('scout-intake').classList.remove('dragging');
+  if(files.length!==1){notify('Drop one saved page or feed at a time.',true);return;}
+  loadScoutFile(files[0]);
 });
 for(const id of ['collections-add'])$(id).addEventListener('click',()=>openCollection());
 $('collections-lineage').addEventListener('click',()=>go('lineage'));
@@ -5286,6 +5524,9 @@ $('auto-interval').addEventListener('change',()=>{applySchedule();notify(Number(
 $('refresh-due').addEventListener('click',refreshDue);
 $('docs-persist').addEventListener('click',async()=>{try{const ok=await V.requestPersistence();notify(ok?'Browser approved durable-origin storage. Keep backups anyway.':'Browser did not grant durable storage (may be unsupported on file://).',!ok)}catch(err){notify('Durable storage: '+err.message,true)}});
 document.querySelectorAll('[data-vault-backup]').forEach(button=>button.addEventListener('click',exportBackup));
+$('private-restore-backup-current').addEventListener('click',exportBackup);
+$('private-restore-cancel').addEventListener('click',discardPrivateRestore);
+$('private-restore-apply').addEventListener('click',applyPrivateRestore);
 $('docs-restore').addEventListener('click',()=>$('docs-restore-file').click());
 $('docs-restore-file').addEventListener('change',async e=>{await restorePrivateFile(e.target.files[0]);e.target.value='';});
 $('docs-backup').addEventListener('click',exportBackup);$('docs-opml').addEventListener('click',()=>download('ProgRSS-feeds.opml',C.makeOPML(state),'text/xml'));
