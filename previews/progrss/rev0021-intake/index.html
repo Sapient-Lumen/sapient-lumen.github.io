@@ -173,7 +173,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
   </div>
 </aside>
 <main><p role="note" style="border:1px solid #efd6a1;padding:12px">Experimental file-first GUI candidate derived from rev0021. Use synthetic data. WebRTC is deferred.</p>
-  <div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div>
+  <div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p></div>
   <div class="topline"><div class="crumb">PROJECT / <b>PROGRSS</b> / <span id="crumb-view">OBSERVATORY</span></div><div class="actions"><button class="btn ghost sm" id="top-scout">⌁ Discover</button><button class="btn ghost sm" id="top-import">↥ Import</button><button class="btn ghost sm" id="top-export">↧ Share recipes</button><button class="btn primary sm" id="top-add">＋ New lens</button></div></div>
   <section class="view" id="view-home">
     <div class="hero"><div class="hero-copy"><p class="eyebrow">A new kind of feed / Early experiment 019</p><h1>Follow the parts of the internet <em>that matter.</em></h1><p class="lede">Watch selected parts of pages you can fetch or supply as HTML. Combine RSS, watched regions and the collections of friends. Prove your filters with reproducible snapshots. No feed server or extension required.</p><div class="hero-links"><button class="btn primary" id="hero-add">＋ Make your first Lens</button><button class="btn ghost" id="hero-demo">Try the offline demo ↗</button></div></div><div class="hero-art" aria-hidden="true"><div class="art-line"></div><span class="orb a"></span><span class="orb b"></span><span class="orb c"></span><span class="orb d"></span><div class="art-label">public web → <b>observation</b><br>observation → <b>collective lens</b><br>collective lens → <b>your attention</b></div></div></div>
@@ -441,7 +441,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
       <button class="btn primary sm" id="proposal-apply" disabled>Approve tested patch →</button><div class="signed-patch-panel"><strong>Contributor trust pins · local only</strong><p class="mini">Accepted signed repairs pin the contributor key to this URL. New collaborators need separate approval; unsigned external patches are blocked after the first pin. No automatic key rotation. Revoke a pin manually if needed.</p><div id="proposal-pins" class="patch-pin-list">Select a matching Lens to view contributor pins.</div></div>
     </div></div>
   </section>
-  <section class="view" id="view-peers" hidden><div class="section-title"><div><p class="eyebrow">03 / Collective maintenance</p><h2>Exchange studio</h2><p>Export recipe files and review received recipes or patches. Received parcels persist until you review them. Recipe sharing excludes snapshots and browsing history.</p></div><button class="btn ghost" id="peers-file-export">↧ Export Courier capsule</button></div><p class="banner" id="file-sharing-guidance">Share a recipe file, then review received recipes before adopting them. Observations stay local. Live peer connections are deferred in this working edition.</p><div id="deferred-peer-tools" hidden inert><div class="banner warning" style="margin-bottom:20px">Experimental: manual WebRTC signaling is not authenticated to a named person. Exchange offers and answers through an independently trusted channel. Peers may learn your network address; STUN is opt-in. No TURN relay is bundled.</div><div class="peers-grid"><div class="peer-card"><h3>1. Create or accept an invitation</h3><p>Browser-to-browser data channel. An offer is just a handshake, not a subscription. No signaling service is bundled; copy and paste the packets.</p><label class="inline-check"><input type="checkbox" id="peer-stun"> Use external STUN (may reveal network IP)</label><div class="filter-box" style="margin-top:13px"><button class="btn primary sm" id="peer-offer">Create offer</button><button class="btn sm ghost" id="peer-accept">Accept pasted offer</button></div><div class="field" style="margin-top:13px"><label for="peer-local">Your packet — copy to your peer</label><textarea id="peer-local" readonly spellcheck="false" placeholder="Offer or answer appears here"></textarea></div><button class="btn sm ghost" id="peer-copy">Copy your packet</button></div><div class="peer-card"><h3>2. Paste their answer or offer</h3><p>Creator: paste an answer here, then click Finish. Recipient: paste the offer here, click Accept, and send your generated answer back.</p><div class="field"><label for="peer-remote">Their packet</label><textarea id="peer-remote" spellcheck="false" placeholder="Paste a ProgRSS signaling JSON packet here"></textarea></div><button class="btn sm ghost" id="peer-finish">Finish answer</button><div class="peer-status" id="peer-status" style="margin-top:14px">Disconnected · no recipes sent</div><div class="filter-box" style="margin-top:14px"><button class="btn primary sm" id="peer-send" disabled>↗ Send selected recipe bundle</button><button class="btn sm ghost" id="peer-send-proposal" disabled>↗ Send staged patch (signed if available)</button><button class="btn sm ghost" id="peer-close">Disconnect</button></div><p class="mini">Select a collection on the Observatory to send its recipe bundle; or sign a staged patch in Patch Clinic before sending. No HTML fixtures are shared. Incoming signatures are verified again upon adoption.</p></div></div></div><div class="content-panel" style="margin-top:19px"><div class="panel-tools"><strong>Active recipe import review</strong><span class="mini">Review every URL before adoption. Nothing enters automatically.</span></div><div id="import-preview" class="empty"><span class="symbol">↧</span><h3>No recipe preview selected yet.</h3><p>Open a parcel from the persistent Courier Inbox, or import a legacy ProgRSS bundle. You will review its URLs and dependencies before adoption.</p></div></div>
+  <section class="view" id="view-peers" hidden><div class="section-title"><div><p class="eyebrow">03 / Collective maintenance</p><h2>Exchange studio</h2><p>Export recipe files and review received recipes or patches. Received parcels persist until you review them. Recipe sharing excludes snapshots and browsing history.</p></div><button class="btn ghost" id="peers-file-export">↧ Export Courier capsule</button></div><p class="banner" id="file-sharing-guidance">Recipe files and Courier capsules contain definitions, not saved observations. Review their URLs, names, author labels and filters before sharing. A URL can contain personal information. Collection feeds include observation text; private backups include your library and must stay private. Live peer connections are deferred.</p><div class="content-panel" style="margin:18px 0"><div class="panel-tools"><h3 id="recipe-export-title" class="dependency-summary" data-focus-key="recipe-export-title" tabindex="-1">Review the recipe file you are sharing</h3><button class="btn sm primary" id="recipe-file-download">↧ Download recipe file</button><button class="btn sm ghost" id="recipe-export-return">Change collection in Observatory</button></div><div id="recipe-export-preview" style="padding:20px"></div></div><div id="deferred-peer-tools" hidden inert><div class="banner warning" style="margin-bottom:20px">Experimental: manual WebRTC signaling is not authenticated to a named person. Exchange offers and answers through an independently trusted channel. Peers may learn your network address; STUN is opt-in. No TURN relay is bundled.</div><div class="peers-grid"><div class="peer-card"><h3>1. Create or accept an invitation</h3><p>Browser-to-browser data channel. An offer is just a handshake, not a subscription. No signaling service is bundled; copy and paste the packets.</p><label class="inline-check"><input type="checkbox" id="peer-stun"> Use external STUN (may reveal network IP)</label><div class="filter-box" style="margin-top:13px"><button class="btn primary sm" id="peer-offer">Create offer</button><button class="btn sm ghost" id="peer-accept">Accept pasted offer</button></div><div class="field" style="margin-top:13px"><label for="peer-local">Your packet — copy to your peer</label><textarea id="peer-local" readonly spellcheck="false" placeholder="Offer or answer appears here"></textarea></div><button class="btn sm ghost" id="peer-copy">Copy your packet</button></div><div class="peer-card"><h3>2. Paste their answer or offer</h3><p>Creator: paste an answer here, then click Finish. Recipient: paste the offer here, click Accept, and send your generated answer back.</p><div class="field"><label for="peer-remote">Their packet</label><textarea id="peer-remote" spellcheck="false" placeholder="Paste a ProgRSS signaling JSON packet here"></textarea></div><button class="btn sm ghost" id="peer-finish">Finish answer</button><div class="peer-status" id="peer-status" style="margin-top:14px">Disconnected · no recipes sent</div><div class="filter-box" style="margin-top:14px"><button class="btn primary sm" id="peer-send" disabled>↗ Send selected recipe bundle</button><button class="btn sm ghost" id="peer-send-proposal" disabled>↗ Send staged patch (signed if available)</button><button class="btn sm ghost" id="peer-close">Disconnect</button></div><p class="mini">Select a collection on the Observatory to send its recipe bundle; or sign a staged patch in Patch Clinic before sending. No HTML fixtures are shared. Incoming signatures are verified again upon adoption.</p></div></div></div><div class="banner" id="import-format-guidance" style="margin:18px 0"><strong>Choose the right file route</strong><p>Import accepts ProgRSS recipe/Courier JSON, OPML, and private backups. Recipes wait for review; a private backup asks to replace your library.</p><p>For collection JSON Feed, RSS or Atom files, use Lenses → Paste on an RSS / Atom / JSON Feed Lens, choose the local file, then Process snapshot. Import does not turn feed observations into recipes.</p><p>ProgRSS OPML carries feed-type Lens titles and URLs (RSS / Atom / JSON Feed). It leaves out page recipes, collections and filters. Recipe review accepts at most 100 Lenses and 100 collections per file, even though a private library may contain 200 of each. Split larger OPML lists before importing.</p></div><div class="content-panel" style="margin-top:19px"><div class="panel-tools"><strong>Active recipe import review</strong><span class="mini">Review every URL before adoption. Nothing enters automatically.</span></div><div id="import-preview" class="empty"><span class="symbol">↧</span><h3>No recipe preview selected yet.</h3><p>Open a parcel from the persistent Courier Inbox, or import a legacy ProgRSS bundle. You will review its URLs and dependencies before adoption.</p></div></div>
   <div class="content-panel" style="margin-top:20px"><div class="panel-tools"><div><strong>Courier Inbox · local review queue</strong><p class="mini">SHA-256 checks detect changed payloads, not malicious senders. All items are inert until adopted.</p></div><div class="row-actions"><button class="btn sm ghost" id="courier-demo">✳ Seed offline parcel</button><button class="btn sm ghost" id="courier-file-export">↧ Export recipe capsule</button><button class="btn sm ghost" id="courier-patch-export">↧ Export staged patch capsule</button></div></div><div id="courier-inbox" class="courier-list" aria-live="polite"></div><div class="courier-history"><strong>Decision receipts</strong><pre id="courier-receipts">No decisions recorded yet.</pre></div></div></section>
   <section class="view" id="view-commons" hidden>
     <div class="section-title"><div><p class="eyebrow">02.5 / The shared signal</p><h2>Feed Commons</h2><p>Where local Lenses converge—and where stable feed entries were edited.</p></div><button class="btn sm ghost" id="commons-demo">✳ Offline overlap demo</button></div>
@@ -450,16 +450,16 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
     <div class="content-panel" style="margin-top:18px"><div class="panel-tools"><strong>Moving targets · edited RSS/Atom/JSON Feed entries</strong><span class="mini">Same entry ID · content changed · dated local events</span></div><div class="stack" id="commons-edits"></div></div>
     <p class="section-note">Select “Draft intersection” to prefill an ordinary collection editor. Review its rules and click Save yourself. A cross-host overlap is a discovery clue, not a proof of independent witnesses; publisher-controlled IDs and redirects are not verified by ProgRSS.</p>
   </section>
-  <section class="view" id="view-docs" hidden><div class="section-title"><div><p class="eyebrow">04 / Expedition journal</p><h2>Field notes</h2><p>Research, design, safety assumptions, donor preservation, test plan and ranked experiments—all carried inside this file.</p></div><div class="toolbar-small"><button class="btn sm ghost" id="docs-backup">↧ Private backup</button><button class="btn sm ghost" id="docs-opml">↧ OPML</button><button class="btn sm ghost" id="docs-persist">Ask for durable storage</button></div></div><div class="banner warning" style="margin-bottom:17px">A page opened with file:// may not keep browser storage consistently across paths and browsers. Export a private backup of your observations. Moving this file to a different origin changes its storage namespace.</div><pre class="docs" id="doc-render"></pre></section>
+  <section class="view" id="view-docs" hidden><div class="section-title"><div><p class="eyebrow">04 / Expedition journal</p><h2>Field notes</h2><p>Research, design, safety assumptions, donor preservation, test plan and ranked experiments—all carried inside this file.</p></div><div class="toolbar-small"><button class="btn sm ghost" id="docs-backup">↧ Private backup</button><button class="btn sm ghost" id="docs-restore">↥ Restore private backup</button><input id="docs-restore-file" type="file" accept=".json,application/json" hidden><button class="btn sm ghost" id="docs-opml">↧ OPML</button><button class="btn sm ghost" id="docs-persist">Ask for durable storage</button></div></div><div class="banner warning" style="margin-bottom:17px">A page opened with file:// may not keep browser storage consistently across paths and browsers. Export a private backup of your observations. Moving this file to a different origin changes its storage namespace.</div><p class="mini">Private restore accepts JSON backups up to 32,000,000 bytes. This is an input limit, not a memory or storage guarantee. Export your current library before replacing it. Export preserves every serialized JSON state field without checking its contents. Restore validates before replacement; exactness covers the 24 saved JSON state fields only. Views, scheduling choices and signing keys are separate. Files above this limit remain full archives that this app cannot restore.</p><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p><pre class="docs" id="doc-render"></pre></section>
   <div class="footer"><span>ProgRSS / rev0021 / FIXTURE GARDEN + REPLAYABLE SYNTHETIC PACKS</span><span>A single webpage, a hackable Bash companion, no extension.</span></div>
 </main>
 </div>
-<dialog id="lens-dialog" aria-labelledby="lens-title"><div class="dialog-head"><div><h2 id="lens-title">Make a Lens</h2><p>One way to sense a piece of the web.</p></div><button class="xbtn" type="button" data-close="lens-dialog" aria-label="Close">×</button></div><form id="lens-form"><p id="lens-form-error" class="dialog-error" data-form-error tabindex="-1" hidden></p><div class="dialog-content fields"><input type="hidden" id="lens-id"><div class="field wide"><label for="lens-name">A human name</label><input id="lens-name" required maxlength="130" placeholder="e.g. Independent Web Notes"></div><div class="field"><label for="lens-type">What are we watching?</label><select id="lens-type"><option value="rss">RSS / Atom / JSON Feed</option><option value="page">Webpage</option></select></div><div class="field"><label for="lens-url">Public HTTP(S) URL</label><input id="lens-url" type="url" required placeholder="https://example.org/feed.xml"></div><div class="field wide page-only" hidden><label for="lens-selector">CSS selector (optional for region mode)</label><input id="lens-selector" placeholder="main article, .updates, #news-list"><small>For cards, choose the repeating element. For regions, empty means main or the whole body.</small></div><div class="field page-only" hidden><label for="lens-mode">Observation type</label><select id="lens-mode"><option value="region">Watch text changes</option><option value="cards">Extract repeated cards</option></select></div><div class="field card-only" hidden><label for="lens-title-selector">Title inside each card (CSS)</label><input id="lens-title-selector" placeholder="h2"></div><div class="field card-only" hidden><label for="lens-link-selector">Link inside each card (CSS)</label><input id="lens-link-selector" placeholder="a[href]"></div><div class="field page-only" hidden><label for="lens-threshold">Changed characters threshold</label><input id="lens-threshold" type="number" min="0" max="10000" value="24"></div><div class="field page-only" hidden><label class="inline-check"><input type="checkbox" id="lens-ignore-numbers"> Ignore changing numbers when diffing</label></div><div class="field"><label for="lens-include">Only show if text contains (comma-separated)</label><input id="lens-include" placeholder="optional: security, release, notes"></div><div class="field"><label for="lens-exclude">Ignore if text contains</label><input id="lens-exclude" placeholder="optional: ads, sponsored"></div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="lens-dialog">Cancel</button><button class="btn primary" type="submit">Save Lens</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div></dialog>
-<dialog id="collection-dialog" aria-labelledby="collection-title"><div class="dialog-head"><div><h2 id="collection-title">Weave a collection</h2><p>Feeds from feeds, not just a folder of URLs.</p></div><button class="xbtn" type="button" data-close="collection-dialog" aria-label="Close">×</button></div><form id="collection-form"><p id="collection-form-error" class="dialog-error" data-form-error tabindex="-1" hidden></p><div class="dialog-content fields"><input id="collection-id" type="hidden"><div class="field wide"><label for="collection-name">Collection name</label><input id="collection-name" required maxlength="130" placeholder="e.g. My weird little research network"></div><div class="field"><label for="collection-include">Include (comma-separated)</label><input id="collection-include" placeholder="release, tools"></div><div class="field"><label for="collection-exclude">Exclude (comma-separated)</label><input id="collection-exclude" placeholder="sponsored, sale"></div><div class="field wide"><label for="collection-mode">Algebraic operator</label><select id="collection-mode"><option value="union">∪ Union — show any member</option><option value="intersection">∩ Intersection — require every member AND 2 distinct sources</option><option value="subtract">− Subtract — begin with base member, remove the others</option></select><small>Only HTTP(S) permalinks can corroborate across Lenses; item IDs without links remain source-local.</small></div><div class="field wide"><label>Members — select sources and/or collections</label><div class="member-list" id="collection-members"></div></div><div class="field wide" id="collection-base-field" hidden><label for="collection-base">Subtraction base — keep signals from this member, then subtract the remaining members</label><select id="collection-base"><option value="">Choose a base member</option></select></div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="collection-dialog">Cancel</button><button class="btn primary" type="submit">Save collection</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div></dialog>
-<dialog id="paste-dialog" aria-labelledby="paste-title"><div class="dialog-head"><div><h2 id="paste-title">Paste a snapshot</h2><p>Capture saved feed or page content without checking the source URL.</p></div><button class="xbtn" type="button" data-close="paste-dialog" aria-label="Close">×</button></div><form id="paste-form"><p id="paste-form-error" class="dialog-error" data-form-error tabindex="-1" hidden></p><div class="dialog-content"><input id="paste-source-id" type="hidden"><div class="field"><label for="paste-raw">RSS, Atom, JSON Feed, or complete page HTML</label><textarea id="paste-raw" rows="11" placeholder="Paste the fetched source of your feed or watched webpage…"></textarea></div><div class="field" style="margin-top:13px"><label for="paste-file">Or choose a local file (takes priority over pasted text)</label><input id="paste-file" type="file" accept=".html,.htm,.xml,.rss,.atom,.json,.txt,text/html,text/xml,application/json"></div><div class="banner" style="margin-top:15px">Pasted HTML is parsed in an inert document and only plain text is displayed. No page scripts are run.</div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="paste-dialog">Cancel</button><button class="btn primary" type="submit">Process snapshot</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div></dialog>
+<dialog id="lens-dialog" aria-labelledby="lens-title"><div class="dialog-head"><div><h2 id="lens-title">Make a Lens</h2><p>One way to sense a piece of the web.</p></div><button class="xbtn" type="button" data-close="lens-dialog" aria-label="Close">×</button></div><form id="lens-form"><p id="lens-form-error" class="dialog-error" data-form-error tabindex="-1" hidden></p><div class="dialog-content fields"><input type="hidden" id="lens-id"><div class="field wide"><label for="lens-name">A human name</label><input id="lens-name" required maxlength="130" placeholder="e.g. Independent Web Notes"></div><div class="field"><label for="lens-type">What are we watching?</label><select id="lens-type"><option value="rss">RSS / Atom / JSON Feed</option><option value="page">Webpage</option></select></div><div class="field"><label for="lens-url">Public HTTP(S) URL</label><input id="lens-url" type="url" required placeholder="https://example.org/feed.xml"></div><div class="field wide page-only" hidden><label for="lens-selector">CSS selector (optional for region mode)</label><input id="lens-selector" placeholder="main article, .updates, #news-list"><small>For cards, choose the repeating element. For regions, empty means main or the whole body.</small></div><div class="field page-only" hidden><label for="lens-mode">Observation type</label><select id="lens-mode"><option value="region">Watch text changes</option><option value="cards">Extract repeated cards</option></select></div><div class="field card-only" hidden><label for="lens-title-selector">Title inside each card (CSS)</label><input id="lens-title-selector" placeholder="h2"></div><div class="field card-only" hidden><label for="lens-link-selector">Link inside each card (CSS)</label><input id="lens-link-selector" placeholder="a[href]"></div><div class="field page-only" hidden><label for="lens-threshold">Changed characters threshold</label><input id="lens-threshold" type="number" min="0" max="10000" value="24"></div><div class="field page-only" hidden><label class="inline-check"><input type="checkbox" id="lens-ignore-numbers"> Ignore changing numbers when diffing</label></div><div class="field"><label for="lens-include">Only show if text contains (comma-separated)</label><input id="lens-include" placeholder="optional: security, release, notes"></div><div class="field"><label for="lens-exclude">Ignore if text contains</label><input id="lens-exclude" placeholder="optional: ads, sponsored"></div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="lens-dialog">Cancel</button><button class="btn primary" type="submit">Save Lens</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p></div></dialog>
+<dialog id="collection-dialog" aria-labelledby="collection-title"><div class="dialog-head"><div><h2 id="collection-title">Weave a collection</h2><p>Feeds from feeds, not just a folder of URLs.</p></div><button class="xbtn" type="button" data-close="collection-dialog" aria-label="Close">×</button></div><form id="collection-form"><p id="collection-form-error" class="dialog-error" data-form-error tabindex="-1" hidden></p><div class="dialog-content fields"><input id="collection-id" type="hidden"><div class="field wide"><label for="collection-name">Collection name</label><input id="collection-name" required maxlength="130" placeholder="e.g. My weird little research network"></div><div class="field"><label for="collection-include">Include (comma-separated)</label><input id="collection-include" placeholder="release, tools"></div><div class="field"><label for="collection-exclude">Exclude (comma-separated)</label><input id="collection-exclude" placeholder="sponsored, sale"></div><div class="field wide"><label for="collection-mode">Algebraic operator</label><select id="collection-mode"><option value="union">∪ Union — show any member</option><option value="intersection">∩ Intersection — require every member AND 2 distinct sources</option><option value="subtract">− Subtract — begin with base member, remove the others</option></select><small>Only HTTP(S) permalinks can corroborate across Lenses; item IDs without links remain source-local.</small></div><div class="field wide"><label>Members — select sources and/or collections</label><div class="member-list" id="collection-members"></div></div><div class="field wide" id="collection-base-field" hidden><label for="collection-base">Subtraction base — keep signals from this member, then subtract the remaining members</label><select id="collection-base"><option value="">Choose a base member</option></select></div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="collection-dialog">Cancel</button><button class="btn primary" type="submit">Save collection</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p></div></dialog>
+<dialog id="paste-dialog" aria-labelledby="paste-title"><div class="dialog-head"><div><h2 id="paste-title">Paste a snapshot</h2><p>Capture saved feed or page content without checking the source URL.</p></div><button class="xbtn" type="button" data-close="paste-dialog" aria-label="Close">×</button></div><form id="paste-form"><p id="paste-form-error" class="dialog-error" data-form-error tabindex="-1" hidden></p><div class="dialog-content"><input id="paste-source-id" type="hidden"><div class="field"><label for="paste-raw">RSS, Atom, JSON Feed, or complete page HTML</label><textarea id="paste-raw" rows="11" placeholder="Paste the fetched source of your feed or watched webpage…"></textarea></div><div class="field" style="margin-top:13px"><label for="paste-file">Or choose a local file (takes priority over pasted text)</label><input id="paste-file" type="file" accept=".html,.htm,.xml,.rss,.atom,.json,.txt,text/html,text/xml,application/json"></div><div class="banner" style="margin-top:15px">Pasted HTML is parsed in an inert document and only plain text is displayed. No page scripts are run.</div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="paste-dialog">Cancel</button><button class="btn primary" type="submit">Process snapshot</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p></div></dialog>
 <input type="file" id="import-file" accept=".json,.opml,.xml,application/json,text/xml" hidden>
 <dialog id="deletion-dependency-dialog" aria-labelledby="deletion-dependency-title"><div class="dialog-head"><div><h2 id="deletion-dependency-title">Review collection dependencies</h2><p>Nothing has been deleted.</p></div><button class="xbtn" type="button" data-close="deletion-dependency-dialog" aria-label="Close dependency guidance">×</button></div><div class="dialog-content"><p id="deletion-dependency-summary" class="dependency-summary" tabindex="-1" autofocus></p><p>Use the matching Edit button below, or close this message and open Collections, to edit each collection listed below and remove or replace this member. Changes stay in the editor until you save. Save those changes, then try Delete again.</p><p>Intersection and Subtraction require at least two members: choose replacements or explicitly change the operator. For Subtraction, review the base member before saving; removing the old base can select another member in the editor.</p><ol id="deletion-dependency-list" class="dependency-list"></ol></div><div class="dialog-footer"><button class="btn primary" type="button" data-close="deletion-dependency-dialog">Close</button></div></dialog>
-<dialog id="trace-dialog" aria-labelledby="trace-dialog-title"><div class="dialog-head"><div><h2 id="trace-dialog-title">Why this signal?</h2><p>Local derivation path; no external verification implied.</p></div><button class="xbtn" type="button" data-close="trace-dialog" aria-label="Close">×</button></div><pre id="trace-dialog-result" class="trace-full"></pre><div class="dialog-footer"><button class="btn ghost" type="button" data-close="trace-dialog">Close</button></div><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button></div></dialog>
+<dialog id="trace-dialog" aria-labelledby="trace-dialog-title"><div class="dialog-head"><div><h2 id="trace-dialog-title">Why this signal?</h2><p>Local derivation path; no external verification implied.</p></div><button class="xbtn" type="button" data-close="trace-dialog" aria-label="Close">×</button></div><pre id="trace-dialog-result" class="trace-full"></pre><div class="dialog-footer"><button class="btn ghost" type="button" data-close="trace-dialog">Close</button></div><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p></div></dialog>
 <div id="toast" role="status" aria-live="polite" hidden></div>
 <script id="progrss-core">
 /* ProgRSS rev0004: deterministic browser core. No network, DOM mutations or storage on load. */
@@ -506,6 +506,29 @@ function atomText(el,limit=1200) {
   return type==='html'||(el.localName==='content'&&type==='text/html')?htmlText(value,limit):text(value,limit);
 }
 function bestDate(val) { let n=Date.parse(val||''); return Number.isFinite(n) ? new Date(n).toISOString() : ''; }
+// Recheck the serialized URL against the same limit used by saved observations.
+function feedLink(raw,base){return safeUrl(safeUrl(raw,base));}
+// Resolve Atom's inherited xml:base against the feed URL, never this app's URL.
+// An unusable base leaves relative links unresolved; an absolute descendant can recover.
+function atomLink(e, origin) {
+  for(const link of Array.from(e.children).filter(x=>x.localName==='link')){
+    const rel=link.getAttribute('rel');
+    if(rel&&rel!=='alternate'&&rel!=='http://www.iana.org/assignments/relation/alternate')continue;
+    const href=link.getAttribute('href');if(!href)continue;
+    const ancestors=[];for(let node=link;node;node=node.parentElement)ancestors.push(node);
+    let base=origin;
+    for(const node of ancestors.reverse()){
+      const value=node.getAttributeNS('http://www.w3.org/XML/1998/namespace','base');
+      if(value===null)continue;
+      try{
+        if(value.length>2048||/[\u0000-\u001f\u007f]/.test(value))throw Error('Invalid XML base');
+        base=new URL(value,base).href;
+      }catch{base=undefined;}
+    }
+    try{return feedLink(href,base);}catch{}
+  }
+  return '';
+}
 function parseFeed(raw, url) {
   if(typeof raw!=='string' || raw.length>LIMIT.characters)throw Error('Feed exceeds 2MB text limit');
   const origin=safeUrl(url), trimmed=raw.trim();
@@ -514,7 +537,7 @@ function parseFeed(raw, url) {
     if(!doc || !Array.isArray(doc.items) || typeof doc.version!=='string' || !/^https?:\/\/(www\.)?jsonfeed\.org\/version\/1(\.1)?\/?$/.test(doc.version)) throw Error('Not a JSON Feed 1.x document');
     return {title:text(doc.title||origin,180),type:'json',items:doc.items.slice(0,250).flatMap((entry,i)=>{
       const id=text(entry?.id,400); if(!id) return [];
-      let link=''; try{link=entry.url?safeUrl(entry.url,origin):'';}catch{}
+      let link=''; try{link=entry.url?feedLink(entry.url,origin):'';}catch{}
       return [{key:id,title:text(entry.title||entry.content_text||'Untitled update',240),url:link,summary:entry.content_text?text(entry.content_text,1200):htmlText(entry.content_html,1200),published:bestDate(entry.date_published||entry.date_modified)}];
     })};
   }
@@ -525,8 +548,7 @@ function parseFeed(raw, url) {
   if(local==='feed') {
     let entries=Array.from(doc.children).filter(x=>x.localName==='entry');
     return {title:atomText(getChild(doc,'title'),180)||origin,type:'atom',items:entries.slice(0,250).map((e,i)=>{
-      let linkEl=Array.from(e.children).filter(x=>x.localName==='link').find(x=>!x.getAttribute('rel')||x.getAttribute('rel')==='alternate');
-      let href=linkEl?.getAttribute('href')||'';let link='';try{if(href)link=safeUrl(href,origin);}catch{}
+      const link=atomLink(e,origin);
       return {key:childText(e,'id')||link||('entry-'+i),title:atomText(getChild(e,'title'),240)||'Untitled update',summary:atomText(getChild(e,'summary'))||atomText(getChild(e,'content')),published:bestDate(childText(e,'published')||childText(e,'updated')),url:link};
     })};
   }
@@ -534,7 +556,7 @@ function parseFeed(raw, url) {
   if(!channel) throw Error('Not RSS, Atom, or JSON Feed');
   const candidates=local==='rdf'?Array.from(doc.children).filter(x=>x.localName==='item'):Array.from(channel.children).filter(x=>x.localName==='item');
   return {title:text(childText(channel,'title')||origin,180),type:'rss',items:candidates.slice(0,250).map((e,i)=>{
-    const href=childText(e,'link');let link='';try{if(href)link=safeUrl(href,origin);}catch{}
+    const href=childText(e,'link');let link='';try{if(href)link=feedLink(href,origin);}catch{}
     return {key:childText(e,'guid')||link||('item-'+i),title:text(childText(e,'title')||'Untitled update',240),summary:htmlText(childText(e,'description')||childText(e,'encoded')),published:bestDate(childText(e,'pubDate')||childText(e,'date')),url:link};
   })};
 }
@@ -3260,7 +3282,7 @@ function renderPulsePanel(){
 function render(){
   renderPulsePanel();
   $('nav-items').textContent=state.items.length;$('nav-sources').textContent=state.sources.length;$('nav-collections').textContent=state.collections.length;
-  $('nav-fixtures').textContent=state.fixtures.length;$('nav-courier').textContent=(state.inbox||[]).filter(x=>x.status==='pending').length;$('nav-lineage').textContent=(state.subscriptions||[]).length;if(currentView==='lineage')renderLineage();if(currentView==='recovery'){renderRecovery();renderLedger();renderGossip();renderExchange();}if(currentView==='peers')renderInbox();if(currentView==='home')renderHome();if(currentView==='sources')renderSources();if(currentView==='collections')renderCollections();if(currentView==='commons')renderCommons();if(currentView==='clinic'){renderClinicCases();renderGardenShelf();}
+  $('nav-fixtures').textContent=state.fixtures.length;$('nav-courier').textContent=(state.inbox||[]).filter(x=>x.status==='pending').length;$('nav-lineage').textContent=(state.subscriptions||[]).length;if(currentView==='lineage')renderLineage();if(currentView==='recovery'){renderRecovery();renderLedger();renderGossip();renderExchange();}if(currentView==='peers'){renderInbox();renderRecipeSharing()}if(currentView==='home')renderHome();if(currentView==='sources')renderSources();if(currentView==='collections')renderCollections();if(currentView==='commons')renderCommons();if(currentView==='clinic'){renderClinicCases();renderGardenShelf();}
 }
 const viewNames={home:'OBSERVATORY',sources:'LENSES',scout:'SITE SCOUT',collections:'COLLECTIONS',commons:'FEED COMMONS',lineage:'LINEAGE ROOM',recovery:'TRUST & WITNESSES',clinic:'PATCH CLINIC',peers:'EXCHANGE',docs:'FIELD NOTES'};
 function go(page){currentView=page;Object.keys(viewNames).forEach(name=>$('view-'+name).hidden=page!==name);document.querySelectorAll('[data-view]').forEach(b=>{if(b.dataset.view===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});$('crumb-view').textContent=viewNames[page];if(page==='docs')$('doc-render').textContent=$('progrss-docs').textContent.trim();if(page==='peers')renderImportPreview();if(page==='clinic')clinicSelect($('clinic-source').value);render();}
@@ -3466,7 +3488,7 @@ function applySchedule(){
   if(v>0)autoTimer=setInterval(()=>{if(!document.hidden&&!busy)refreshDue()},v*60*1000);
 }
 function download(name,data,mime){const a=h('a');const url=URL.createObjectURL(new Blob([data],{type:mime||'application/octet-stream'}));a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000)}
-function downloadRecipes(){try{const data=C.exportBundle(state,activeCollection);download('ProgRSS-recipes-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(data,null,2),'application/json');notify('Exported only public recipe definitions; no observations.')}catch(error){notify(error.message,true)}}
+function downloadRecipes(){go('peers');focusAction('recipe-export-title')}
 function feedExportIdentityIssue(items){
   const seen=new Set();let lossy=0,invalid=false;
   for(const item of items){
@@ -3496,7 +3518,15 @@ function exportJSONFeed(){
     setFeedExportError('Collection feed export could not be completed. Check your browser downloads before trying again. Your saved observations are unchanged. To preserve your library, use Field notes → Private backup. Keep that backup private.');
   }finally{button?.focus({preventScroll:true});}
 }
-function exportBackup(){const data={schema:'progrss.private.v1',exportedAt:new Date().toISOString(),state};download('ProgRSS-private-backup.json',JSON.stringify(data,null,2),'application/json');notify('Private observations included. Keep this file to yourself.')}
+function exportBackup(){
+  let prepared;
+  try{prepared=preparePrivateBackup();}catch(error){privateRecoveryFeedback('Could not prepare the full private archive: '+error.message+'. The current library is unchanged.',true);return;}
+  const {raw,bytes,withinLimit}=prepared;
+  const detail=withinLimit?'Fits the 32,000,000-byte private restore limit; contents have not been checked. Use Field notes → Restore private backup to validate before replacement.':'ARCHIVE ONLY: exceeds the 32,000,000-byte private restore limit. This app cannot restore this full archive; all serialized state is retained.';
+  privateRecoveryFeedback(bytes.toLocaleString('en-US')+' bytes. '+detail+' Download requested; verify the saved file. Keep it private.',!withinLimit);
+  try{download(withinLimit?'ProgRSS-private-backup.json':'ProgRSS-private-archive.json',raw,'application/json');}
+  catch(error){privateRecoveryFeedback('Private archive download request failed: '+error.message+'. Check browser downloads before retrying. The current library is unchanged.',true);}
+}
 let pending=null, pendingPatchCourierId=null;
 // Successful replacement invalidates completed Clinic/Discovery reviews only.
 // Saved parcels stay in the restored vault; editor text remains a draft.
@@ -3511,9 +3541,46 @@ function resetRestoredWorkbenches(){
   renderScout(null);$('scout-status').textContent='No discovery selected.';renderProofWorkbench();
 }
 function previewImport(bundle){try{let plan=C.importPreview(bundle,state);if(plan.sources.length+state.sources.length>C.LIMIT.source || plan.collections.length+state.collections.length>C.LIMIT.collection)throw Error('Import would exceed library limits');pending={plan,bundle,parcelId:null};renderImportPreview();go('peers');notify('Review incoming recipes before adding them.')}catch(error){notify('Import rejected: '+error.message,true)}}
-function renderImportPreview(){const slot=$('import-preview');if(!pending){slot.className='empty';slot.replaceChildren(h('span',{class:'symbol',text:'↧'}),h('h3',{text:'No incoming recipes yet.'}),h('p',{text:'A received bundle appears here for manual review. Imported watchers will start paused.'}));return;}
-  const {plan}=pending;slot.className='';slot.replaceChildren(h('div',{style:'padding:20px'},[
-    h('h3',{id:'import-preview-title','data-focus-key':'import-preview-title',tabindex:'-1',text:plan.sources.length+' source recipes / '+plan.collections.length+' collections waiting'}),h('p',{class:'section-note',text:'Review these URL destinations before adding recipes. Imported sources will be paused; importing does not fetch them. '+(pending.parcelId?'This package stays pending in your Courier Inbox when you close the review. Check storage status before leaving.':'Closing this review drops the preview. Import the file again to review it.')}),
+let recipeExportPreview=null;
+function recipeSharingPlan(){
+  const name=activeCollection==='all'?'Every lens':state.collections.find(c=>c.id===activeCollection)?.title;
+  if(!name)throw Error('Selected collection no longer exists. Choose a collection in Observatory.');
+  const bundle=C.exportBundle(state,activeCollection);
+  return {chosen:activeCollection,name,bundle,signature:Q.canonical({sources:bundle.sources,collections:bundle.collections})};
+}
+function renderRecipeSharing(){
+  const slot=$('recipe-export-preview'),oldDetails=slot.querySelector('details'),oldSummary=oldDetails?.querySelector('summary');
+  const keepExpanded=Boolean(oldDetails?.open),keepFocus=document.activeElement===oldSummary;
+  try{
+    const plan=recipeSharingPlan(),previous=recipeExportPreview;
+    if(previous&&previous.chosen===plan.chosen&&previous.signature===plan.signature&&oldDetails)return;
+    recipeExportPreview=plan;
+    const details=h('details',keepExpanded?{open:''}:{},[h('summary',{class:'dependency-summary',text:'Review all Lens URLs and collection rules'}),...recipeDefinitionDetails(plan.bundle)]);
+    for(const id of ['recipe-file-download','peers-file-export','courier-file-export'])$(id).disabled=false;
+    slot.replaceChildren(
+      ...(previous?[h('p',{class:'banner',role:'status',text:'Recipes changed. Review the updated scope and details before downloading.'})]:[]),
+      h('p',{class:'section-note',text:'Selected scope: “'+plan.name+'” ('+plan.chosen+'). '+plan.bundle.sources.length+' Lenses / '+plan.bundle.collections.length+' collections, including every dependency. Search does not limit this file.'}),
+      h('p',{class:'mini',text:'Change the selection in Observatory. Download recipe file and Export Courier capsule use this same scope. No observations, raw snapshots, local inbox or private backup data are included.'}),
+      details);
+    if(keepFocus)details.querySelector('summary')?.focus();
+  }catch(error){
+    recipeExportPreview=null;for(const id of ['recipe-file-download','peers-file-export','courier-file-export'])$(id).disabled=true;
+    const errorNode=h('p',{class:'dependency-summary',role:'alert',tabindex:'-1',text:'Recipe export unavailable: '+error.message+' Share a smaller collection if the 100-Lens or 100-collection file limit is exceeded. Your saved library is unchanged.'});slot.replaceChildren(errorNode);if(keepFocus)errorNode.focus();
+  }
+}
+function downloadRecipePreview(asCapsule=false){
+  try{
+    const current=recipeSharingPlan();
+    if(!recipeExportPreview||currentView!=='peers'||current.chosen!==recipeExportPreview.chosen||current.signature!==recipeExportPreview.signature){
+      go('peers');focusAction('recipe-export-title');notify('Recipe scope changed. Review the refreshed preview, then download again.');return;
+    }
+    const {bundle,chosen}=recipeExportPreview;
+    if(asCapsule){const pkg=Q.makeCapsule(bundle,{note:'Selected collection: '+chosen});download('ProgRSS-capsule-recipes-'+pkg.digest.slice(7,19)+'.json',JSON.stringify(pkg,null,2),'application/json');}
+    else download('ProgRSS-recipes-'+bundle.exportedAt.slice(0,10)+'.json',JSON.stringify(bundle,null,2),'application/json');
+    notify('Recipe file download requested. Check your downloads and review the file before sharing; observations and snapshots are excluded.');
+  }catch(error){notify('Recipe file download could not be completed. Check browser downloads before trying again. '+error.message,true);}
+}
+function recipeDefinitionDetails(plan){return [
     h('p',{class:'mini',text:'Recipe definitions only: no observations or saved snapshots. Author labels are supplied by the sender, not verified identities.'}),
     h('div',{class:'stack'},plan.sources.map(s=>h('div',{class:'row-card',style:'grid-template-columns:minmax(0,1fr);overflow-wrap:anywhere'},[h('div',{},[
       h('strong',{text:s.title}),h('p',{class:'mono',text:s.url}),
@@ -3533,7 +3600,12 @@ function renderImportPreview(){const slot=$('import-preview');if(!pending){slot.
       h('p',{text:'Include any: '+(g.include||'No restriction')+' · Exclude any: '+(g.exclude||'None')}),
       h('ol',{},g.members.map((m,i)=>{const node=(m.kind==='source'?plan.sources:plan.collections).find(x=>x.id===m.id);return h('li',{text:(g.mode==='subtract'?(i===0?'Base: ':'Subtract: '):'')+(m.kind==='source'?'Lens':'Collection')+' “'+(node?.title||m.id)+'” ('+m.id+')'});})),
       ...(g.members.length?[]:[h('p',{text:'No members; this collection is empty.'})])
-    ])]))),
+    ])])))
+];}
+function renderImportPreview(){const slot=$('import-preview');if(!pending){slot.className='empty';slot.replaceChildren(h('span',{class:'symbol',text:'↧'}),h('h3',{text:'No incoming recipes yet.'}),h('p',{text:'A received bundle appears here for manual review. Imported watchers will start paused.'}));return;}
+  const {plan}=pending;slot.className='';slot.replaceChildren(h('div',{style:'padding:20px'},[
+    h('h3',{id:'import-preview-title','data-focus-key':'import-preview-title',tabindex:'-1',text:plan.sources.length+' source recipes / '+plan.collections.length+' collections waiting'}),h('p',{class:'section-note',text:'Review these URL destinations before adding recipes. Imported sources will be paused; importing does not fetch them. '+(pending.parcelId?'This package stays pending in your Courier Inbox when you close the review. Check storage status before leaving.':'Closing this review drops the preview. Import the file again to review it.')}),
+    ...recipeDefinitionDetails(plan),
     h('div',{class:'row-actions',style:'margin-top:18px;justify-content:flex-start'},[
       action('Import paused recipes',()=>{try{
         let fresh=plan;
@@ -3551,12 +3623,114 @@ function renderImportPreview(){const slot=$('import-preview');if(!pending){slot.
   ]));
 }
 let importReadToken=0;
-async function doImport(file){if(!file)return;const token=++importReadToken;if(file.size>12_000_000)return notify('Import file exceeds 12MB',true);try{const raw=await file.text();if(token!==importReadToken)return;if(/\.opml$|\.xml$/i.test(file.name)){const recipes=C.parseOPML(raw);previewImport({schema:C.SCHEMA,sources:recipes,collections:[]});return;}
+// Recovery policy v003: a bounded exact-current-state route, separate from ordinary import.
+// These are input budgets, not guarantees about browser memory or durable storage.
+const PRIVATE_RECOVERY_BYTES=32_000_000, ORDINARY_IMPORT_BYTES=12_000_000;
+function privateByteLength(raw){
+  let bytes=0;
+  for(let i=0;i<raw.length;i++){
+    const c=raw.charCodeAt(i);
+    if(c<0x80)bytes++;else if(c<0x800)bytes+=2;
+    else if(c>=0xd800&&c<=0xdbff&&i+1<raw.length&&raw.charCodeAt(i+1)>=0xdc00&&raw.charCodeAt(i+1)<=0xdfff){bytes+=4;i++;}
+    else bytes+=3;
+  }
+  return bytes;
+}
+function validatePrivateState(b){
+  checkPrivateStructure(b);
+  if(!b||![2,3,4,5,6,7,8,9,10,11].includes(b.version)||!Array.isArray(b.sources)||!Array.isArray(b.collections)||!Array.isArray(b.items)||b.items.length>1200||b.sources.length>200||b.collections.length>200)throw Error('Invalid backup');
+  C.validateBackupRecipes({schema:C.SCHEMA,sources:b.sources,collections:b.collections});
+  const validated=V.normalize(b);validated.fixtures=(validated.fixtures||[]).map(C.cleanFixture);Q.initializeState(validated);L.stateInit(validated);for(const e of validated.inbox)Q.validateCapsule(e.capsule);
+  return validated;
+}
+function checkPrivateStructure(value){
+  let visited=0;
+  function visit(current,depth,field="state"){
+    if(++visited>1_000_000||depth>64)throw Error('State exceeds the private recovery structure budget (1,000,000 values or 64 levels)');
+    if(typeof current==='number'&&!Number.isFinite(current))throw Error('Unsupported non-finite parsed JSON number in '+field);
+    if(Object.is(current,-0))throw Error('Unsupported negative zero JSON number in '+field+'; it would be stored as zero');
+    if(Array.isArray(current)){for(const child of current)visit(child,depth+1,field);}
+    else if(current!==null&&typeof current==='object'){for(const key of Object.keys(current))visit(current[key],depth+1,depth===0?key.slice(0,80):field);}
+  }
+  visit(value,0);
+}
+function privateStateDifferences(before,after){
+  // Both operands are JSON values. Compare meaning, ignoring object key order.
+  // Bound the comparison itself; do not silently normalize a too-complex state.
+  let visited=0;
+  const equal=(a,b,depth=0)=>{
+    if(++visited>1_000_000||depth>64)throw Error('State exceeds the recovery comparison budget (1,000,000 values or 64 levels)');
+    if(a===b)return true;
+    if(a===null||b===null||typeof a!=='object'||typeof b!=='object'||Array.isArray(a)!==Array.isArray(b))return false;
+    const ak=Object.keys(a),bk=Object.keys(b);
+    return ak.length===bk.length&&ak.every(k=>Object.prototype.hasOwnProperty.call(b,k)&&equal(a[k],b[k],depth+1));
+  };
+  return [...new Set([...Object.keys(before),...Object.keys(after)])].filter(k=>!Object.prototype.hasOwnProperty.call(before,k)||!Object.prototype.hasOwnProperty.call(after,k)||!equal(before[k],after[k]));
+}
+function privateRecoveryFeedback(message,error=false){
+  for(const node of document.querySelectorAll('[data-private-recovery-status]')){node.textContent=message;node.hidden=false;}
+  notify(message,error);
+}
+function preparePrivateBackup(){
+  // Preserve the full archive first. Do not parse/copy it again for export validation.
+  const raw=JSON.stringify({schema:'progrss.private.v1',exportedAt:new Date().toISOString(),state},null,2),bytes=privateByteLength(raw);
+  return {raw,bytes,withinLimit:bytes<=PRIVATE_RECOVERY_BYTES};
+}
+let activeImportRead=null,pendingImportRead=null;
+function startImportRead(job){
+  if(job.token!==importReadToken){job.resolve();return;}
+  activeImportRead=job;
+  const finish=(error,raw)=>{
+    activeImportRead=null;
+    const next=pendingImportRead;pendingImportRead=null;
+    if(job.token!==importReadToken)job.resolve();else if(error)job.reject(error);else job.resolve(raw);
+    if(next)startImportRead(next);
+  };
+  Promise.resolve().then(()=>job.file.text()).then(raw=>finish(null,raw),error=>finish(error));
+}
+function readImportText(file,token){
+  // File.text() cannot be cancelled. Keep one active read and one latest waiting
+  // selection across both routes; superseded waiters resolve without reading.
+  return new Promise((resolve,reject)=>{
+    const job={file,token,resolve,reject};
+    if(token!==importReadToken){resolve();return;}
+    if(activeImportRead){
+      if(pendingImportRead)pendingImportRead.resolve();
+      pendingImportRead=job;
+      notify('Waiting for the previous file read to finish. Only your latest file selection will be read.');
+    }else startImportRead(job);
+  });
+}
+async function restorePrivateFile(file){
+  if(!file)return;
+  const token=++importReadToken;
+  if(!Number.isSafeInteger(file.size)||file.size<0||file.size>PRIVATE_RECOVERY_BYTES)return privateRecoveryFeedback('Private restore accepts files up to '+PRIVATE_RECOVERY_BYTES.toLocaleString('en-US')+' bytes. This file was not read; the current library is unchanged. Keep your full archive.',true);
+  if(file.size>ORDINARY_IMPORT_BYTES&&!confirm('Read this '+file.size.toLocaleString('en-US')+'-byte private backup? Export the current library first. Reading and restoring a large file can use much more memory than its file size and may interrupt this tab. Continue?'))return;
+  let replaced=false;
+  try{
+    const raw=await readImportText(file,token);if(token!==importReadToken)return;
+    if(privateByteLength(raw)>PRIVATE_RECOVERY_BYTES)throw Error('File text exceeds the private restore byte limit');
     const parsed=JSON.parse(raw);
-    if(parsed.schema==='progrss.private.v1' && parsed.state){if(!confirm('This is a private backup and will REPLACE your current library. Continue?'))return;
-      const b=parsed.state;if(!b||![2,3,4,5,6,7,8,9,10,11].includes(b.version)||!Array.isArray(b.sources)||!Array.isArray(b.collections)||!Array.isArray(b.items)||b.items.length>1200||b.sources.length>200||b.collections.length>200)throw Error('Invalid backup');
-      C.validateBackupRecipes({schema:C.SCHEMA,sources:b.sources,collections:b.collections});
-      const validated=V.normalize(b);validated.fixtures=(validated.fixtures||[]).map(C.cleanFixture);Q.initializeState(validated);L.stateInit(validated);for(const e of validated.inbox)Q.validateCapsule(e.capsule);state=validated;pending=null;renderImportPreview();resetRestoredWorkbenches();save();notify('Private backup loaded into this tab. Check storage status before leaving.');go('home');return;
+    if(parsed?.schema!=='progrss.private.v1'||!parsed.state)throw Error('Choose a ProgRSS private backup. Names and file types do not establish its format');
+    const validated=validatePrivateState(parsed.state),differences=privateStateDifferences(parsed.state,validated),legacy=parsed.state.version!==11;
+    if(differences.length&&!legacy)throw Error('Exact restore would change these state fields: '+differences.join(', ')+'. Keep this full archive. Ordinary Import can read files up to 12,000,000 bytes using legacy normalization');
+    const migration=legacy?' This older backup will be upgraded; these fields will change: '+differences.join(', ')+'.':'';
+    if(!confirm('This private backup will REPLACE your current library.'+migration+' Browser storage can still fail after loading. Continue?'))return;
+    if(token!==importReadToken)return;
+    state=validated;replaced=true;pending=null;renderImportPreview();resetRestoredWorkbenches();save();
+    privateRecoveryFeedback((legacy?'Older private backup upgraded and loaded':'The 24 saved JSON state fields were loaded exactly')+' into this tab. Transient view and scheduling choices are separate. Check storage status before leaving; keep the original file.');go('home');
+  }catch(error){if(token===importReadToken)privateRecoveryFeedback(replaced?'The replacement library is loaded in this tab, but restore follow-up failed: '+error.message+'. Keep the original file and check storage status.':'Private restore failed: '+error.message+'. The current library is unchanged.',true);}
+}
+
+async function doImport(file){if(!file)return;const token=++importReadToken;if(file.size>ORDINARY_IMPORT_BYTES)return notify('Import file exceeds 12MB (12,000,000 bytes). For a private backup, use Field notes → Restore private backup (up to 32,000,000 bytes).',true);try{const raw=await readImportText(file,token);if(token!==importReadToken)return;if(/\.opml$|\.xml$/i.test(file.name)){const recipes=C.parseOPML(raw);previewImport({schema:C.SCHEMA,sources:recipes,collections:[]});return;}
+    const parsed=JSON.parse(raw);
+    if(parsed&&Array.isArray(parsed.items)&&typeof parsed.version==='string'&&/^https?:\/\/(www\.)?jsonfeed\.org\/version\/1(\.1)?\/?$/.test(parsed.version)){notify('This is a JSON Feed of observations. Use Lenses → Paste on an RSS / Atom / JSON Feed Lens, choose this file, then Process snapshot. No recipes or observations were imported.',true);return;}
+    if(parsed.schema==='progrss.private.v1' && parsed.state){
+      const validated=validatePrivateState(parsed.state),differences=privateStateDifferences(parsed.state,validated);
+      const changes=differences.length?' Legacy normalization will change these fields: '+differences.join(', ')+'. Values may be changed or removed; keep the original archive.':'';
+      if(!confirm('This is a private backup and will REPLACE your current library.'+changes+' Continue?'))return;
+      if(token!==importReadToken)return;
+      state=validated;pending=null;renderImportPreview();resetRestoredWorkbenches();save();notify('Private backup loaded into this tab. Check storage status before leaving.');go('home');return;
     }
     if([Q.SCHEMA,C.PATCH_SCHEMA,G.SCHEMA,C.SCHEMA,D.SCHEMA,L.SCHEMA,T.SCHEMA,W.HEAD,W.SIGHT,E.REQUEST,E.REPLY,E.FORK,Y.SCHEMA].includes(parsed.schema)){receiveCourier(parsed,'file');return;}
     previewImport(parsed);
@@ -4170,9 +4344,7 @@ function courierDemonstration(){
     notify(result.duplicate?'Demo package already in Courier Inbox':'Demonstration package received · review it without fetching any website');
   }catch(error){notify('Demo creation failed: '+error.message,true)}
 }
-function exportNewCourier(){try{const pkg=Q.makeCapsule(C.exportBundle(state,activeCollection),{note:'Selected collection: '+activeCollection});
-  download('ProgRSS-capsule-recipes-'+pkg.digest.slice(7,19)+'.json',JSON.stringify(pkg,null,2),'application/json');notify('Shareable checked capsule exported · observations excluded.');
-}catch(error){notify('Capsule export failed: '+error.message,true)}}
+function exportNewCourier(){downloadRecipePreview(true)}
 function exportCourierPatch(){try{if(!stagedProposal)throw Error('Stage a proposal in Patch Clinic first');const pkg=Q.makeCapsule(stagedSignedPatch||stagedProposal);
   download('ProgRSS-capsule-patch-'+pkg.digest.slice(7,19)+'.json',JSON.stringify(pkg,null,2),'application/json');
 }catch(error){notify('Patch capsule export failed: '+error.message,true)}}
@@ -5050,12 +5222,14 @@ $('refresh-all').addEventListener('click',refreshAll);$('search-items').addEvent
 $('collection-choice').addEventListener('change',e=>{activeCollection=e.target.value;renderHome();traceSelected()});
 $('trace-run').addEventListener('click',traceSelected);$('trace-choose').addEventListener('change',traceSelected);
 $('collection-mode').addEventListener('change',refreshCollectionBase);
-$('top-export').addEventListener('click',downloadRecipes);$('export-feed').addEventListener('click',exportJSONFeed);
+$('top-export').addEventListener('click',downloadRecipes);$('recipe-file-download').addEventListener('click',()=>downloadRecipePreview(false));$('recipe-export-return').addEventListener('click',()=>{go('home');focusAction($('collection-choice'))});$('export-feed').addEventListener('click',exportJSONFeed);
 $('hero-demo').addEventListener('click',loadDemo);$('home-docs').addEventListener('click',()=>go('docs'));
 $('auto-interval').addEventListener('change',()=>{applySchedule();notify(Number($('auto-interval').value)?'Open-tab scheduling enabled. Only due Lenses are checked, with per-site pacing.':'Scheduled checks disabled.')});
 $('refresh-due').addEventListener('click',refreshDue);
 $('docs-persist').addEventListener('click',async()=>{try{const ok=await V.requestPersistence();notify(ok?'Browser approved durable-origin storage. Keep backups anyway.':'Browser did not grant durable storage (may be unsupported on file://).',!ok)}catch(err){notify('Durable storage: '+err.message,true)}});
 document.querySelectorAll('[data-vault-backup]').forEach(button=>button.addEventListener('click',exportBackup));
+$('docs-restore').addEventListener('click',()=>$('docs-restore-file').click());
+$('docs-restore-file').addEventListener('change',async e=>{await restorePrivateFile(e.target.files[0]);e.target.value='';});
 $('docs-backup').addEventListener('click',exportBackup);$('docs-opml').addEventListener('click',()=>download('ProgRSS-feeds.opml',C.makeOPML(state),'text/xml'));
 $('clinic-source').addEventListener('change',e=>clinicSelect(e.target.value));$('clinic-mode').addEventListener('change',()=>{toggleClinicCardFields();resetForge();});$('forge-run').addEventListener('click',runForge);
 $('arena-run').addEventListener('click',runArena);$('arena-demo').addEventListener('click',arenaDemo);$('arena-export').addEventListener('click',exportArena);
