@@ -3748,7 +3748,24 @@ async function restorePrivateFile(file){
   }catch(error){if(token===importReadToken)privateRecoveryFeedback(replaced?'The replacement library is loaded in this tab, but restore follow-up failed: '+error.message+'. Keep the original file and check storage status.':'Private restore failed: '+error.message+'. The current library is unchanged.',true);}
 }
 
-async function doImport(file){if(!file)return;const token=++importReadToken;if(file.size>ORDINARY_IMPORT_BYTES)return notify('Import file exceeds 12MB (12,000,000 bytes). For a private backup, use Field notes → Restore private backup (up to 32,000,000 bytes).',true);try{const raw=await readImportText(file,token);if(token!==importReadToken)return;if(/\.opml$|\.xml$/i.test(file.name)){const recipes=C.parseOPML(raw);previewImport({schema:C.SCHEMA,sources:recipes,collections:[]});return;}
+function rejectedXMLFeedGuidance(raw){
+  // Only explain an already rejected file. This does not validate or import a feed.
+  if(typeof raw!=='string'||raw.length>C.LIMIT.characters||!raw.trimStart().startsWith('<')||/<!DOCTYPE\b/i.test(raw))return '';
+  try{
+    const doc=new DOMParser().parseFromString(raw,'application/xml');
+    if(doc.querySelector('parsererror'))return '';
+    const root=doc.documentElement;if(!root)return '';
+    const is=(node,name,namespace='')=>node.localName===name&&(node.namespaceURI||'')===namespace;
+    let format='';
+    if(is(root,'rss')&&Array.from(root.children).some(node=>is(node,'channel')))format='RSS';
+    else if(is(root,'feed','http://www.w3.org/2005/Atom'))format='Atom';
+    else if(is(root,'RDF','http://www.w3.org/1999/02/22-rdf-syntax-ns#')&&Array.from(root.children).some(node=>is(node,'channel','http://purl.org/rss/1.0/')))format='RSS';
+    if(!format)return '';
+    return 'This looks like an '+format+' feed snapshot. Use Lenses → Paste on an RSS / Atom / JSON Feed Lens, choose this file, then Process snapshot. No recipes or observations were imported.';
+  }catch{return '';}
+}
+
+async function doImport(file){if(!file)return;const token=++importReadToken;if(file.size>ORDINARY_IMPORT_BYTES)return notify('Import file exceeds 12MB (12,000,000 bytes). For a private backup, use Field notes → Restore private backup (up to 32,000,000 bytes).',true);let raw;try{raw=await readImportText(file,token);if(token!==importReadToken)return;if(/\.opml$|\.xml$/i.test(file.name)){const recipes=C.parseOPML(raw);previewImport({schema:C.SCHEMA,sources:recipes,collections:[]});return;}
     const parsed=JSON.parse(raw);
     if(parsed&&Array.isArray(parsed.items)&&typeof parsed.version==='string'&&/^https?:\/\/(www\.)?jsonfeed\.org\/version\/1(\.1)?\/?$/.test(parsed.version)){notify('This is a JSON Feed of observations. Use Lenses → Paste on an RSS / Atom / JSON Feed Lens, choose this file, then Process snapshot. No recipes or observations were imported.',true);return;}
     if(parsed.schema==='progrss.private.v1' && parsed.state){
@@ -3760,7 +3777,7 @@ async function doImport(file){if(!file)return;const token=++importReadToken;if(f
     }
     if([Q.SCHEMA,C.PATCH_SCHEMA,G.SCHEMA,C.SCHEMA,D.SCHEMA,L.SCHEMA,T.SCHEMA,W.HEAD,W.SIGHT,E.REQUEST,E.REPLY,E.FORK,Y.SCHEMA].includes(parsed.schema)){receiveCourier(parsed,'file');return;}
     previewImport(parsed);
-  }catch(error){if(token===importReadToken)notify('Import failed: '+error.message,true)}
+  }catch(error){if(token===importReadToken)notify(rejectedXMLFeedGuidance(raw)||'Import failed: '+error.message,true)}
 }
 function loadDemo(){if(state.sources.some(s=>s.id==='demo-blog'))return notify('Offline demo already present.');const feed={id:'demo-blog',title:'DEMO · Indie web posts',url:'https://example.org/blog.xml',type:'rss',include:'',exclude:'',selector:'',enabled:false,version:1,author:'ProgRSS sample',origin:'demo'};const page={id:'demo-projects',title:'DEMO · Project board changes',url:'https://example.org/projects',type:'page',mode:'cards',selector:'.project',include:'',exclude:'',enabled:false,version:1,author:'ProgRSS sample',origin:'demo'};
   state.sources.push(feed,page);processContent(feed,`<?xml version="1.0"?><rss version="2.0"><channel><title>Offline Sample</title><item><guid>paper-1</guid><title>Making the web observable again</title><link>https://example.org/notes/one</link><description>A thought experiment about local-first publishing.</description><pubDate>Fri, 09 Oct 2026 00:00:00 GMT</pubDate></item><item><guid>paper-2</guid><title>A new open-source filtering engine</title><link>https://example.org/notes/two</link><description>Rule recipes can be maintained collectively.</description></item></channel></rss>`);
