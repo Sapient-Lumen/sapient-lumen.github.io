@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "project": "ProgRSS",
+  "record_date": "2026-10-11",
+  "bundle_scope": "Complete shareable resilient-work documentation; not an application recovery archive.",
+  "state": "Design reviewed; workflow implementation and fault testing not performed by this design task.",
+  "start_here": "RESILIENT-WORK-DESIGN.md",
+  "independent_review": "independent-review.md",
+  "manifest": "MANIFEST.json",
+  "required_dependency_policy": "All documentation recovery dependencies are adjacent files listed in MANIFEST.json. Historical source citations are optional provenance, not required to recover this design bundle.",
+  "next_item": "Select one useful direct-file result with a job card, resume step, shared manifest, independent destination intents, exact readback and fresh-directory recovery, after confirming current scope and tools.",
+  "acceptance_for_next_item": [
+    "Pinned inputs and complete selected dependency closure",
+    "Independent candidate review",
+    "Recorded byte and path validation checks",
+    "A demonstrated cold resume without original worker memory",
+    "Application, GUI and live deployment claims only when separately executed and verified"
+  ],
+  "do_not_infer": [
+    "No new workers or schedule created",
+    "No credentials or permissions changed",
+    "No application archive replicated by this documentation bundle",
+    "No remote write proved by this file",
+    "No automatic startup or replay authorization"
+  ],
+  "publication_model": "Either complete verified eligible copy establishes documentation custody; both establish its replication. Each destination has independent evidence."
+}
