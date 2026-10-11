@@ -3113,6 +3113,9 @@ let lastClinicAnalysis=null;
 // a newer pending/failed write, including synchronous serialization failures.
 let vaultAttempt=0,vaultPhase='idle',vaultSaveError='';
 async function persist(){
+  // A new library save supersedes the earlier backup/restore outcome.
+  // Do this at request time: an older completion must not clear a newer notice.
+  clearPrivateRecoveryFeedback();
   const attempt=++vaultAttempt;vaultPhase='saving';vaultSaveError='';renderVault();
   try{
     const saved=await V.save(state);if(saved===false)throw Error(V.info().warning||'Browser storage is unavailable');
@@ -3666,6 +3669,10 @@ function privateStateDifferences(before,after){
     return ak.length===bk.length&&ak.every(k=>Object.prototype.hasOwnProperty.call(b,k)&&equal(a[k],b[k],depth+1));
   };
   return [...new Set([...Object.keys(before),...Object.keys(after)])].filter(k=>!Object.prototype.hasOwnProperty.call(before,k)||!Object.prototype.hasOwnProperty.call(after,k)||!equal(before[k],after[k]));
+}
+function clearPrivateRecoveryFeedback(){
+  // Storage failures have their own persistent status and are never cleared here.
+  for(const node of document.querySelectorAll('[data-private-recovery-status]')){node.textContent='';node.hidden=true;}
 }
 function privateRecoveryFeedback(message,error=false){
   for(const node of document.querySelectorAll('[data-private-recovery-status]')){node.textContent=message;node.hidden=false;}
