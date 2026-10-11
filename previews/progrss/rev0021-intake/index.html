@@ -3306,8 +3306,9 @@ function render(){
   $('nav-items').textContent=state.items.length;$('nav-sources').textContent=state.sources.length;$('nav-collections').textContent=state.collections.length;
   $('nav-fixtures').textContent=state.fixtures.length;$('nav-courier').textContent=(state.inbox||[]).filter(x=>x.status==='pending').length;$('nav-lineage').textContent=(state.subscriptions||[]).length;if(currentView==='lineage')renderLineage();if(currentView==='recovery'){renderRecovery();renderLedger();renderGossip();renderExchange();}if(currentView==='peers'){renderInbox();renderRecipeSharing()}if(currentView==='home')renderHome();if(currentView==='sources')renderSources();if(currentView==='collections')renderCollections();if(currentView==='commons')renderCommons();if(currentView==='clinic'){renderClinicCases();renderGardenShelf();}
 }
+let sectionNavigationGeneration=0;
 const viewNames={home:'OBSERVATORY',sources:'LENSES',scout:'SITE SCOUT',collections:'COLLECTIONS',commons:'FEED COMMONS',lineage:'LINEAGE ROOM',recovery:'TRUST & WITNESSES',clinic:'PATCH CLINIC',peers:'EXCHANGE',docs:'FIELD NOTES'};
-function go(page){currentView=page;Object.keys(viewNames).forEach(name=>$('view-'+name).hidden=page!==name);document.querySelectorAll('[data-view]').forEach(b=>{if(b.dataset.view===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});$('crumb-view').textContent=viewNames[page];if(page==='docs')$('doc-render').textContent=$('progrss-docs').textContent.trim();if(page==='peers')renderImportPreview();if(page==='clinic')clinicSelect($('clinic-source').value);render();}
+function go(page){sectionNavigationGeneration++;currentView=page;Object.keys(viewNames).forEach(name=>$('view-'+name).hidden=page!==name);document.querySelectorAll('[data-view]').forEach(b=>{if(b.dataset.view===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});$('crumb-view').textContent=viewNames[page];if(page==='docs')$('doc-render').textContent=$('progrss-docs').textContent.trim();if(page==='peers')renderImportPreview();if(page==='clinic')clinicSelect($('clinic-source').value);render();}
 function clearDialogError(id){
   const summary=$(id).querySelector('[data-form-error]');if(!summary)return;
   summary.hidden=true;summary.textContent='';
@@ -3766,7 +3767,7 @@ function rejectedXMLFeedGuidance(raw){
   }catch{return '';}
 }
 
-async function doImport(file){if(!file)return;const token=++importReadToken;if(file.size>ORDINARY_IMPORT_BYTES)return notify('Import file exceeds 12MB (12,000,000 bytes). For a private backup, use Field notes → Restore private backup (up to 32,000,000 bytes).',true);let raw;try{raw=await readImportText(file,token);if(token!==importReadToken)return;if(/\.opml$|\.xml$/i.test(file.name)){const recipes=C.parseOPML(raw);previewImport({schema:C.SCHEMA,sources:recipes,collections:[]});return;}
+async function doImport(file){if(!file)return;const token=++importReadToken,selectionSectionGeneration=sectionNavigationGeneration;if(file.size>ORDINARY_IMPORT_BYTES)return notify('Import file exceeds 12MB (12,000,000 bytes). For a private backup, use Field notes → Restore private backup (up to 32,000,000 bytes).',true);let raw;try{raw=await readImportText(file,token);if(token!==importReadToken)return;if(/\.opml$|\.xml$/i.test(file.name)){const recipes=C.parseOPML(raw);previewImport({schema:C.SCHEMA,sources:recipes,collections:[]});return;}
     const parsed=JSON.parse(raw);
     if(parsed&&Array.isArray(parsed.items)&&typeof parsed.version==='string'&&/^https?:\/\/(www\.)?jsonfeed\.org\/version\/1(\.1)?\/?$/.test(parsed.version)){notify('This is a JSON Feed of observations. Use Lenses → Paste on an RSS / Atom / JSON Feed Lens, choose this file, then Process snapshot. No recipes or observations were imported.',true);return;}
     if(parsed.schema==='progrss.private.v1' && parsed.state){
@@ -3776,7 +3777,7 @@ async function doImport(file){if(!file)return;const token=++importReadToken;if(f
       if(token!==importReadToken)return;
       state=validated;pending=null;renderImportPreview();resetRestoredWorkbenches();save();notify('Private backup loaded into this tab. Check storage status before leaving.');go('home');return;
     }
-    if([Q.SCHEMA,C.PATCH_SCHEMA,G.SCHEMA,C.SCHEMA,D.SCHEMA,L.SCHEMA,T.SCHEMA,W.HEAD,W.SIGHT,E.REQUEST,E.REPLY,E.FORK,Y.SCHEMA].includes(parsed.schema)){receiveCourier(parsed,'file');return;}
+    if([Q.SCHEMA,C.PATCH_SCHEMA,G.SCHEMA,C.SCHEMA,D.SCHEMA,L.SCHEMA,T.SCHEMA,W.HEAD,W.SIGHT,E.REQUEST,E.REPLY,E.FORK,Y.SCHEMA].includes(parsed.schema)){receiveCourier(parsed,'file',{openExchange:selectionSectionGeneration===sectionNavigationGeneration});return;}
     previewImport(parsed);
   }catch(error){if(token===importReadToken)notify(rejectedXMLFeedGuidance(raw)||'Import failed: '+error.message,true)}
 }
@@ -4299,8 +4300,8 @@ async function applyPatch(){
 
 // Rev0005 / Courier: durable local inbox, no automatic adoption or fetch.
 // Checksums are deliberately NOT signatures or trusted human identities.
-function receiveCourier(packet,via='file'){
-  try{const result=Q.receive(state,packet,via);save();go('peers');
+function receiveCourier(packet,via='file',{openExchange=true}={}){
+  try{const result=Q.receive(state,packet,via);save();if(openExchange)go('peers');
     notify(result.duplicate?'Already in your Courier Inbox (same content digest).':'Courier package added to this tab · checksum verified · waiting for review.');
     return result;
   }catch(error){notify('Courier refused: '+error.message,true);throw error;}
