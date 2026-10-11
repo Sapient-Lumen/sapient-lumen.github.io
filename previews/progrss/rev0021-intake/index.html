@@ -43,6 +43,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 .scout-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:19px}
 .scout-grid>.peer-card{min-width:0}.scout-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
 .scout-grid textarea{min-height:170px;resize:vertical;word-break:normal}
+.scout-offline-help{margin-top:14px;font-size:12px;line-height:1.7;overflow-wrap:anywhere}.scout-offline-help summary{cursor:pointer;color:var(--teal)}.scout-offline-help summary:focus-visible{outline:2px solid var(--lime);outline-offset:3px}.scout-offline-help ol{padding-left:20px}.scout-offline-help li+li{margin-top:6px}.scout-status,#scout-findings-context{overflow-wrap:anywhere}
 .scout-status{white-space:pre-wrap;color:var(--teal);border:1px dashed #4d7158;border-radius:8px;padding:12px;background:#17251b;font:11px/1.6 var(--mono);margin:15px 0}
 .scout-results{display:grid;gap:11px;max-height:650px;overflow:auto;padding-right:3px}
 .scout-result{border-radius:9px;border:1px solid var(--line);background:#132018;padding:13px;min-width:0}
@@ -147,6 +148,14 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 
 /* Short form dialogs need scrollable headers so footer controls stay reachable. */
 @media(max-height:500px){#lens-dialog .dialog-head,#collection-dialog .dialog-head,#paste-dialog .dialog-head{position:static}}
+/* Returning reading libraries keep the same actions in a compact introduction. */
+#view-home.has-library .hero{display:block}
+#view-home.has-library .hero-copy{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:0}
+#view-home.has-library .hero h1{font-size:28px;line-height:1.2;letter-spacing:-.8px;margin:0}
+#view-home.has-library .hero .eyebrow,#view-home.has-library .hero .lede,#view-home.has-library .hero-art{display:none}
+#view-home.has-library .metrics{margin:16px 0 24px}
+#view-home.has-library .metric{padding:10px 14px}
+#view-home.has-library .metric strong{font-size:22px}
 </style>
 </head>
 <body>
@@ -176,7 +185,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
   <div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p></div>
   <div class="topline"><div class="crumb">PROJECT / <b>PROGRSS</b> / <span id="crumb-view">OBSERVATORY</span></div><div class="actions"><button class="btn ghost sm" id="top-scout">⌁ Discover</button><button class="btn ghost sm" id="top-import">↥ Import</button><button class="btn ghost sm" id="top-export">↧ Share recipes</button><button class="btn primary sm" id="top-add">＋ New lens</button></div></div>
   <section class="view" id="view-home">
-    <div class="hero"><div class="hero-copy"><p class="eyebrow">A new kind of feed / Early experiment 019</p><h1>Follow the parts of the internet <em>that matter.</em></h1><p class="lede">Watch selected parts of pages you can fetch or supply as HTML. Combine RSS, watched regions and the collections of friends. Prove your filters with reproducible snapshots. No feed server or extension required.</p><div class="hero-links"><button class="btn primary" id="hero-add">＋ Make your first Lens</button><button class="btn ghost" id="hero-demo">Try the offline demo ↗</button></div></div><div class="hero-art" aria-hidden="true"><div class="art-line"></div><span class="orb a"></span><span class="orb b"></span><span class="orb c"></span><span class="orb d"></span><div class="art-label">public web → <b>observation</b><br>observation → <b>collective lens</b><br>collective lens → <b>your attention</b></div></div></div>
+    <div class="hero"><div class="hero-copy"><p class="eyebrow">A new kind of feed / Early experiment 019</p><h1><span id="home-intro-title">Follow the parts of the internet <em>that matter.</em></span><span id="home-reading-title" hidden>Your reading</span></h1><p class="lede">Watch selected parts of pages you can fetch or supply as HTML. Combine RSS, watched regions and the collections of friends. Prove your filters with reproducible snapshots. No feed server or extension required.</p><div class="hero-links"><button class="btn primary" id="hero-add">＋ Make your first Lens</button><button class="btn ghost" id="hero-demo">Try the offline demo ↗</button></div></div><div class="hero-art" aria-hidden="true"><div class="art-line"></div><span class="orb a"></span><span class="orb b"></span><span class="orb c"></span><span class="orb d"></span><div class="art-label">public web → <b>observation</b><br>observation → <b>collective lens</b><br>collective lens → <b>your attention</b></div></div></div>
     <div class="metrics"><div class="metric"><div><span>Watching lenses</span><strong id="stat-sources">0</strong></div><span class="glyph">◉</span></div><div class="metric"><div><span>Collections</span><strong id="stat-collections">0</strong></div><span class="glyph">⌗</span></div><div class="metric"><div><span>Observed events</span><strong id="stat-items">0</strong></div><span class="glyph">↗</span></div></div>
     <div class="section-title"><div><h2>The signal</h2><p>Only observations you or your circles choose to keep.</p></div><div class="toolbar-small"><button class="btn sm ghost" id="refresh-due">◷ Check due</button><button class="btn sm ghost" id="refresh-all">↻ Check all now</button><button class="btn sm ghost" id="export-feed" aria-describedby="feed-export-scope feed-export-error">↧ Export collection feed</button></div></div>
     <p class="section-note" id="feed-export-scope">Collection feed export includes saved observations and is not limited by search.</p>
@@ -189,16 +198,18 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
     <div class="banner" style="margin-bottom:18px">Site Scout only reads the page you explicitly scan. Discovered links are NOT fetched automatically. Newly created Lenses begin paused until you choose to enable them.</div>
     <div class="scout-grid">
       <div class="peer-card">
-        <h3>Investigate a website</h3><p>Enter a public URL and fetch its HTML using browser CORS or the optional local CLI bridge. Alternatively, inspect saved HTML completely offline.</p>
-        <div class="field"><label for="scout-url">Site URL (also resolves relative feed links)</label><input type="url" id="scout-url" placeholder="https://example.org/blog" spellcheck="false"></div>
-        <div class="scout-actions"><button class="btn primary sm" id="scout-fetch">⌁ Fetch &amp; discover</button><button class="btn ghost sm" id="scout-analyze">Analyze pasted HTML</button><button class="btn ghost sm" id="scout-clear">Clear</button></div>
+        <h3>Investigate a website</h3><p>Browser fetch works when the site allows ProgRSS to read its response. You can also paste page source or load a saved page/feed below. Those routes need no CLI.</p>
+        <div class="field"><label for="scout-url">Site or feed URL (required for saved content too)</label><input type="url" id="scout-url" placeholder="https://example.org/blog" spellcheck="false"></div>
+        <div class="scout-actions"><button class="btn primary sm" id="scout-fetch">⌁ Fetch &amp; discover</button><button class="btn ghost sm" id="scout-analyze">Analyze pasted content</button><button class="btn ghost sm" id="scout-clear">Clear</button></div>
+        <details id="scout-offline-help" class="scout-offline-help"><summary>How to scan without fetching</summary><ol><li>Open the page in your browser. Copy its final address into Site or feed URL above so relative links resolve correctly.</li><li>Use View Page Source and copy the HTML, or save the page as HTML. For a feed, use its RSS, Atom or JSON contents. Copying only the visible page text loses feed links. Leave HTTP Link header empty unless it came from this page.</li><li>Paste below and choose Analyze pasted content, or choose a saved file below to load and analyze it immediately.</li></ol><p>Use a file under 2 MB and content under 2 million characters. Scout reads the supplied source; it does not run the page's scripts or inspect embedded frames. A saved page may omit content loaded by scripts.</p><p>Opening a site in another tab does not grant ProgRSS cross-site access (CORS). Direct Fetch also rejects redirects and can fail on network or timeout errors. A generic browser error cannot identify the cause. An optional local CLI bridge is a separate route: use the local ProgRSS page it serves, not this hosted preview.</p></details>
         <div class="field" style="margin-top:14px"><label for="scout-html">Offline HTML / RSS / Atom / JSON Feed</label><textarea id="scout-html" rows="8" spellcheck="false" placeholder="Paste a homepage's HTML, or a feed's contents. This stays in memory only and is not saved to the vault."></textarea></div>
-        <div class="field" style="margin-top:12px"><label for="scout-file">Or load a local saved page</label><input type="file" id="scout-file" accept=".html,.htm,.rss,.atom,.xml,.json,.txt,text/html,text/xml,application/json"></div>
+        <div class="field" style="margin-top:12px"><label for="scout-file">Or load and analyze a saved page or feed</label><input type="file" id="scout-file" accept=".html,.htm,.rss,.atom,.xml,.json,.txt,text/html,text/xml,application/json"></div>
         <div class="field" style="margin-top:12px"><label for="scout-header">HTTP Link header (optional; needed to replay header proofs)</label><input id="scout-header" spellcheck="false" placeholder="&lt;/feed.xml&gt;; rel=alternate; type=application/rss+xml"></div><p class="mini" style="margin-top:12px">No wildcard URL guessing; declared &lt;link rel=alternate&gt; and HTTP Link headers are preferred. Candidate recipes require your explicit adoption.</p>
       </div>
       <div class="peer-card">
         <h3>Scout findings</h3><p>Public web feeds are advertised with MIME-typed alternate links. When none are available, try a region or repeated-card watcher and refine it in Patch Clinic.</p>
         <div id="scout-status" class="scout-status" aria-live="polite">Enter a site URL and fetch, paste HTML, or try the demo.</div>
+        <button type="button" class="btn ghost sm" id="scout-use-saved" hidden>Use saved content</button><p id="scout-findings-context" class="mini" hidden></p>
         <div id="scout-results" class="scout-results"><div class="empty"><span class="symbol">⌁</span><h3>Nothing scouted yet</h3><p>Every page might contain a feed—or become one.</p></div></div>
       </div>
     </div>
@@ -3167,7 +3178,15 @@ function searchObservationRows(rows,search){
 }
 function relative(iso){const d=Date.parse(iso);if(!d)return 'undated';const sec=Math.max(0,Math.round((Date.now()-d)/1000));return sec<60?'just now':sec<3600?Math.floor(sec/60)+'m ago':sec<86400?Math.floor(sec/3600)+'h ago':new Date(d).toLocaleDateString();}
 function updateSelector(){const select=$('collection-choice'),keep=activeCollection;select.replaceChildren(h('option',{value:'all',text:'Every lens'}));state.collections.forEach(c=>select.append(h('option',{value:c.id,text:c.title})));if(keep!=='all'&&!state.collections.some(c=>c.id===keep))activeCollection='all';select.value=activeCollection;}
+function renderHomeIntroduction(){
+  const hasLibrary=Boolean(state.sources.length||state.collections.length||state.items.length);
+  $('view-home').classList.toggle('has-library',hasLibrary);
+  $('home-intro-title').hidden=hasLibrary;
+  $('home-reading-title').hidden=!hasLibrary;
+  $('hero-add').textContent=hasLibrary?'＋ Make a Lens':'＋ Make your first Lens';
+}
 function renderHome(){
+  renderHomeIntroduction();
   $('stat-sources').textContent=state.sources.filter(s=>s.enabled).length;
   $('stat-collections').textContent=state.collections.length;
   $('stat-items').textContent=state.items.length;
@@ -4620,7 +4639,7 @@ function lineageDemo(){
 // Site Scout has no lasting raw-HTML state and performs no automatic fetching.
 let scoutReport=null,scoutMarkupMemory='',scoutLinkHeader='',activeProof=null,proofReplay=null,pendingDiscoveryCourierId=null;
 let scoutIntent=0,scoutFileRead=null;
-function invalidateScoutLoads(){scoutIntent++;$('scout-fetch').disabled=false;}
+function invalidateScoutLoads(){scoutIntent++;$('scout-fetch').disabled=false;$('scout-use-saved').hidden=true;}
 function beginScoutLoad(){
   invalidateScoutLoads();
   const token=scoutIntent,library=state,ids=['scout-url','scout-html','scout-header'],values=ids.map(id=>$(id).value);
@@ -4628,6 +4647,7 @@ function beginScoutLoad(){
 }
 function renderScout(report){
   const slot=$('scout-results');scoutReport=report;
+  $('scout-findings-context').hidden=!report;$('scout-findings-context').textContent=report?'Last completed scan: '+report.siteUrl:'';
   if(!report){slot.replaceChildren(h('div',{class:'empty'},[h('h3',{text:'No discovery yet'}),h('p',{text:'Paste, load, or fetch a webpage when ready.'})]));return;}
   const candidates=[...report.candidates,...report.recommendations];
   $('scout-status').textContent=report.kind==='direct-feed'?'Valid feed detected · '+report.count+' entries':'Site: '+report.title+' · '+report.candidates.length+' declared feed(s) · '+report.recommendations.length+' suggested page watch(es)';
@@ -4665,6 +4685,12 @@ function analyzeScout(body,linkHeader='',fromCurrentLoad=false){
     return report;
   }catch(err){$('scout-status').textContent='SCOUT ERROR: '+err.message;notify('Scout: '+err.message,true);return null}
 }
+function scoutFetchDetail(error){
+  const message=String(error?.message||error),prefix='Direct browser fetch failed (possibly CORS): ',suffix='. Use Paste or `bash ProgRSS.html serve` for a local bridge.';
+  // Rephrase only the shared transport's exact legacy wrapper here. Other
+  // callers, known size errors, and original low-level details stay intact.
+  return message.startsWith(prefix)&&message.endsWith(suffix)?'Browser read failed: '+message.slice(prefix.length,-suffix.length):message;
+}
 async function fetchScout(){
   const button=$('scout-fetch');if(button.disabled)return;
   const intent=beginScoutLoad();
@@ -4672,8 +4698,10 @@ async function fetchScout(){
   try{const result=await requestRemote(intent.url);
     if(!intent.current())return;
     if(result.notModified)throw Error('Unexpected conditional response to an unconditional discovery request');
+    if(result.status===429||result.status===503)throw Error('HTTP '+result.status+': '+(result.status===429?'the site asked for fewer requests':'the site is temporarily unavailable')+'. Try again later.');
+    if(typeof result.body!=='string'||!result.body.trim())throw Error('The response contained no page or feed content.');
     $('scout-html').value=result.body;$('scout-header').value=result.linkHeader||'';analyzeScout(result.body,result.linkHeader||'',true);
-  }catch(err){if(intent.current()){$('scout-status').textContent='SCOUT FETCH ERROR: '+err.message;notify('Scout: '+err.message,true)}}
+  }catch(err){if(intent.current()){const detail=scoutFetchDetail(err);$('scout-status').textContent='SCOUT FETCH ERROR: '+detail+'\nUse saved content to continue without a CLI. Your draft'+(scoutReport?' and earlier findings are':' is')+' unchanged.';$('scout-offline-help').open=true;$('scout-use-saved').hidden=false;notify('Scout: '+detail,true)}}
   finally{if(intent.token===scoutIntent)button.disabled=false}
 }
 function demoScout(){
@@ -5190,6 +5218,7 @@ $('top-scout').addEventListener('click',()=>go('scout'));
 $('proof-replay').addEventListener('click',replayDiscovery);$('proof-adopt').addEventListener('click',adoptDiscovery);
 $('proof-export').addEventListener('click',()=>proofDownload(false));$('proof-capsule').addEventListener('click',()=>proofDownload(true));$('proof-send').addEventListener('click',proofSend);
 $('proof-import-button').addEventListener('click',()=>$('proof-import-file').click());$('proof-import-file').addEventListener('change',async e=>{await importProofFile(e.target.files[0]);e.target.value='';});
+$('scout-use-saved').addEventListener('click',()=>{$('scout-offline-help').open=true;$('scout-html').focus()});
 $('scout-fetch').addEventListener('click',fetchScout);$('scout-analyze').addEventListener('click',()=>analyzeScout($('scout-html').value));
 $('scout-demo').addEventListener('click',demoScout);$('scout-clear').addEventListener('click',()=>{invalidateScoutLoads();$('scout-html').value='';$('scout-header').value='';scoutMarkupMemory='';scoutLinkHeader='';scoutReport=null;activeProof=null;pendingDiscoveryCourierId=null;proofReplay=null;$('scout-status').textContent='Cleared. No content stored.';renderScout(null);renderProofWorkbench()});
 for(const id of ['scout-html','scout-header','scout-url'])$(id).addEventListener('input',()=>{invalidateScoutLoads();$('scout-status').textContent='Draft changed. Analyze or fetch again when ready.';if(proofReplay){proofReplay=null;renderProofWorkbench()}});
