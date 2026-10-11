@@ -3371,6 +3371,7 @@ function saveCollection(e){e.preventDefault();clearDialogError('collection-dialo
   const mode=$('collection-mode').value;if(['intersection','subtract'].includes(mode)&&memberIds.length<2)return reportDialogError('collection-dialog','Intersection/subtraction requires at least two members.');
   if(mode==='subtract'){const base=$('collection-base').value;if(!memberIds.includes(base))return reportDialogError('collection-dialog','Select an included base member.');memberIds=[base,...memberIds.filter(v=>v!==base)];}
   const candidate={id,title:$('collection-name').value,mode,include:$('collection-include').value,exclude:$('collection-exclude').value,author:old?.author||'local',version:old?(old.version||1)+1:1,members:memberIds.map(v=>{const [kind,...rest]=v.split(':');return{kind,id:rest.join(':')}})};
+  for(const field of ['include','exclude'])if(candidate[field].replace(/\s+/g,' ').trim().length>280)return reportDialogError('collection-dialog',(field==='include'?'Include':'Exclude')+' filter must be 280 characters or fewer after whitespace normalization.');
   try{
     const clean=C.cleanCollection(candidate);if(old)state.collections=state.collections.map(c=>c.id===id?clean:c);else{if(state.collections.length>=C.LIMIT.collection)throw Error('Collection limit reached');state.collections.push(clean)};
     C.validateBackupRecipes({schema:C.SCHEMA,sources:state.sources.map(C.cleanRecipe),collections:state.collections.map(C.cleanCollection)});
