@@ -4862,7 +4862,7 @@ function renderScout(report){
       h('span',{class:'mini',text:(i+1)+' · '+candidate.format+' · '+candidate.confidence}),h('h4',{text:candidate.title}),
       h('p',{class:'mono',text:candidate.url||report.siteUrl}),
       ...(candidate.selector?[h('p',{text:'Suggested CSS: '+candidate.selector+(candidate.count?' · '+candidate.count+' matches':'' )})]:[]),
-      preview,status,h('div',{class:'row-actions'},actions)
+      h('div',{class:'row-actions'},actions),status,preview
     ]);
   });
   if(!cards.length)cards.push(h('div',{class:'empty'},[h('h3',{text:'No feed or readable page region found'}),h('p',{text:'The saved source may be incomplete or rely on scripts. Try the page’s complete source or a direct feed URL.'})]));
