@@ -4301,7 +4301,10 @@ async function applyPatch(){
 // Rev0005 / Courier: durable local inbox, no automatic adoption or fetch.
 // Checksums are deliberately NOT signatures or trusted human identities.
 function receiveCourier(packet,via='file',{openExchange=true}={}){
+  const opener=document.activeElement,reviewKey=opener?.dataset?.focusKey;
+  const keepReviewFocus=currentView==='peers'&&opener?.isConnected&&!opener.disabled&&!opener.closest('[hidden],[inert]')&&$('courier-inbox').contains(opener)&&reviewKey?.startsWith('courier-review:')&&!document.querySelector('dialog[open]');
   try{const result=Q.receive(state,packet,via);save();if(openExchange)go('peers');
+    if(keepReviewFocus&&!opener.isConnected&&document.activeElement===document.body&&!document.querySelector('dialog[open]'))focusAction(reviewKey);
     notify(result.duplicate?'Already in your Courier Inbox (same content digest).':'Courier package added to this tab · checksum verified · waiting for review.');
     return result;
   }catch(error){notify('Courier refused: '+error.message,true);throw error;}
