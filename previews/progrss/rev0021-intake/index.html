@@ -1099,7 +1099,12 @@ function inferSource(raw){
   }catch{return null;}
 }
 function feedPreview(feed){return {kind:'feed',count:feed.items.length,items:feed.items.slice(0,3).map(item=>({title:C.text(item.title,180),summary:C.text(item.summary,240),url:item.url||''}))};}
-function previewFeed(raw,url){const kind=sourceKind(raw);if(kind==='html')throw Error('This address did not return RSS, Atom or JSON Feed content');const feed=C.parseFeed(kind==='xml-feed'?prepareFeedXml(raw):raw,url);return {title:feed.title,format:feed.type==='json'?'JSON Feed':feed.type==='atom'?'Atom':'RSS',...feedPreview(feed)};}
+function parseInspectedFeed(raw,url){
+  if(typeof raw!=='string'||raw.length>C.LIMIT.characters)throw Error('Site Scout can inspect at most 2 million characters');
+  const kind=sourceKind(raw);if(kind==='html')throw Error('This address did not return RSS, Atom or JSON Feed content');
+  return C.parseFeed(kind==='xml-feed'?prepareFeedXml(raw):raw,url);
+}
+function previewFeed(raw,url){const feed=parseInspectedFeed(raw,url);return {title:feed.title,format:feed.type==='json'?'JSON Feed':feed.type==='atom'?'Atom':'RSS',...feedPreview(feed)};}
 function suggestPageRegions(doc){
   const suggestions=[],groups=[];
   const probes=['main article','article','main .post','main .entry','.h-entry','.post','.entry','.news-item','main li'];
@@ -1141,7 +1146,7 @@ function scanMarkup(raw,siteUrl,options={}){
   });
   return {siteUrl:sourceUrl,title,kind:'html',candidates:chooseCandidates(items,sourceUrl,{baseHref,linkHeader:options.linkHeader}),recommendations,count:0};
 }
-root.ProgRSSScout=Object.freeze({scanMarkup,chooseCandidates,splitLinkHeader,suggestPageRegions,relIsAlternate,mimeOf,inferSource,previewFeed});
+root.ProgRSSScout=Object.freeze({scanMarkup,chooseCandidates,splitLinkHeader,suggestPageRegions,relIsAlternate,mimeOf,inferSource,previewFeed,parseInspectedFeed});
 })(globalThis);
 
 </script>
@@ -4818,6 +4823,29 @@ function lineageDemo(){
 // an explicit Scan address or Check feed action; local edits never fetch.
 let scoutReport=null,scoutMarkupMemory='',scoutLinkHeader='',activeProof=null,proofReplay=null,pendingDiscoveryCourierId=null;
 let scoutIntent=0,scoutFileRead=null,scoutAnalyzeTimer=null,scoutUrlHint=null,scoutAwaitingAddress=false,scoutCheckActive=null;
+// One bounded acquisition only. This record and the raw body never enter state.
+let scoutFeedAcquisition=null,scoutCaptureControls=[];
+function scoutCaptureCurrent(item,report){
+  const a=scoutFeedAcquisition;
+  return !!a&&a.item===item&&a.report===report&&report===scoutReport&&a.token===scoutIntent&&a.library===state&&
+    item.kind==='feed'&&item.url===a.url&&report.candidates.includes(item)&&
+    ['scout-url','scout-html','scout-header'].every((id,i)=>$(id).value===a.inputs[i]);
+}
+function refreshScoutCaptureControls(){
+  for(const {item,report,button,note} of scoutCaptureControls){
+    const ready=scoutCaptureCurrent(item,report);button.disabled=!ready;
+    note.textContent=ready?'Capture reuses this inspected feed without checking its address again. It saves normalized entries from up to the first 250 source records, not just the 3 shortened excerpts. Duplicate IDs may reduce the saved event count. Raw source is not saved; future checks stay paused.':
+      item.origin==='body'?'Capture unavailable for these earlier findings. Choose Analyze now to inspect the current input.':
+      item.preview?'Previous preview retained; check this feed again before capture.':'Check this feed successfully before capturing its entries.';
+  }
+}
+function retireScoutCapture(){scoutFeedAcquisition=null;refreshScoutCaptureControls();}
+function holdScoutFeed(item,report,body,method){
+  if(typeof body!=='string'||body.length>C.LIMIT.characters)throw Error('Inspected feed exceeds the capture limit');
+  scoutFeedAcquisition={item,report,body,method,url:item.url,acquiredAt:new Date().toISOString(),token:scoutIntent,library:state,
+    inputs:['scout-url','scout-html','scout-header'].map(id=>$(id).value)};
+  refreshScoutCaptureControls();
+}
 function setScoutCheckBusy(button,busy){
   // Keep the same control focusable while a request is pending. Native disabled
   // blurs a focused button; no later focus restoration should override a user.
@@ -4825,7 +4853,7 @@ function setScoutCheckBusy(button,busy){
   else{button.removeAttribute('aria-disabled');button.removeAttribute('aria-busy');}
 }
 function invalidateScoutLoads(){
-  scoutIntent++;clearTimeout(scoutAnalyzeTimer);scoutAnalyzeTimer=null;
+  scoutIntent++;clearTimeout(scoutAnalyzeTimer);scoutAnalyzeTimer=null;retireScoutCapture();
   $('scout-fetch').disabled=false;$('scout-use-saved').hidden=true;
   if(scoutCheckActive){setScoutCheckBusy(scoutCheckActive.button,false);scoutCheckActive.button.textContent='Check feed';scoutCheckActive.status.textContent='Check retired after newer input. Check again when ready.';scoutCheckActive=null;}
 }
@@ -4845,7 +4873,7 @@ function renderScoutPreview(slot,preview){
   slot.append(h('ol',{},preview.items.map(item=>h('li',{},[h('strong',{text:item.title||'Untitled update'}),...(item.summary?[h('p',{text:item.summary})]:[]),...(item.url?[h('p',{class:'mono',text:item.url})]:[])]))));
 }
 function renderScout(report){
-  const slot=$('scout-results');scoutReport=report;
+  const slot=$('scout-results');scoutReport=report;scoutCaptureControls=[];
   $('scout-findings-context').hidden=!report;$('scout-findings-context').textContent=report?'Last completed scan: '+report.siteUrl:'';
   if(!report){slot.replaceChildren(h('div',{class:'empty'},[h('h3',{text:'No discovery yet'}),h('p',{text:'Scan an address, paste source content, or drop a saved page/feed.'})]));return;}
   const candidates=[...report.candidates,...report.recommendations];
@@ -4857,20 +4885,27 @@ function renderScout(report){
       const check=action('Check feed',()=>checkScoutFeed(candidate,report,check,status,preview),'primary');actions.push(check);
       status.textContent=candidate.preview?'Feed parsed in this tab.':'Advertised by this page; contents have not been checked.';
     }
-    actions.push(action(candidate.kind==='page'?'Create paused page Lens':'Create paused feed Lens',()=>addScoutLens(candidate,report),'ghost'),action('♧ Make replayable proof',()=>selectScoutProof(report,candidate),'ghost'));
+    actions.push(action(candidate.kind==='page'?'Create paused page Lens':'Create paused feed Lens',()=>addScoutLens(candidate,report),'ghost'));
+    const captureNote=h('p',{class:'mini','aria-live':'polite'});
+    if(candidate.kind==='feed'){
+      const capture=action('Create paused Lens + capture feed entries',()=>captureScoutLens(candidate,report),'ghost');
+      actions.push(capture);scoutCaptureControls.push({item:candidate,report,button:capture,note:captureNote});
+    }else captureNote.textContent='Create saves this page recipe only. A separate Paste capture in Lenses establishes its first baseline; this preview is not a baseline.';
+    actions.push(action('♧ Make replayable proof',()=>selectScoutProof(report,candidate),'ghost'));
     return h('article',{class:'scout-result'},[
       h('span',{class:'mini',text:(i+1)+' · '+candidate.format+' · '+candidate.confidence}),h('h4',{text:candidate.title}),
       h('p',{class:'mono',text:candidate.url||report.siteUrl}),
       ...(candidate.selector?[h('p',{text:'Suggested CSS: '+candidate.selector+(candidate.count?' · '+candidate.count+' matches':'' )})]:[]),
-      h('div',{class:'row-actions'},actions),status,preview
+      h('div',{class:'row-actions'},actions),status,captureNote,preview
     ]);
   });
   if(!cards.length)cards.push(h('div',{class:'empty'},[h('h3',{text:'No feed or readable page region found'}),h('p',{text:'The saved source may be incomplete or rely on scripts. Try the page’s complete source or a direct feed URL.'})]));
-  slot.replaceChildren(...cards);
+  slot.replaceChildren(...cards);refreshScoutCaptureControls();
 }
 async function checkScoutFeed(candidate,report,button,status,preview){
   if(report!==scoutReport||button.disabled||scoutCheckActive?.button===button)return;
   if(scoutCheckActive){notify('A feed check is already running. Wait for it to finish.');return;}
+  retireScoutCapture();
   const token=scoutIntent,library=state,job={button,status};scoutCheckActive=job;
   const current=()=>scoutCheckActive===job&&token===scoutIntent&&library===state&&report===scoutReport;
   setScoutCheckBusy(button,true);button.textContent='Checking…';status.textContent='Reading this feed address…';
@@ -4880,11 +4915,47 @@ async function checkScoutFeed(candidate,report,button,status,preview){
     if(result.status===429||result.status===503)throw Error('HTTP '+result.status+'. Try again later.');
     if(typeof result.body!=='string'||!result.body.trim())throw Error('The response contained no feed content.');
     const parsed=S.previewFeed(result.body,candidate.url);candidate.preview=parsed;
+    holdScoutFeed(candidate,report,result.body,'scout-checked-feed');
     renderScoutPreview(preview,parsed);status.textContent='✓ Parsed as '+parsed.format+'. '+parsed.count+' usable entries from up to the first 250 source records. Proof still replays the original advertisement.';
   }catch(error){if(current())status.textContent='Could not check this feed: '+scoutFetchDetail(error)+'. The advertised recipe is still available.';}
   finally{if(scoutCheckActive===job){setScoutCheckBusy(button,false);button.textContent='Check feed again';scoutCheckActive=null;}}
 }
 
+function scoutEquivalentFeed(url){
+  return state.sources.find(s=>s.url===url&&s.type==='rss'&&(s.mode||'region')==='region'&&!(s.selector||''));
+}
+function scoutCaptureDuplicate(source){
+  go('sources');focusAction('lens-edit:'+source.id)||focusAction('nav:sources');
+  notify('An equivalent Lens already exists: '+source.title+'. Nothing was captured or changed.');
+}
+function captureScoutLens(item,report){
+  let committed=false;
+  try{
+    if(!scoutCaptureCurrent(item,report))throw Error('Inspected content is no longer current. Analyze the input or check this feed again before capture.');
+    const acquisition=scoutFeedAcquisition,library=state,url=C.safeUrl(acquisition.url),duplicate=scoutEquivalentFeed(url);
+    if(duplicate)return scoutCaptureDuplicate(duplicate);
+    if(state.sources.length>=C.LIMIT.source)throw Error('Source limit reached');
+    // Stage against the library at this click, never an acquisition-time copy.
+    // No await occurs before commit; the fingerprint also guards reentrant work.
+    const before=JSON.stringify({sources:state.sources,collections:state.collections,items:state.items}),existing=[...state.items];
+    const clean=C.cleanRecipe({id:C.uid('lens'),type:'rss',url,title:item.title,mode:'region',selector:'',threshold:24,author:'local'});
+    if(state.sources.some(s=>s.id===clean.id)||state.collections.some(s=>s.id===clean.id)||existing.some(x=>x.sourceId===clean.id))throw Error('Lens identity collision; try capture again');
+    const parsed=S.parseInspectedFeed(acquisition.body,url),draft={items:[...existing]};
+    const added=C.ingestFeed(draft,clean,parsed);
+    // Core's ordinary retention trimming must not discard any existing witness.
+    if(existing.some(old=>!draft.items.includes(old))||draft.items.length!==existing.length+added)throw Error('Capture would exceed the observation limit. Nothing was created or captured.');
+    const source={...clean,enabled:false,origin:'site-scout',lastScan:new Date().toISOString(),lastError:'',lastOutcome:'captured',lastItems:added,
+      captureSource:{method:acquisition.method,url,acquiredAt:acquisition.acquiredAt}};
+    const nextSources=[...state.sources,source];
+    // Preserve the existing private-backup recipe graph's size/reference bounds.
+    C.validateBackupRecipes({schema:C.SCHEMA,sources:nextSources,collections:state.collections});
+    if(state!==library||scoutFeedAcquisition!==acquisition||!scoutCaptureCurrent(item,report)||JSON.stringify({sources:state.sources,collections:state.collections,items:state.items})!==before)throw Error('The library or inspected content changed during capture. Try again.');
+    if(state.sources.length>=C.LIMIT.source||scoutEquivalentFeed(url))throw Error('The Lens library changed during capture. Try again.');
+    state.sources=nextSources;state.items=draft.items;committed=true;
+    save();go('sources');focusAction('lens-edit:'+source.id)||focusAction('nav:sources');
+    notify('Created PAUSED Lens and captured '+added+' observation event'+(added===1?'':'s')+' in this tab. Check browser storage status before leaving.');
+  }catch(error){notify((committed?'Capture is in this tab, but the follow-up failed. Check browser storage status: ':'Scout capture: ')+error.message,true);}
+}
 function addScoutLens(item,report){
   try{
     if(state.sources.length>=C.LIMIT.source)throw Error('Source limit reached');
@@ -4912,7 +4983,9 @@ function analyzeScout(body,linkHeader='',fromCurrentLoad=false,quiet=false){
       $('scout-url').value=hint.url;scoutUrlHint=hint;scoutAddressNote();
     }
     const siteUrl=C.safeUrl($('scout-url').value),header=linkHeader||$('scout-header').value;
-    const report=S.scanMarkup(body,siteUrl,{linkHeader:header});scoutAwaitingAddress=false;scoutMarkupMemory=body;scoutLinkHeader=header;renderScout(report);renderProofWorkbench();
+    const report=S.scanMarkup(body,siteUrl,{linkHeader:header});scoutAwaitingAddress=false;scoutMarkupMemory=body;scoutLinkHeader=header;renderScout(report);
+    if(report.kind==='direct-feed')holdScoutFeed(report.candidates[0],report,body,'scout-inspected-feed');
+    renderProofWorkbench();
     return report;
   }catch(err){$('scout-status').textContent='SCOUT: '+err.message;if(!quiet)notify('Scout: '+err.message,true);return null;}
 }
