@@ -48,7 +48,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 .scout-results{display:grid;gap:11px;max-height:650px;overflow:auto;padding-right:3px}
 .scout-result{border-radius:9px;border:1px solid var(--line);background:#132018;padding:13px;min-width:0}
 .scout-result h4{font-size:13px;margin:0 0 7px}.scout-result p{color:var(--muted);font-size:11px;margin:5px 0;overflow-wrap:anywhere}
-.scout-result .mini{color:var(--teal)}.scout-result .btn{margin-top:6px}
+.scout-result .mini{color:var(--teal)}.scout-result .btn{margin-top:6px}.scout-result .btn[aria-disabled="true"]{opacity:.55;cursor:progress}
 .scout-intake.dragging{outline:2px dashed var(--lime);outline-offset:5px}.scout-preview{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}.scout-preview ol{padding-left:20px;margin:8px 0}.scout-preview li{margin:8px 0;font-size:12px;overflow-wrap:anywhere}.scout-preview li p{margin:3px 0}.scout-snapshot{margin-top:14px}.scout-snapshot summary{cursor:pointer;color:var(--teal)}.scout-snapshot summary:focus-visible{outline:2px solid var(--lime);outline-offset:3px}.scout-drop-note{font-size:11px;color:var(--muted);margin:7px 0}
 .pulse-health{display:inline-block;color:var(--teal);font:10px var(--mono);margin-right:8px}
 .pulse-health.problem{color:var(--red)}
@@ -4818,10 +4818,16 @@ function lineageDemo(){
 // an explicit Scan address or Check feed action; local edits never fetch.
 let scoutReport=null,scoutMarkupMemory='',scoutLinkHeader='',activeProof=null,proofReplay=null,pendingDiscoveryCourierId=null;
 let scoutIntent=0,scoutFileRead=null,scoutAnalyzeTimer=null,scoutUrlHint=null,scoutAwaitingAddress=false,scoutCheckActive=null;
+function setScoutCheckBusy(button,busy){
+  // Keep the same control focusable while a request is pending. Native disabled
+  // blurs a focused button; no later focus restoration should override a user.
+  if(busy){button.setAttribute('aria-disabled','true');button.setAttribute('aria-busy','true');}
+  else{button.removeAttribute('aria-disabled');button.removeAttribute('aria-busy');}
+}
 function invalidateScoutLoads(){
   scoutIntent++;clearTimeout(scoutAnalyzeTimer);scoutAnalyzeTimer=null;
   $('scout-fetch').disabled=false;$('scout-use-saved').hidden=true;
-  if(scoutCheckActive){scoutCheckActive.button.disabled=false;scoutCheckActive.button.textContent='Check feed';scoutCheckActive.status.textContent='Check retired after newer input. Check again when ready.';scoutCheckActive=null;}
+  if(scoutCheckActive){setScoutCheckBusy(scoutCheckActive.button,false);scoutCheckActive.button.textContent='Check feed';scoutCheckActive.status.textContent='Check retired after newer input. Check again when ready.';scoutCheckActive=null;}
 }
 function beginScoutLoad(){
   invalidateScoutLoads();
@@ -4863,11 +4869,11 @@ function renderScout(report){
   slot.replaceChildren(...cards);
 }
 async function checkScoutFeed(candidate,report,button,status,preview){
-  if(report!==scoutReport||button.disabled)return;
+  if(report!==scoutReport||button.disabled||scoutCheckActive?.button===button)return;
   if(scoutCheckActive){notify('A feed check is already running. Wait for it to finish.');return;}
   const token=scoutIntent,library=state,job={button,status};scoutCheckActive=job;
   const current=()=>scoutCheckActive===job&&token===scoutIntent&&library===state&&report===scoutReport;
-  button.disabled=true;button.textContent='Checking…';status.textContent='Reading this feed address…';
+  setScoutCheckBusy(button,true);button.textContent='Checking…';status.textContent='Reading this feed address…';
   try{
     const result=await requestRemote(candidate.url);if(!current())return;
     if(result.notModified)throw Error('Unexpected conditional response. Try again.');
@@ -4876,7 +4882,7 @@ async function checkScoutFeed(candidate,report,button,status,preview){
     const parsed=S.previewFeed(result.body,candidate.url);candidate.preview=parsed;
     renderScoutPreview(preview,parsed);status.textContent='✓ Parsed as '+parsed.format+'. '+parsed.count+' usable entries from up to the first 250 source records. Proof still replays the original advertisement.';
   }catch(error){if(current())status.textContent='Could not check this feed: '+scoutFetchDetail(error)+'. The advertised recipe is still available.';}
-  finally{if(scoutCheckActive===job){button.disabled=false;button.textContent='Check feed again';scoutCheckActive=null;}}
+  finally{if(scoutCheckActive===job){setScoutCheckBusy(button,false);button.textContent='Check feed again';scoutCheckActive=null;}}
 }
 
 function addScoutLens(item,report){
