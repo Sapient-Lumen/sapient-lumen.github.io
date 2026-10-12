@@ -22,6 +22,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 .witness-tools{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin-top:11px}.witness-tools .btn{padding:5px 9px;font-size:11px}.witness-tools .mini{color:var(--teal)}
 .trace-result{font:11px/1.6 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;max-height:150px;overflow:auto;color:var(--lime);background:#101c16;border:1px dashed #3f6147;border-radius:8px;padding:11px;margin-top:12px}
 .reading-results{padding:12px 19px;margin:0;color:var(--muted);font-size:12px;line-height:1.7}.reading-footer{padding:14px 19px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line)}.reading-footer:empty{display:none}.feed-inner h3[tabindex="-1"]:focus,.reading-results:focus{outline:2px solid var(--lime);outline-offset:3px;scroll-margin-block:20px}
+#home-heading:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
 .feed-origin-action{border:0;background:none;padding:0;min-width:0;max-width:100%;text-align:left;overflow-wrap:anywhere;text-decoration:underline dotted;text-underline-offset:3px;cursor:pointer}.feed-origin-action:hover{color:var(--lime)}.feed-origin-action:focus-visible{outline:2px solid var(--lime);outline-offset:3px}.lens-context-fields{display:grid;gap:5px;margin:18px 0}.lens-context-fields dt{font-size:12px;color:var(--muted);margin-top:9px}.lens-context-fields dd{margin:0;overflow-wrap:anywhere;font-size:13px;line-height:1.7}.lens-context-fields .mono{font-size:12px}
 .stored-observation-details{margin-top:22px;padding-top:14px;border-top:1px solid var(--line)}.stored-observation-details summary{cursor:pointer;color:var(--teal);font-size:13px}.stored-observation-details dl{display:grid;gap:6px;margin:15px 0 0}.stored-observation-details dt{font-size:12px;color:var(--muted);margin-top:8px}.stored-observation-details dd{margin:0;font:12px/1.7 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere}.stored-observation-details .value-note{display:block;font:11px/1.6 var(--sans);color:var(--muted);white-space:normal;margin-top:5px}
 .saved-reading-text{font-size:14px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:18px;color:var(--ink)}
@@ -102,7 +103,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 /* rev0013 · Key Bridge / cross-role rotation proof review */
 .key-bridge-panel{background:#182b24;border-color:#55705a}.key-bridge-panel .lineage-report{max-height:270px;margin-top:12px;margin-bottom:12px}.key-bridge-panel .field{max-width:680px;margin:12px 0}.key-bridge-panel input{width:100%}
 /* rev0020: scrollable desktop navigation; ten sections should fit small laptop windows */
-@media(min-width:851px){.nav{min-height:0;overflow-y:auto;scrollbar-width:thin}}
+@media(min-width:851px){.nav{min-height:0;overflow-y:auto;scrollbar-width:thin}.rail .nav button:focus-visible{outline-offset:-4px}}
 /* rev0020: Feed Commons and Chain Doctor */
 #view-commons .row-card{margin:11px 0}#view-commons .mono{overflow-wrap:anywhere}#commons-edits .row-card{margin:9px 0}#doctor-results .row-card{margin:10px 0}
 /* rev0017 Merkle Observatory */
@@ -190,7 +191,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
   <div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p></div>
   <div class="topline"><div class="crumb">PROJECT / <b>PROGRSS</b> / <span id="crumb-view">OBSERVATORY</span></div><div class="actions"><button class="btn ghost sm" id="top-scout">⌁ Discover</button><button class="btn ghost sm" id="top-import">↥ Import</button><button class="btn ghost sm" id="top-export">↧ Share recipes</button><button class="btn primary sm" id="top-add">＋ New lens</button></div></div>
   <section class="view" id="view-home">
-    <div class="hero"><div class="hero-copy"><p class="eyebrow">A new kind of feed / Early experiment 019</p><h1><span id="home-intro-title">Follow the parts of the internet <em>that matter.</em></span><span id="home-reading-title" hidden>Your reading</span></h1><p class="lede">Watch selected parts of pages you can fetch or supply as HTML. Combine RSS, watched regions and the collections of friends. Prove your filters with reproducible snapshots. No feed server or extension required.</p><div class="hero-links"><button class="btn primary" id="hero-add">＋ Make your first Lens</button><button class="btn ghost" id="hero-demo">Try the offline demo ↗</button></div></div><div class="hero-art" aria-hidden="true"><div class="art-line"></div><span class="orb a"></span><span class="orb b"></span><span class="orb c"></span><span class="orb d"></span><div class="art-label">public web → <b>observation</b><br>observation → <b>collective lens</b><br>collective lens → <b>your attention</b></div></div></div>
+    <div class="hero"><div class="hero-copy"><p class="eyebrow">A new kind of feed / Early experiment 019</p><h1 id="home-heading" tabindex="-1"><span id="home-intro-title">Follow the parts of the internet <em>that matter.</em></span><span id="home-reading-title" hidden>Your reading</span></h1><p class="lede">Watch selected parts of pages you can fetch or supply as HTML. Combine RSS, watched regions and the collections of friends. Prove your filters with reproducible snapshots. No feed server or extension required.</p><div class="hero-links"><button class="btn primary" id="hero-add">＋ Make your first Lens</button><button class="btn ghost" id="hero-demo">Try the offline demo ↗</button></div></div><div class="hero-art" aria-hidden="true"><div class="art-line"></div><span class="orb a"></span><span class="orb b"></span><span class="orb c"></span><span class="orb d"></span><div class="art-label">public web → <b>observation</b><br>observation → <b>collective lens</b><br>collective lens → <b>your attention</b></div></div></div>
     <div class="metrics"><div class="metric"><div><span>Watching lenses</span><strong id="stat-sources">0</strong></div><span class="glyph">◉</span></div><div class="metric"><div><span>Collections</span><strong id="stat-collections">0</strong></div><span class="glyph">⌗</span></div><div class="metric"><div><span>Observed events</span><strong id="stat-items">0</strong></div><span class="glyph">↗</span></div></div>
     <p class="section-note" id="observation-retention-note">Up to 1,200 observation events are kept in this library. New captures and checks can replace the oldest events. Shared links may be combined into fewer feed entries. Export a private backup before older events leave the library.</p>
     <div class="section-title"><div><h2>The signal</h2><p>Only observations you or your circles choose to keep.</p></div><div class="toolbar-small"><button class="btn sm ghost" id="refresh-due">◷ Check due</button><button class="btn sm ghost" id="refresh-all">↻ Check all now</button><button class="btn sm ghost" id="export-feed" aria-describedby="feed-export-scope feed-export-error">↧ Export collection feed</button></div></div>
@@ -3542,6 +3543,15 @@ function render(){
 let sectionNavigationGeneration=0;
 const viewNames={home:'OBSERVATORY',sources:'LENSES',scout:'SITE SCOUT',collections:'COLLECTIONS',commons:'FEED COMMONS',lineage:'LINEAGE ROOM',recovery:'TRUST & WITNESSES',clinic:'PATCH CLINIC',peers:'EXCHANGE',docs:'FIELD NOTES'};
 function go(page){sectionNavigationGeneration++;currentView=page;Object.keys(viewNames).forEach(name=>$('view-'+name).hidden=page!==name);document.querySelectorAll('[data-view]').forEach(b=>{if(b.dataset.view===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});$('crumb-view').textContent=viewNames[page];if(page==='docs')$('doc-render').textContent=$('progrss-docs').textContent.trim();if(page==='peers')renderImportPreview();if(page==='clinic')clinicSelect($('clinic-source').value);render();if(page==='scout'){refreshScoutCaptureControls();refreshScoutPageControls();}}
+function navigateFromSidebar(control){
+  const page=control.dataset.view;
+  const revealReading=page==='home'&&currentView!=='home'&&control.matches('.rail .nav [data-view="home"]')&&!document.querySelector('dialog[open]');
+  const library=state,navigation=sectionNavigationGeneration,focus=document.activeElement,target=$('view-home');
+  go(page);
+  if(!revealReading||state!==library||sectionNavigationGeneration!==navigation+1||currentView!=='home'||document.activeElement!==focus||document.querySelector('dialog[open]')||!control.isConnected||!target||$('view-home')!==target||!target.isConnected||target.hidden)return;
+  // Only this explicit cross-section action resets the document viewport; never defer or move focus.
+  window.scrollTo({top:0,left:window.scrollX,behavior:'instant'});
+}
 function clearDialogError(id){
   const summary=$(id).querySelector('[data-form-error]');if(!summary)return;
   summary.hidden=true;summary.textContent='';
@@ -4092,16 +4102,28 @@ function discardPrivateRestore(){
   clearPrivateRestoreReview();privateRecoveryFeedback('Private backup review discarded. The current library is unchanged.');
   if(currentView==='docs'&&!document.querySelector('dialog[open]'))focusAction($('docs-restore'));
 }
-function applyPrivateRestore(){
+function finishPrivateRestoreArrival(context){
+  if(!context)return false;
+  try{
+    const current=()=>state===context.library&&importReadToken===context.token&&sectionNavigationGeneration===context.navigation+1&&currentView==='home'&&!document.querySelector('dialog[open]')&&context.origin===$('private-restore-apply')&&context.origin.isConnected&&context.target===$('home-heading')&&context.target?.isConnected&&!context.target.closest('[hidden],[inert]');
+    if(!current()||(document.activeElement!==context.focus&&!(context.reviewHadFocus&&document.activeElement===document.body)))return false;
+    context.target.focus({preventScroll:true});
+    if(!current()||document.activeElement!==context.target)return false;
+    window.scrollTo({top:0,left:window.scrollX,behavior:'instant'});
+    return true;
+  }catch{return false;}
+}
+function applyPrivateRestore(event){
   const review=privateRestoreReview;
   if(!review||review.token!==importReadToken){clearPrivateRestoreReview();return privateRecoveryFeedback('This backup review is no longer current. Select the file again. Nothing was replaced.',true);}
+  const arrival=event?.currentTarget===$('private-restore-apply')&&currentView==='docs'&&!document.querySelector('dialog[open]')?{library:review.validated,token:review.token,navigation:sectionNavigationGeneration,origin:event.currentTarget,target:$('home-heading'),focus:document.activeElement,reviewHadFocus:$('private-restore-review').contains(document.activeElement)}:null;
   let replaced=false;
   try{
     renderPrivateRestoreReview();
     if(!confirm('Replace the current library ('+privateLibrarySummary(state)+') with "'+review.filename+'" ('+privateLibrarySummary(review.validated)+')?'+(review.differences.length?' Reviewed normalization changes will apply.':'')+' '+privateRestoreActivity(review.validated)+' This is not a merge. Browser storage can still fail. Continue?'))return;
     if(review!==privateRestoreReview||review.token!==importReadToken)return;
     state=review.validated;replaced=true;clearPrivateRestoreReview();pending=null;renderImportPreview();resetRestoredWorkbenches();save();
-    privateRecoveryFeedback((review.differences.length?'Reviewed private backup loaded with the listed normalization changes':'The 24 saved JSON state fields were loaded exactly')+' into this tab. Transient view and scheduling choices are separate. Check storage status before leaving; keep the original file.');go('home');
+    privateRecoveryFeedback((review.differences.length?'Reviewed private backup loaded with the listed normalization changes':'The 24 saved JSON state fields were loaded exactly')+' into this tab. Transient view and scheduling choices are separate. Check storage status before leaving; keep the original file.');go('home');finishPrivateRestoreArrival(arrival);
   }catch(error){privateRecoveryFeedback(replaced?'The replacement library is loaded in this tab, but restore follow-up failed: '+error.message+'. Keep the original file and check storage status.':'Private restore failed: '+error.message+'. The current library is unchanged.',true);}
 }
 async function restorePrivateFile(file){
@@ -5932,7 +5954,7 @@ async function exchangeDemo(){try{
 
 // Wire controls.
 window.addEventListener('resize',revealFocusedDialogError);
-document.querySelectorAll('[data-view]').forEach(el=>el.addEventListener('click',()=>go(el.dataset.view)));
+document.querySelectorAll('[data-view]').forEach(el=>el.addEventListener('click',()=>navigateFromSidebar(el)));
 document.querySelectorAll('[data-close]').forEach(el=>el.addEventListener('click',()=>close(el.dataset.close)));
 $('deletion-dependency-dialog').addEventListener('close',()=>{
   if($('deletion-dependency-dialog').open)return;
