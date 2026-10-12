@@ -483,7 +483,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 </div>
 <dialog id="lens-dialog" aria-labelledby="lens-title"><div class="dialog-head"><div><h2 id="lens-title">Make a Lens</h2><p>One way to sense a piece of the web.</p></div><button class="xbtn" type="button" data-close="lens-dialog" aria-label="Close">×</button></div><form id="lens-form"><p id="lens-form-error" class="dialog-error" data-form-error tabindex="-1" hidden></p><div class="dialog-content fields"><input type="hidden" id="lens-id"><div class="field wide"><label for="lens-name">A human name</label><input id="lens-name" required maxlength="130" placeholder="e.g. Independent Web Notes"></div><div class="field"><label for="lens-type">What are we watching?</label><select id="lens-type"><option value="rss">RSS / Atom / JSON Feed</option><option value="page">Webpage</option></select></div><div class="field"><label for="lens-url">Public HTTP(S) URL</label><input id="lens-url" type="url" required placeholder="https://example.org/feed.xml"></div><div class="field wide page-only" hidden><label for="lens-selector">CSS selector (optional for region mode)</label><input id="lens-selector" placeholder="main article, .updates, #news-list"><small>For cards, choose the repeating element. For regions, empty means main or the whole body.</small></div><div class="field page-only" hidden><label for="lens-mode">Observation type</label><select id="lens-mode"><option value="region">Watch text changes</option><option value="cards">Extract repeated cards</option></select></div><div class="field card-only" hidden><label for="lens-title-selector">Title inside each card (CSS)</label><input id="lens-title-selector" placeholder="h2"></div><div class="field card-only" hidden><label for="lens-link-selector">Link inside each card (CSS)</label><input id="lens-link-selector" placeholder="a[href]"></div><div class="field page-only" hidden><label for="lens-threshold">Changed characters threshold</label><input id="lens-threshold" type="number" min="0" max="10000" value="24"></div><div class="field page-only" hidden><label class="inline-check"><input type="checkbox" id="lens-ignore-numbers"> Ignore changing numbers when diffing</label></div><div class="field"><label for="lens-include">Only show if text contains (comma-separated)</label><input id="lens-include" placeholder="optional: security, release, notes"></div><div class="field"><label for="lens-exclude">Ignore if text contains</label><input id="lens-exclude" placeholder="optional: ads, sponsored"></div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="lens-dialog">Cancel</button><button class="btn primary" type="submit">Save Lens</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p></div></dialog>
 <dialog id="collection-dialog" aria-labelledby="collection-title"><div class="dialog-head"><div><h2 id="collection-title">Weave a collection</h2><p>Feeds from feeds, not just a folder of URLs.</p></div><button class="xbtn" type="button" data-close="collection-dialog" aria-label="Close">×</button></div><form id="collection-form"><p id="collection-form-error" class="dialog-error" data-form-error tabindex="-1" hidden></p><div class="dialog-content fields"><input id="collection-id" type="hidden"><div class="field wide"><label for="collection-name">Collection name</label><input id="collection-name" required maxlength="130" placeholder="e.g. My weird little research network"></div><div class="field"><label for="collection-include">Include (comma-separated)</label><input id="collection-include" placeholder="release, tools"></div><div class="field"><label for="collection-exclude">Exclude (comma-separated)</label><input id="collection-exclude" placeholder="sponsored, sale"></div><div class="field wide"><label for="collection-mode">Algebraic operator</label><select id="collection-mode"><option value="union">∪ Union — show any member</option><option value="intersection">∩ Intersection — require every member AND 2 distinct sources</option><option value="subtract">− Subtract — begin with base member, remove the others</option></select><small>Only HTTP(S) permalinks can corroborate across Lenses; item IDs without links remain source-local.</small></div><div class="field wide"><label>Members — select sources and/or collections</label><div class="member-list" id="collection-members"></div></div><div class="field wide" id="collection-base-field" hidden><label for="collection-base">Subtraction base — keep signals from this member, then subtract the remaining members</label><select id="collection-base"><option value="">Choose a base member</option></select></div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="collection-dialog">Cancel</button><button class="btn primary" type="submit">Save collection</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p></div></dialog>
-<dialog id="paste-dialog" aria-labelledby="paste-title"><div class="dialog-head"><div><h2 id="paste-title">Paste a snapshot</h2><p>Capture saved feed or page content without checking the source URL.</p></div><button class="xbtn" type="button" data-close="paste-dialog" aria-label="Close">×</button></div><form id="paste-form"><p id="paste-form-error" class="dialog-error" data-form-error tabindex="-1" hidden></p><div class="dialog-content"><input id="paste-source-id" type="hidden"><div class="field"><label for="paste-raw">RSS, Atom, JSON Feed, or complete page HTML</label><textarea id="paste-raw" rows="11" placeholder="Paste the fetched source of your feed or watched webpage…"></textarea></div><div class="field" style="margin-top:13px"><label for="paste-file">Or choose a local file (takes priority over pasted text)</label><input id="paste-file" type="file" accept=".html,.htm,.xml,.rss,.atom,.json,.txt,text/html,text/xml,application/json"></div><div class="banner" style="margin-top:15px">Pasted HTML is parsed in an inert document and only plain text is displayed. No page scripts are run.</div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="paste-dialog">Cancel</button><button class="btn primary" type="submit">Process snapshot</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p></div></dialog>
+<dialog id="paste-dialog" aria-labelledby="paste-title"><div class="dialog-head"><div><h2 id="paste-title">Paste a snapshot</h2><p>Capture saved feed or page content without checking the source URL.</p></div><button class="xbtn" type="button" data-close="paste-dialog" aria-label="Close">×</button></div><form id="paste-form"><p id="paste-form-error" class="dialog-error" data-form-error tabindex="-1" hidden></p><div class="dialog-content"><input id="paste-source-id" type="hidden"><p id="paste-preparation-note" class="banner dependency-summary" tabindex="-1" hidden></p><div class="field"><label for="paste-raw">RSS, Atom, JSON Feed, or complete page HTML</label><textarea id="paste-raw" rows="11" placeholder="Paste the fetched source of your feed or watched webpage…"></textarea></div><div class="field" style="margin-top:13px"><label for="paste-file">Or choose a local file (takes priority over pasted text)</label><input id="paste-file" type="file" accept=".html,.htm,.xml,.rss,.atom,.json,.txt,text/html,text/xml,application/json"></div><div class="banner" style="margin-top:15px">Pasted HTML is parsed in an inert document and only plain text is displayed. No page scripts are run.</div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="paste-dialog">Cancel</button><button class="btn primary" type="submit">Process snapshot</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p></div></dialog>
 <input type="file" id="import-file" accept=".json,.opml,.xml,application/json,text/xml" hidden>
 <dialog id="deletion-dependency-dialog" aria-labelledby="deletion-dependency-title"><div class="dialog-head"><div><h2 id="deletion-dependency-title">Review collection dependencies</h2><p>Nothing has been deleted.</p></div><button class="xbtn" type="button" data-close="deletion-dependency-dialog" aria-label="Close dependency guidance">×</button></div><div class="dialog-content"><p id="deletion-dependency-summary" class="dependency-summary" tabindex="-1" autofocus></p><p>Use the matching Edit button below, or close this message and open Collections, to edit each collection listed below and remove or replace this member. Changes stay in the editor until you save. Save those changes, then try Delete again.</p><p>Intersection and Subtraction require at least two members: choose replacements or explicitly change the operator. For Subtraction, review the base member before saving; removing the old base can select another member in the editor.</p><ol id="deletion-dependency-list" class="dependency-list"></ol></div><div class="dialog-footer"><button class="btn primary" type="button" data-close="deletion-dependency-dialog">Close</button></div></dialog>
 <dialog id="trace-dialog" aria-labelledby="trace-dialog-title"><div class="dialog-head"><div><h2 id="trace-dialog-title">Why this signal?</h2><p>Local derivation path; no external verification implied.</p></div><button class="xbtn" type="button" data-close="trace-dialog" aria-label="Close">×</button></div><pre id="trace-dialog-result" class="trace-full"></pre><div class="dialog-footer"><button class="btn ghost" type="button" data-close="trace-dialog">Close</button></div><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p></div></dialog>
@@ -3464,7 +3464,7 @@ function revealFocusedDialogError(){
   }
 }
 function show(id){clearDialogError(id);$(id).showModal()}
-function close(id){$(id).close()}
+function close(id){if(id==='paste-dialog'&&pastePreparation){closePreparedPaste();return;}$(id).close()}
 function openLens(s=null){const f=$('lens-form');f.reset();$('lens-id').value=s?.id||'';$('lens-name').value=s?.title||'';$('lens-url').value=s?.url||'';$('lens-type').value=s?.type||'rss';$('lens-mode').value=s?.mode||'region';$('lens-selector').value=s?.selector||'';$('lens-title-selector').value=s?.titleSelector||'';$('lens-link-selector').value=s?.linkSelector||'';$('lens-include').value=s?.include||'';$('lens-exclude').value=s?.exclude||'';$('lens-threshold').value=s?(s.threshold??1):24;$('lens-ignore-numbers').checked=Boolean(s?.ignoreNumbers);$('lens-title').textContent=s?'Revise Lens':'Make a Lens';toggleLensFields();show('lens-dialog');}
 function toggleLensFields(){let page=$('lens-type').value==='page';document.querySelectorAll('.page-only').forEach(el=>el.hidden=!page);document.querySelectorAll('.card-only').forEach(el=>el.hidden=!page||$('lens-mode').value!=='cards');}
 function saveLens(e){e.preventDefault();clearDialogError('lens-dialog');let id=$('lens-id').value;const old=state.sources.find(s=>s.id===id);if(!id)id=C.uid('lens');let s;
@@ -3498,12 +3498,51 @@ function saveCollection(e){e.preventDefault();clearDialogError('collection-dialo
     C.validateBackupRecipes({schema:C.SCHEMA,sources:state.sources.map(C.cleanRecipe),collections:state.collections.map(C.cleanCollection)});
   }catch(error){if(old)state.collections=state.collections.map(c=>c.id===id?old:c);else state.collections=state.collections.filter(c=>c.id!==id);return reportDialogError('collection-dialog','Cannot save collection: '+error.message)}
   routedCollectionFocusReturn=null;close('collection-dialog');save();go('collections');focusAction('collection-edit:'+id);}
-let pasteReadToken=0;
+let pasteReadToken=0,pastePreparation=null;
 // Check and Capture share latest admitted intent; failure or cancellation never revives older work.
 const acquisitionIntents=new WeakMap();
 function admitAcquisition(s){const intent={};acquisitionIntents.set(s,intent);return intent;}
 function ownsAcquisition(s,intent){return acquisitionIntents.get(s)===intent;}
-function openPaste(s){pasteReadToken++;$('paste-form').reset();$('paste-source-id').value=s.id;$('paste-title').textContent='Capture: '+s.title;show('paste-dialog');}
+function openPaste(s,preparedBody=null){
+  pasteReadToken++;pastePreparation=null;$('paste-form').reset();$('paste-preparation-note').hidden=true;$('paste-preparation-note').textContent='';
+  $('paste-source-id').value=s.id;$('paste-title').textContent='Capture: '+s.title;
+  if(typeof preparedBody==='string'){
+    $('paste-raw').value=preparedBody;
+    pastePreparation={source:s,library:state,recipe:JSON.stringify(C.cleanRecipe(s)),navigation:sectionNavigationGeneration,committed:false};
+    $('paste-preparation-note').hidden=false;
+    $('paste-preparation-note').textContent='Prepared from Scout: '+s.url+' · '+s.mode+' · CSS '+(s.selector||'(main or body)')+(s.mode==='cards'?' · title '+(s.titleSelector||'(heading)')+' · link '+(s.linkSelector||'a[href]'):'')+'. Full HTML is supplied as an editable draft; textarea line endings may be normalized. Process snapshot uses your edited draft. If you choose a file, it takes priority. Process creates the first comparison baseline with 0 observation events. Cancel or a refusal before capture keeps this paused Lens without a baseline. Check browser storage status before leaving.';
+  }
+  show('paste-dialog');
+  if(pastePreparation){$('paste-dialog').scrollTop=0;$('paste-preparation-note').focus({preventScroll:true});}
+}
+function closePreparedPaste(){
+  const prepared=pastePreparation;pastePreparation=null;pasteReadToken++;$('paste-dialog').close();
+  if(!prepared)return;
+  if(state===prepared.library&&state.sources.includes(prepared.source)){
+    if(!prepared.committed)notify('Capture draft closed. The Lens remains in this tab; this draft did not create a baseline. Check browser storage status.');
+    if(currentView==='sources'&&sectionNavigationGeneration===prepared.navigation)focusAction('lens-paste:'+prepared.source.id);
+  }
+}
+function preparedPasteCurrent(prepared,s){
+  return pastePreparation===prepared&&prepared.library===state&&prepared.source===s&&state.sources.includes(s)&&s.enabled===false&&
+    !prepared.committed&&JSON.stringify(C.cleanRecipe(s))===prepared.recipe;
+}
+function processPreparedPage(s,body,prepared,current){
+  if(!preparedPasteCurrent(prepared,s))throw Error('Prepared Lens or library changed. Close this draft and open Capture again.');
+  if(Object.prototype.hasOwnProperty.call(state.snapshots,s.id))throw Error('This Lens already has a baseline. Close this draft and review it before another capture.');
+  const library=state,before=JSON.stringify({sources:state.sources,collections:state.collections,items:state.items,snapshots:state.snapshots});
+  const existing=[...state.items],snapshots=state.snapshots,draft={items:[...existing],snapshots:{...snapshots}};
+  const capture=C.extractPage(body,s),result=C.ingestPage(draft,s,capture);
+  if(!result.baseline||result.added!==0||draft.items.length!==existing.length||existing.some(item=>!draft.items.includes(item))||Object.keys(snapshots).some(id=>draft.snapshots[id]!==snapshots[id]))throw Error('Capture would change existing observations or baselines. Nothing was captured.');
+  const update={lastScan:new Date().toISOString(),lastError:'',lastOutcome:'captured-baseline',lastItems:0};
+  C.validateBackupRecipes({schema:C.SCHEMA,sources:state.sources.map(x=>x===s?{...s,...update}:x),collections:state.collections});
+  if(!current()||!preparedPasteCurrent(prepared,s)||state!==library||JSON.stringify({sources:state.sources,collections:state.collections,items:state.items,snapshots:state.snapshots})!==before)throw Error('Draft, Lens or library changed during capture. Nothing was captured.');
+  state.items=draft.items;state.snapshots=draft.snapshots;Object.assign(s,update);prepared.committed=true;
+  save();notify((capture.mode==='region'&&capture.content===''?'Empty first page baseline':'First page baseline')+' captured in this tab · 0 observation events. Lens stays paused. Check browser storage status before leaving.');
+}
+$('paste-dialog').addEventListener('cancel',event=>{if(pastePreparation){event.preventDefault();close('paste-dialog');}});
+// Retire prepared work synchronously; queued old close events cannot clear a new draft.
+for(const id of ['paste-raw','paste-file'])$(id).addEventListener(id==='paste-file'?'change':'input',()=>{if(pastePreparation)pasteReadToken++;});
 function processContent(s,body,{offline=false}={}){let added=0,baseline=false;
   if(s.type==='rss'){
     const parsed=C.parseFeed(body,s.url);added=C.ingestFeed(state,s,parsed);
@@ -3516,9 +3555,10 @@ function processContent(s,body,{offline=false}={}){let added=0,baseline=false;
   save();return added;
 }
 $('paste-form').addEventListener('submit',async e=>{e.preventDefault();clearDialogError('paste-dialog');
-  const dialog=$('paste-dialog'),s=state.sources.find(x=>x.id===$('paste-source-id').value);if(!dialog.open||!s)return;
+  const dialog=$('paste-dialog'),prepared=pastePreparation,s=state.sources.find(x=>x.id===$('paste-source-id').value);if(!dialog.open)return;
+  if(!s){if(prepared)reportDialogError('paste-dialog','Prepared Lens is no longer in this library. Close this draft.');return;}
   const token=++pasteReadToken,library=state,version=s.version,file=$('paste-file').files[0];
-  let value=$('paste-raw').value;
+  let value=$('paste-raw').value;const submittedText=value;
   const acquisition=(file||value.trim())?admitAcquisition(s):null;
   try{
     if(file)try{value=await file.text();}catch(error){
@@ -3529,8 +3569,14 @@ $('paste-form').addEventListener('submit',async e=>{e.preventDefault();clearDial
     if(state!==library||state.sources.find(x=>x.id===s.id)!==s||s.version!==version)throw Error('Library or Lens changed while reading. Open Capture again.');
     if(($('paste-file').files[0]||null)!==(file||null))throw Error('Selected file changed while reading. Process the snapshot again.');
     if(!value.trim())throw Error('Paste content or select a file');
-    processContent(s,value,{offline:true});close('paste-dialog');focusAction('lens-paste:'+s.id);
-  }catch(error){if((!acquisition||ownsAcquisition(s,acquisition))&&token===pasteReadToken&&dialog.open)reportDialogError('paste-dialog','Snapshot: '+error.message)}
+    if(prepared)processPreparedPage(s,value,prepared,()=>token===pasteReadToken&&dialog.open&&ownsAcquisition(s,acquisition)&&$('paste-raw').value===submittedText&&($('paste-file').files[0]||null)===(file||null));
+    else processContent(s,value,{offline:true});
+    close('paste-dialog');if(!prepared)focusAction('lens-paste:'+s.id);
+  }catch(error){if((!acquisition||ownsAcquisition(s,acquisition))&&token===pasteReadToken&&dialog.open){
+    const detail=prepared&&!prepared.committed?error.message.replace('; previous snapshot kept',''):error.message;
+    const retained=prepared&&prepared.library===state&&state.sources.includes(prepared.source);
+    reportDialogError('paste-dialog',prepared?(prepared.committed?'Baseline is in this tab, but follow-up failed. Check browser storage status: ':'No baseline captured from this draft. '+(retained?'The Lens recipe remains: ':'The prepared Lens is no longer current here: '))+detail:'Snapshot: '+detail);
+  }}
 });
 async function detectBridge(){if(location.protocol!=='http:'||location.hostname!=='127.0.0.1'){setBridge(false);return}try{const r=await fetch('/api/status',{credentials:'omit',cache:'no-store'});let x=await r.json();setBridge(Boolean(r.ok&&x.project==='ProgRSS'&&x.broker))}catch{setBridge(false)}}
 function setBridge(ok){bridge=ok;$('bridge-dot').classList.toggle('online',ok);$('bridge-status').textContent=ok?'Local CLI fetch bridge connected':'Webpage-only · CORS applies'}
@@ -4825,6 +4871,28 @@ let scoutReport=null,scoutMarkupMemory='',scoutLinkHeader='',activeProof=null,pr
 let scoutIntent=0,scoutFileRead=null,scoutAnalyzeTimer=null,scoutUrlHint=null,scoutAwaitingAddress=false,scoutCheckActive=null;
 // One bounded acquisition only. This record and the raw body never enter state.
 let scoutFeedAcquisition=null,scoutCaptureControls=[];
+let scoutPageAcquisition=null,scoutPageControls=[];
+function scoutPageRecipe(item,report,id='scout-page'){
+  return C.cleanRecipe({id,type:'page',url:item.url||report.siteUrl,title:item.title,mode:item.mode||'region',selector:item.selector||'',titleSelector:item.titleSelector||'',linkSelector:item.linkSelector||'',threshold:24,author:'local'});
+}
+function scoutPageCurrent(item,report){
+  const a=scoutPageAcquisition;
+  try{return !!a&&a.report===report&&report===scoutReport&&a.library===state&&a.token===scoutIntent&&item.kind==='page'&&
+    report.recommendations.includes(item)&&a.recipes.get(item)===JSON.stringify(scoutPageRecipe(item,report))&&
+    ['scout-url','scout-html','scout-header'].every((id,i)=>$(id).value===a.inputs[i]);}catch{return false;}
+}
+function refreshScoutPageControls(){
+  for(const {item,report,button,note} of scoutPageControls){
+    const ready=scoutPageCurrent(item,report);button.disabled=!ready;
+    note.textContent=ready?'Prepare creates a paused page Lens now and opens Capture with the full supplied HTML as an editable draft. Process snapshot establishes its first comparison baseline with 0 observations. Cancel or a refusal before capture keeps the recipe without a baseline. Create alone saves only the recipe.':
+      'Earlier page finding: choose Analyze now before preparing its baseline. Create alone still saves only the recipe; this preview is not a baseline.';
+  }
+}
+function holdScoutPage(report,body){
+  scoutPageAcquisition={report,body,library:state,token:scoutIntent,recipes:new Map(report.recommendations.map(item=>[item,JSON.stringify(scoutPageRecipe(item,report))])),
+    inputs:['scout-url','scout-html','scout-header'].map(id=>$(id).value)};
+  refreshScoutPageControls();
+}
 function scoutCaptureCurrent(item,report){
   const a=scoutFeedAcquisition;
   return !!a&&a.item===item&&a.report===report&&report===scoutReport&&a.token===scoutIntent&&a.library===state&&
@@ -4853,7 +4921,7 @@ function setScoutCheckBusy(button,busy){
   else{button.removeAttribute('aria-disabled');button.removeAttribute('aria-busy');}
 }
 function invalidateScoutLoads(){
-  scoutIntent++;clearTimeout(scoutAnalyzeTimer);scoutAnalyzeTimer=null;retireScoutCapture();
+  scoutIntent++;clearTimeout(scoutAnalyzeTimer);scoutAnalyzeTimer=null;retireScoutCapture();scoutPageAcquisition=null;refreshScoutPageControls();
   $('scout-fetch').disabled=false;$('scout-use-saved').hidden=true;
   if(scoutCheckActive){setScoutCheckBusy(scoutCheckActive.button,false);scoutCheckActive.button.textContent='Check feed';scoutCheckActive.status.textContent='Check retired after newer input. Check again when ready.';scoutCheckActive=null;}
 }
@@ -4873,7 +4941,7 @@ function renderScoutPreview(slot,preview){
   slot.append(h('ol',{},preview.items.map(item=>h('li',{},[h('strong',{text:item.title||'Untitled update'}),...(item.summary?[h('p',{text:item.summary})]:[]),...(item.url?[h('p',{class:'mono',text:item.url})]:[])]))));
 }
 function renderScout(report){
-  const slot=$('scout-results');scoutReport=report;scoutCaptureControls=[];
+  const slot=$('scout-results');scoutReport=report;scoutCaptureControls=[];scoutPageControls=[];
   $('scout-findings-context').hidden=!report;$('scout-findings-context').textContent=report?'Last completed scan: '+report.siteUrl:'';
   if(!report){slot.replaceChildren(h('div',{class:'empty'},[h('h3',{text:'No discovery yet'}),h('p',{text:'Scan an address, paste source content, or drop a saved page/feed.'})]));return;}
   const candidates=[...report.candidates,...report.recommendations];
@@ -4890,7 +4958,10 @@ function renderScout(report){
     if(candidate.kind==='feed'){
       const capture=action('Create paused Lens + capture feed entries',()=>captureScoutLens(candidate,report),'ghost');
       actions.push(capture);scoutCaptureControls.push({item:candidate,report,button:capture,note:captureNote});
-    }else captureNote.textContent='Create saves this page recipe only. A separate Paste capture in Lenses establishes its first baseline; this preview is not a baseline.';
+    }else{
+      const prepare=action('Create paused Lens + prepare baseline',()=>prepareScoutPage(candidate,report),'ghost');
+      actions.push(prepare);scoutPageControls.push({item:candidate,report,button:prepare,note:captureNote});
+    }
     actions.push(action('♧ Make replayable proof',()=>selectScoutProof(report,candidate),'ghost'));
     return h('article',{class:'scout-result'},[
       h('span',{class:'mini',text:(i+1)+' · '+candidate.format+' · '+candidate.confidence}),h('h4',{text:candidate.title}),
@@ -4900,7 +4971,7 @@ function renderScout(report){
     ]);
   });
   if(!cards.length)cards.push(h('div',{class:'empty'},[h('h3',{text:'No feed or readable page region found'}),h('p',{text:'The saved source may be incomplete or rely on scripts. Try the page’s complete source or a direct feed URL.'})]));
-  slot.replaceChildren(...cards);refreshScoutCaptureControls();
+  slot.replaceChildren(...cards);refreshScoutCaptureControls();refreshScoutPageControls();
 }
 async function checkScoutFeed(candidate,report,button,status,preview){
   if(report!==scoutReport||button.disabled||scoutCheckActive?.button===button)return;
@@ -4921,6 +4992,29 @@ async function checkScoutFeed(candidate,report,button,status,preview){
   finally{if(scoutCheckActive===job){setScoutCheckBusy(button,false);button.textContent='Check feed again';scoutCheckActive=null;}}
 }
 
+function prepareScoutPage(item,report){
+  let created=false;
+  try{
+    if(!scoutPageCurrent(item,report))throw Error('This page input or recipe is no longer current. Choose Analyze now before preparation.');
+    if(document.querySelector('dialog[open]'))throw Error('Close the current dialog before preparing another baseline.');
+    const acquisition=scoutPageAcquisition,library=state,recipe=scoutPageRecipe(item,report);
+    const duplicate=state.sources.find(s=>s.type==='page'&&s.url===recipe.url&&(s.mode||'region')===recipe.mode&&(s.selector||'')===recipe.selector);
+    if(duplicate){go('sources');focusAction('lens-paste:'+duplicate.id)||focusAction('nav:sources');return notify('A page Lens with this address, mode and selector already exists: '+duplicate.title+'. Other settings may differ. Nothing was created or prepared.');}
+    if(state.sources.length>=C.LIMIT.source)throw Error('Source limit reached');
+    if(state.items.length>C.LIMIT.items)throw Error('This library is above its observation limit. Preparation would not guarantee preservation; no Lens was created.');
+    const before=JSON.stringify({sources:state.sources,collections:state.collections,items:state.items,snapshots:state.snapshots});
+    const id=C.uid('lens');
+    if(state.sources.some(x=>x.id===id)||state.collections.some(x=>x.id===id)||state.items.some(x=>x.sourceId===id||x.id===id)||Object.prototype.hasOwnProperty.call(state.snapshots,id))throw Error('Lens identity collision; try preparation again');
+    const source={...scoutPageRecipe(item,report,id),enabled:false,origin:'site-scout',lastScan:'',lastError:'',lastOutcome:'waiting'};
+    const nextSources=[...state.sources,source];C.validateBackupRecipes({schema:C.SCHEMA,sources:nextSources,collections:state.collections});
+    if(state!==library||scoutPageAcquisition!==acquisition||!scoutPageCurrent(item,report)||JSON.stringify({sources:state.sources,collections:state.collections,items:state.items,snapshots:state.snapshots})!==before)throw Error('Page input or library changed during preparation. Nothing was created.');
+    state.sources=nextSources;created=true;save();go('sources');
+    const navigation=sectionNavigationGeneration;focusAction('lens-paste:'+source.id)||focusAction('nav:sources');
+    if(currentView!=='sources'||sectionNavigationGeneration!==navigation||state!==library||!state.sources.includes(source)||!scoutPageCurrent(item,report))return notify('Paused Lens created in this tab. A newer action prevented opening Capture; use its Paste control when ready. Check browser storage status.');
+    openPaste(source,acquisition.body);
+    notify('Paused page Lens created in this tab. Review the editable draft; Process snapshot captures the baseline. Cancel keeps the recipe. Check browser storage status.');
+  }catch(error){notify((created?'Paused Lens is in this tab, but preparation follow-up failed. Check browser storage status: ':'Scout preparation: ')+error.message,true);}
+}
 function scoutEquivalentFeed(url){
   return state.sources.find(s=>s.url===url&&s.type==='rss'&&(s.mode||'region')==='region'&&!(s.selector||''));
 }
@@ -4985,6 +5079,7 @@ function analyzeScout(body,linkHeader='',fromCurrentLoad=false,quiet=false){
     const siteUrl=C.safeUrl($('scout-url').value),header=linkHeader||$('scout-header').value;
     const report=S.scanMarkup(body,siteUrl,{linkHeader:header});scoutAwaitingAddress=false;scoutMarkupMemory=body;scoutLinkHeader=header;renderScout(report);
     if(report.kind==='direct-feed')holdScoutFeed(report.candidates[0],report,body,'scout-inspected-feed');
+    else holdScoutPage(report,body);
     renderProofWorkbench();
     return report;
   }catch(err){$('scout-status').textContent='SCOUT: '+err.message;if(!quiet)notify('Scout: '+err.message,true);return null;}
