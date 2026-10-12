@@ -52,7 +52,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 .scout-results{display:grid;gap:11px;max-height:650px;overflow:auto;padding-right:3px}
 .scout-result{border-radius:9px;border:1px solid var(--line);background:#132018;padding:13px;min-width:0}
 .scout-result h4{font-size:13px;margin:0 0 7px}.scout-result p{color:var(--muted);font-size:11px;margin:5px 0;overflow-wrap:anywhere}
-.scout-result .mini{color:var(--teal)}.scout-result .btn{margin-top:6px}.scout-result .btn[aria-disabled="true"]{opacity:.55;cursor:progress}
+.scout-result .mini{color:var(--teal)}.scout-result .btn{margin-top:6px}.scout-result .btn[aria-disabled="true"],#scout-fetch[aria-disabled="true"]{opacity:.55;cursor:progress}
 .scout-intake.dragging{outline:2px dashed var(--lime);outline-offset:5px}.scout-preview{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}.scout-preview ol{padding-left:20px;margin:8px 0}.scout-preview li{margin:8px 0;font-size:12px;overflow-wrap:anywhere}.scout-preview li p{margin:3px 0}.scout-snapshot{margin-top:14px}.scout-snapshot summary{cursor:pointer;color:var(--teal)}.scout-snapshot summary:focus-visible{outline:2px solid var(--lime);outline-offset:3px}.scout-drop-note{font-size:11px;color:var(--muted);margin:7px 0}
 .pulse-health{display:inline-block;color:var(--teal);font:10px var(--mono);margin-right:8px}
 .pulse-health.problem{color:var(--red)}
@@ -5153,7 +5153,7 @@ $('scout-feed-paste-dialog').addEventListener('close',()=>{if(!$('scout-feed-pas
 function invalidateScoutLoads(){
   closeScoutFeedPaste(false);
   scoutIntent++;clearTimeout(scoutAnalyzeTimer);scoutAnalyzeTimer=null;retireScoutCapture();retireScoutFeedFile();scoutPageAcquisition=null;refreshScoutPageControls();
-  $('scout-fetch').disabled=false;$('scout-use-saved').hidden=true;
+  setScoutCheckBusy($('scout-fetch'),false);$('scout-use-saved').hidden=true;
   if(scoutCheckActive){setScoutCheckBusy(scoutCheckActive.button,false);scoutCheckActive.button.textContent='Check feed';scoutCheckActive.status.textContent='Check retired after newer input. Check again when ready.';scoutCheckActive=null;}
 }
 function beginScoutLoad(){
@@ -5362,9 +5362,9 @@ function scoutFetchDetail(error){
   return message.startsWith(prefix)&&message.endsWith(suffix)?'Browser read failed: '+message.slice(prefix.length,-suffix.length):message;
 }
 async function fetchScout(){
-  const button=$('scout-fetch');if(button.disabled)return;
+  const button=$('scout-fetch');if(button.disabled||button.getAttribute('aria-busy')==='true')return;
   const intent=beginScoutLoad();let addressAccepted=false,responseReceived=false;
-  button.disabled=true;$('scout-status').textContent='Fetching the user-selected URL…';
+  setScoutCheckBusy(button,true);$('scout-status').textContent='Fetching the user-selected URL…';
   try{const target=C.safeUrl(intent.url);addressAccepted=true;const result=await requestRemote(target);responseReceived=true;
     if(!intent.current())return;
     if(result.notModified)throw Error('Unexpected conditional response to an unconditional discovery request');
@@ -5389,7 +5389,7 @@ async function fetchScout(){
     if(addressAccepted&&!status&&!responseReceived&&!limitExceeded){$('scout-offline-help').open=true;$('scout-use-saved').hidden=false;}
     notify('Scout: '+detail,true);
   }}
-  finally{if(intent.token===scoutIntent)button.disabled=false}
+  finally{if(intent.token===scoutIntent)setScoutCheckBusy(button,false)}
 }
 function demoScout(){
   scoutUrlHint=null;scoutAddressNote();
