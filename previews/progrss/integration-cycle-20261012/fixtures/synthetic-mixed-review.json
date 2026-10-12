@@ -1,0 +1,65 @@
+{
+  "schema": "progrss.private.v1",
+  "exportedAt": "2026-10-11T00:00:00Z",
+  "state": {
+    "version": 11,
+    "sources": [
+      {
+        "id": "recovery-source-0",
+        "title": "<leaf> & Enabled fictional feed",
+        "type": "rss",
+        "url": "https://review.example/enabled?fictional=1&view=all",
+        "enabled": true,
+        "version": 1,
+        "author": "Synthetic fixture",
+        "include": "",
+        "exclude": "",
+        "selector": ""
+      },
+      {
+        "id": "recovery-source-1",
+        "title": "Paused fictional page",
+        "type": "page",
+        "url": "https://review.example/paused",
+        "enabled": false,
+        "version": 1,
+        "author": "Synthetic fixture",
+        "include": "",
+        "exclude": "",
+        "selector": "",
+        "mode": "cards"
+      }
+    ],
+    "collections": [],
+    "items": [
+      {
+        "id": "fixture-observation",
+        "sourceId": "recovery-source-0",
+        "title": "Synthetic observation",
+        "summary": "Offline-only fixture",
+        "url": "https://example.invalid/recovery/item",
+        "unread": true
+      }
+    ],
+    "snapshots": {},
+    "fixtures": [],
+    "inbox": [],
+    "receipts": [],
+    "subscriptions": [],
+    "publications": [],
+    "patchPins": [],
+    "keyRotations": [],
+    "recoveryPolicies": [],
+    "recoveryReceipts": [],
+    "charterHistory": [],
+    "charterClaims": [],
+    "gossipCards": [],
+    "witnessPins": [],
+    "merklePins": [],
+    "merkleReceipts": [],
+    "proofRequests": [],
+    "proofSightings": [],
+    "proofForks": [],
+    "fixturePacks": []
+  }
+}
