@@ -21,6 +21,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 /* rev0004 / provenance microscope, collection algebra, patch proposals */
 .witness-tools{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin-top:11px}.witness-tools .btn{padding:5px 9px;font-size:11px}.witness-tools .mini{color:var(--teal)}
 .trace-result{font:11px/1.6 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;max-height:150px;overflow:auto;color:var(--lime);background:#101c16;border:1px dashed #3f6147;border-radius:8px;padding:11px;margin-top:12px}
+.saved-reading-text{font-size:14px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:18px;color:var(--ink)}
 .trace-full{font:12px/1.75 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;margin:0;padding:24px;max-height:60vh;overflow:auto;background:var(--panel);color:var(--lime)}
 .proposal-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:17px}.proposal-grid .peer-card{min-width:0}.proposal-grid textarea{min-height:90px}.proposal-grid select{width:100%}.proposal-report{white-space:pre-wrap;overflow-wrap:anywhere;max-height:320px;min-height:140px;overflow:auto;padding:13px;background:#111d17;border:1px solid #48634e;border-radius:9px;color:#c7dacc;font:11px/1.65 var(--mono);margin:12px 0}
 #collection-base-field{border:1px dashed #60704a;padding:13px;border-radius:9px}#collection-base{width:100%}
@@ -486,6 +487,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 <dialog id="paste-dialog" aria-labelledby="paste-title"><div class="dialog-head"><div><h2 id="paste-title">Paste a snapshot</h2><p>Capture saved feed or page content without checking the source URL.</p></div><button class="xbtn" type="button" data-close="paste-dialog" aria-label="Close">×</button></div><form id="paste-form"><p id="paste-form-error" class="dialog-error" data-form-error tabindex="-1" hidden></p><div class="dialog-content"><input id="paste-source-id" type="hidden"><p id="paste-preparation-note" class="banner dependency-summary" tabindex="-1" hidden></p><div class="field"><label for="paste-raw">RSS, Atom, JSON Feed, or complete page HTML</label><textarea id="paste-raw" rows="11" placeholder="Paste the fetched source of your feed or watched webpage…"></textarea></div><div class="field" style="margin-top:13px"><label for="paste-file">Or choose a local file (takes priority over pasted text)</label><input id="paste-file" type="file" accept=".html,.htm,.xml,.rss,.atom,.json,.txt,text/html,text/xml,application/json"></div><div class="banner" style="margin-top:15px">Pasted HTML is parsed in an inert document and only plain text is displayed. No page scripts are run.</div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="paste-dialog">Cancel</button><button class="btn primary" type="submit">Process snapshot</button></div></form><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p></div></dialog>
 <input type="file" id="import-file" accept=".json,.opml,.xml,application/json,text/xml" hidden>
 <dialog id="deletion-dependency-dialog" aria-labelledby="deletion-dependency-title"><div class="dialog-head"><div><h2 id="deletion-dependency-title">Review collection dependencies</h2><p>Nothing has been deleted.</p></div><button class="xbtn" type="button" data-close="deletion-dependency-dialog" aria-label="Close dependency guidance">×</button></div><div class="dialog-content"><p id="deletion-dependency-summary" class="dependency-summary" tabindex="-1" autofocus></p><p>Use the matching Edit button below, or close this message and open Collections, to edit each collection listed below and remove or replace this member. Changes stay in the editor until you save. Save those changes, then try Delete again.</p><p>Intersection and Subtraction require at least two members: choose replacements or explicitly change the operator. For Subtraction, review the base member before saving; removing the old base can select another member in the editor.</p><ol id="deletion-dependency-list" class="dependency-list"></ol></div><div class="dialog-footer"><button class="btn primary" type="button" data-close="deletion-dependency-dialog">Close</button></div></dialog>
+<dialog id="reading-dialog" aria-labelledby="reading-dialog-title"><div class="dialog-head"><div><h2 id="reading-dialog-title">Read saved text</h2><p id="reading-dialog-source"></p></div><button class="xbtn" type="button" data-close="reading-dialog" aria-label="Close saved text">×</button></div><div class="dialog-content"><p id="reading-dialog-context" class="dependency-summary" tabindex="-1">This is the text saved with this observation. Captures can shorten or normalize text.</p><div id="reading-dialog-text" class="saved-reading-text"></div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="reading-dialog">Close</button></div></dialog>
 <dialog id="trace-dialog" aria-labelledby="trace-dialog-title"><div class="dialog-head"><div><h2 id="trace-dialog-title">Why this signal?</h2><p>Local derivation path; no external verification implied.</p></div><button class="xbtn" type="button" data-close="trace-dialog" aria-label="Close">×</button></div><pre id="trace-dialog-result" class="trace-full"></pre><div class="dialog-footer"><button class="btn ghost" type="button" data-close="trace-dialog">Close</button></div><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p></div></dialog>
 <div id="toast" role="status" aria-live="polite" hidden></div>
 <script id="progrss-core">
@@ -3329,11 +3331,30 @@ function renderHome(){
       h('span',{class:'feed-bullet '+(item.kind==='removed'?'removed':item.kind==='changed'?'changed':'')}),
       h('div',{class:'feed-inner'},[
         h('div',{class:'feed-top'},[h('span',{class:'feed-origin',text:originTitle(item)}),h('span',{class:'feed-date',text:relative(item.observedAt)})]),title,h('p',{text:item.summary||'No summary. Open the original source to read more.'}),...(['changed','removed'].includes(item.kind)?[h('span',{class:'feed-tag '+(item.kind==='removed'?'removed':''),text:item.kind==='removed'?'CARD REMOVED':'CHANGE DETECTED'})]:[]),
-        h('div',{class:'witness-tools'},[h('span',{class:'mini',text:'WITNESSES '+new Set(witnesses.map(w=>w.sourceId)).size+' source(s)'}),action('Why here? ↗',()=>openTrace(item.id),'ghost','Why here? '+item.title)])
+        h('div',{class:'witness-tools'},[h('span',{class:'mini',text:'WITNESSES '+new Set(witnesses.map(w=>w.sourceId)).size+' source(s)'}),action('Read saved text',()=>openSavedObservation(item),'ghost','Read saved text: '+item.title,'observation-read:'+item.id),action('Why here? ↗',()=>openTrace(item.id),'ghost','Why here? '+item.title)])
       ])
     ]);
   }));
 }
+// Read-only local text view: no source fetch, reconstruction, or library mutation.
+let readingDialogContext=null;
+function openSavedObservation(item){
+  if(currentView!=='home'||document.querySelector('dialog[open]'))return;
+  if(!state.items.includes(item))return notify('This observation is no longer available in the current library.',true);
+  const kind=item.kind==='changed'?'Change observation':item.kind==='removed'?'Removal observation':'Saved observation';
+  readingDialogContext={library:state,item,navigation:sectionNavigationGeneration};
+  $('reading-dialog-title').textContent='Saved text: '+(item.title||'Untitled observation');
+  $('reading-dialog-source').textContent=kind+' · Lens: '+originTitle(item)+' · observed '+relative(item.observedAt);
+  $('reading-dialog-text').textContent=typeof item.summary==='string'&&item.summary?item.summary:'No text was saved with this observation.';
+  show('reading-dialog');$('reading-dialog').scrollTop=0;$('reading-dialog-context').focus({preventScroll:true});
+}
+function closeSavedObservation(){
+  const context=readingDialogContext;readingDialogContext=null;$('reading-dialog').close();
+  if(!context||state!==context.library||currentView!=='home'||sectionNavigationGeneration!==context.navigation||document.querySelector('dialog[open]'))return;
+  if(state.items.includes(context.item)&&focusAction('observation-read:'+context.item.id))return;
+  focusAction($('search-items'));
+}
+$('reading-dialog').addEventListener('cancel',event=>{if(readingDialogContext){event.preventDefault();closeSavedObservation();}});
 function traceText(result){
   if(!result.included)return 'NOT INCLUDED\n'+result.reason+'\n\nRule: '+(result.mode||activeCollection)+
     (Number.isInteger(result.matchedMembers)?' · matching members '+result.matchedMembers+'/'+result.totalMembers:'');
@@ -3464,7 +3485,7 @@ function revealFocusedDialogError(){
   }
 }
 function show(id){clearDialogError(id);$(id).showModal()}
-function close(id){if(id==='paste-dialog'&&pastePreparation){closePreparedPaste();return;}$(id).close()}
+function close(id){if(id==='reading-dialog'){closeSavedObservation();return;}if(id==='paste-dialog'&&pastePreparation){closePreparedPaste();return;}$(id).close()}
 function openLens(s=null){const f=$('lens-form');f.reset();$('lens-id').value=s?.id||'';$('lens-name').value=s?.title||'';$('lens-url').value=s?.url||'';$('lens-type').value=s?.type||'rss';$('lens-mode').value=s?.mode||'region';$('lens-selector').value=s?.selector||'';$('lens-title-selector').value=s?.titleSelector||'';$('lens-link-selector').value=s?.linkSelector||'';$('lens-include').value=s?.include||'';$('lens-exclude').value=s?.exclude||'';$('lens-threshold').value=s?(s.threshold??1):24;$('lens-ignore-numbers').checked=Boolean(s?.ignoreNumbers);$('lens-title').textContent=s?'Revise Lens':'Make a Lens';toggleLensFields();show('lens-dialog');}
 function toggleLensFields(){let page=$('lens-type').value==='page';document.querySelectorAll('.page-only').forEach(el=>el.hidden=!page);document.querySelectorAll('.card-only').forEach(el=>el.hidden=!page||$('lens-mode').value!=='cards');}
 function saveLens(e){e.preventDefault();clearDialogError('lens-dialog');let id=$('lens-id').value;const old=state.sources.find(s=>s.id===id);if(!id)id=C.uid('lens');let s;
