@@ -3489,7 +3489,7 @@ function renderSources(){const list=$('source-list');if(!state.sources.length){l
     h('div',{class:'row-actions'},[
       action('↻ Check',()=>checkSource(s,{manual:true}),'ghost','Check Lens: '+s.title),action('↥ Paste',()=>openPaste(s),'ghost','Paste snapshot for Lens: '+s.title,'lens-paste:'+s.id),...(s.type==='page'?[action('♢ Clinic',()=>{go('clinic');clinicSelect(s.id)},'ghost','Clinic for Lens: '+s.title)]:[]),action('Edit',()=>openLens(s),'ghost','Edit Lens: '+s.title,'lens-edit:'+s.id),
       action(s.enabled?'Pause':'Enable',()=>{if(!s.enabled&&!confirm('Enable future checks for '+s.title+'? Your browser will contact '+s.url+' only when you manually check or enable an open-tab schedule.'))return;s.enabled=!s.enabled;save();focusAction('lens-toggle:'+s.id)},'ghost',(s.enabled?'Pause':'Enable')+' Lens: '+s.title,'lens-toggle:'+s.id),
-      action('×',event=>{if(collectionDeletionBlocked('source',s.id,event?.currentTarget))return;if(!confirm('Delete Lens and its saved observations?'))return;state.sources=state.sources.filter(x=>x.id!==s.id);state.items=state.items.filter(x=>x.sourceId!==s.id);delete state.snapshots[s.id];save()},'danger','Delete Lens: '+s.title)
+      action('×',event=>{if(collectionDeletionBlocked('source',s.id,event?.currentTarget))return;if(!confirm('Delete Lens “'+s.title+'” and its saved observations?'))return;state.sources=state.sources.filter(x=>x.id!==s.id);state.items=state.items.filter(x=>x.sourceId!==s.id);delete state.snapshots[s.id];save()},'danger','Delete Lens: '+s.title)
     ])
   ])));
 }
