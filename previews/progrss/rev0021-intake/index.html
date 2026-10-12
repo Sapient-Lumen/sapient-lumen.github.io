@@ -4870,7 +4870,7 @@ function lineageDemo(){
 let scoutReport=null,scoutMarkupMemory='',scoutLinkHeader='',activeProof=null,proofReplay=null,pendingDiscoveryCourierId=null;
 let scoutIntent=0,scoutFileRead=null,scoutAnalyzeTimer=null,scoutUrlHint=null,scoutAwaitingAddress=false,scoutCheckActive=null;
 // One bounded acquisition only. This record and the raw body never enter state.
-let scoutFeedAcquisition=null,scoutCaptureControls=[];
+let scoutFeedAcquisition=null,scoutCaptureControls=[],scoutFeedFileRead=null;
 let scoutPageAcquisition=null,scoutPageControls=[];
 function scoutPageRecipe(item,report,id='scout-page'){
   return C.cleanRecipe({id,type:'page',url:item.url||report.siteUrl,title:item.title,mode:item.mode||'region',selector:item.selector||'',titleSelector:item.titleSelector||'',linkSelector:item.linkSelector||'',threshold:24,author:'local'});
@@ -4904,7 +4904,7 @@ function refreshScoutCaptureControls(){
     const ready=scoutCaptureCurrent(item,report);button.disabled=!ready;
     note.textContent=ready?'Capture reuses this inspected feed without checking its address again. It saves normalized entries from up to the first 250 source records, not just the 3 shortened excerpts. Duplicate IDs may reduce the saved event count. Raw source is not saved; future checks stay paused.':
       item.origin==='body'?'Capture unavailable for these earlier findings. Choose Analyze now to inspect the current input.':
-      item.preview?'Previous preview retained; check this feed again before capture.':'Check this feed successfully before capturing its entries.';
+      item.preview?'Previous preview retained; check this feed again or use a saved feed before capture.':'Check this feed successfully or use a saved feed before capturing its entries.';
   }
 }
 function retireScoutCapture(){scoutFeedAcquisition=null;refreshScoutCaptureControls();}
@@ -4920,8 +4920,39 @@ function setScoutCheckBusy(button,busy){
   if(busy){button.setAttribute('aria-disabled','true');button.setAttribute('aria-busy','true');}
   else{button.removeAttribute('aria-disabled');button.removeAttribute('aria-busy');}
 }
+function scoutSavedFeedContext(item,report){
+  const a=scoutPageAcquisition;
+  return !!a&&a.report===report&&report===scoutReport&&a.library===state&&a.token===scoutIntent&&item.kind==='feed'&&item.origin!=='body'&&report.candidates.includes(item)&&
+    ['scout-url','scout-html','scout-header'].every((id,i)=>$(id).value===a.inputs[i]);
+}
+function retireScoutFeedFile(){
+  if(!scoutFeedFileRead)return;
+  const old=scoutFeedFileRead;scoutFeedFileRead=null;setScoutCheckBusy(old.button,false);old.button.textContent='Use saved feed…';
+  old.status.textContent='Local feed read retired after a newer action. Previous preview, if any, is not a current capture.';
+}
+async function loadScoutFeedFile(file,item,report,input,button,status,preview){
+  if(!file)return;
+  if(!scoutSavedFeedContext(item,report)){notify('Analyze the current page again before attaching a saved feed.',true);input.value='';return;}
+  retireScoutFeedFile();retireScoutCapture();
+  if(scoutCheckActive){setScoutCheckBusy(scoutCheckActive.button,false);scoutCheckActive.button.textContent='Check feed again';scoutCheckActive.status.textContent='Remote check retired after local file selection.';scoutCheckActive=null;}
+  const token=scoutIntent,library=state,url=item.url,job={button,status};scoutFeedFileRead=job;
+  const current=()=>scoutFeedFileRead===job&&token===scoutIntent&&state===library&&item.url===url&&scoutSavedFeedContext(item,report)&&input.files[0]===file;
+  setScoutCheckBusy(button,true);button.textContent='Reading local feed…';status.textContent='Reading the selected local file. This candidate URL is parsing context, not verified file origin.';
+  try{
+    if(file.size>C.LIMIT.characters)throw Error('Saved feed file exceeds 2 MB');
+    const body=await file.text();if(!current())return;
+    if(typeof body!=='string'||!body.trim())throw Error('The selected file contained no feed content');
+    if(body.length>C.LIMIT.characters)throw Error('Saved feed exceeds 2 million characters');
+    const parsed=S.previewFeed(body,url),hint=S.inferSource(body);
+    if(hint&&hint.url!==url)throw Error('A source-address hint ('+hint.basis+') differs from this candidate URL. Aliases can legitimately differ, but Scout will not rebase this attachment. Use Load a saved page or feed to inspect that file separately');
+    if(!current())return;
+    item.preview=parsed;holdScoutFeed(item,report,body,'scout-saved-feed-file');renderScoutPreview(preview,parsed);
+    status.textContent='Local file parsed as '+parsed.format+' · '+parsed.count+' usable entries from up to the first 250 source records. Candidate URL is borrowed parsing context; file origin is unverified. No address was fetched. Proof still replays the original advertisement.';
+  }catch(error){if(current())status.textContent='Could not use this saved feed: '+error.message+'. Original page and prior preview are kept; previous capture eligibility is retired.';}
+  finally{if(scoutFeedFileRead===job){scoutFeedFileRead=null;setScoutCheckBusy(button,false);button.textContent='Use saved feed…';input.value='';}}
+}
 function invalidateScoutLoads(){
-  scoutIntent++;clearTimeout(scoutAnalyzeTimer);scoutAnalyzeTimer=null;retireScoutCapture();scoutPageAcquisition=null;refreshScoutPageControls();
+  scoutIntent++;clearTimeout(scoutAnalyzeTimer);scoutAnalyzeTimer=null;retireScoutCapture();retireScoutFeedFile();scoutPageAcquisition=null;refreshScoutPageControls();
   $('scout-fetch').disabled=false;$('scout-use-saved').hidden=true;
   if(scoutCheckActive){setScoutCheckBusy(scoutCheckActive.button,false);scoutCheckActive.button.textContent='Check feed';scoutCheckActive.status.textContent='Check retired after newer input. Check again when ready.';scoutCheckActive=null;}
 }
@@ -4958,6 +4989,12 @@ function renderScout(report){
     if(candidate.kind==='feed'){
       const capture=action('Create paused Lens + capture feed entries',()=>captureScoutLens(candidate,report),'ghost');
       actions.push(capture);scoutCaptureControls.push({item:candidate,report,button:capture,note:captureNote});
+      if(candidate.origin!=='body'){
+        const file=h('input',{type:'file',accept:'.xml,.rss,.atom,.json,.txt,text/xml,application/json',hidden:'','aria-label':'Saved feed for '+candidate.url});
+        const choose=action('Use saved feed…',()=>{if(scoutFeedFileRead?.button===choose)return;if(!scoutSavedFeedContext(candidate,report))return notify('Analyze the current page again before attaching a saved feed.',true);file.value='';file.click();},'ghost','Use saved feed file for '+candidate.url);
+        file.addEventListener('change',()=>loadScoutFeedFile(file.files[0],candidate,report,file,choose,status,preview));
+        actions.push(choose,file);
+      }
     }else{
       const prepare=action('Create paused Lens + prepare baseline',()=>prepareScoutPage(candidate,report),'ghost');
       actions.push(prepare);scoutPageControls.push({item:candidate,report,button:prepare,note:captureNote});
@@ -4967,7 +5004,7 @@ function renderScout(report){
       h('span',{class:'mini',text:(i+1)+' · '+candidate.format+' · '+candidate.confidence}),h('h4',{text:candidate.title}),
       h('p',{class:'mono',text:candidate.url||report.siteUrl}),
       ...(candidate.selector?[h('p',{text:'Suggested CSS: '+candidate.selector+(candidate.count?' · '+candidate.count+' matches':'' )})]:[]),
-      h('div',{class:'row-actions'},actions),status,captureNote,preview
+      h('div',{class:'row-actions'},actions),...(candidate.kind==='feed'&&candidate.origin!=='body'?[h('p',{class:'mini',text:'Saved feed fallback: select a local file to inspect it using this candidate URL as context. File origin is not verified; the original page stays available.'})]:[]),status,captureNote,preview
     ]);
   });
   if(!cards.length)cards.push(h('div',{class:'empty'},[h('h3',{text:'No feed or readable page region found'}),h('p',{text:'The saved source may be incomplete or rely on scripts. Try the page’s complete source or a direct feed URL.'})]));
@@ -4976,7 +5013,7 @@ function renderScout(report){
 async function checkScoutFeed(candidate,report,button,status,preview){
   if(report!==scoutReport||button.disabled||scoutCheckActive?.button===button)return;
   if(scoutCheckActive){notify('A feed check is already running. Wait for it to finish.');return;}
-  retireScoutCapture();
+  retireScoutFeedFile();retireScoutCapture();
   const token=scoutIntent,library=state,job={button,status};scoutCheckActive=job;
   const current=()=>scoutCheckActive===job&&token===scoutIntent&&library===state&&report===scoutReport;
   setScoutCheckBusy(button,true);button.textContent='Checking…';status.textContent='Reading this feed address…';
