@@ -21,6 +21,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 /* rev0004 / provenance microscope, collection algebra, patch proposals */
 .witness-tools{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin-top:11px}.witness-tools .btn{padding:5px 9px;font-size:11px}.witness-tools .mini{color:var(--teal)}
 .trace-result{font:11px/1.6 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;max-height:150px;overflow:auto;color:var(--lime);background:#101c16;border:1px dashed #3f6147;border-radius:8px;padding:11px;margin-top:12px}
+.reading-results{padding:12px 19px;margin:0;color:var(--muted);font-size:12px;line-height:1.7}.reading-footer{padding:14px 19px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line)}.reading-footer:empty{display:none}.feed-inner h3[tabindex="-1"]:focus,.reading-results:focus{outline:2px solid var(--lime);outline-offset:3px;scroll-margin-block:20px}
 .saved-reading-text{font-size:14px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:18px;color:var(--ink)}
 .trace-full{font:12px/1.75 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;margin:0;padding:24px;max-height:60vh;overflow:auto;background:var(--panel);color:var(--lime)}
 .proposal-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:17px}.proposal-grid .peer-card{min-width:0}.proposal-grid textarea{min-height:90px}.proposal-grid select{width:100%}.proposal-report{white-space:pre-wrap;overflow-wrap:anywhere;max-height:320px;min-height:140px;overflow:auto;padding:13px;background:#111d17;border:1px solid #48634e;border-radius:9px;color:#c7dacc;font:11px/1.65 var(--mono);margin:12px 0}
@@ -189,10 +190,11 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
   <section class="view" id="view-home">
     <div class="hero"><div class="hero-copy"><p class="eyebrow">A new kind of feed / Early experiment 019</p><h1><span id="home-intro-title">Follow the parts of the internet <em>that matter.</em></span><span id="home-reading-title" hidden>Your reading</span></h1><p class="lede">Watch selected parts of pages you can fetch or supply as HTML. Combine RSS, watched regions and the collections of friends. Prove your filters with reproducible snapshots. No feed server or extension required.</p><div class="hero-links"><button class="btn primary" id="hero-add">＋ Make your first Lens</button><button class="btn ghost" id="hero-demo">Try the offline demo ↗</button></div></div><div class="hero-art" aria-hidden="true"><div class="art-line"></div><span class="orb a"></span><span class="orb b"></span><span class="orb c"></span><span class="orb d"></span><div class="art-label">public web → <b>observation</b><br>observation → <b>collective lens</b><br>collective lens → <b>your attention</b></div></div></div>
     <div class="metrics"><div class="metric"><div><span>Watching lenses</span><strong id="stat-sources">0</strong></div><span class="glyph">◉</span></div><div class="metric"><div><span>Collections</span><strong id="stat-collections">0</strong></div><span class="glyph">⌗</span></div><div class="metric"><div><span>Observed events</span><strong id="stat-items">0</strong></div><span class="glyph">↗</span></div></div>
+    <p class="section-note" id="observation-retention-note">Up to 1,200 observation events are kept in this library. New captures and checks can replace the oldest events. Shared links may be combined into fewer feed entries. Export a private backup before older events leave the library.</p>
     <div class="section-title"><div><h2>The signal</h2><p>Only observations you or your circles choose to keep.</p></div><div class="toolbar-small"><button class="btn sm ghost" id="refresh-due">◷ Check due</button><button class="btn sm ghost" id="refresh-all">↻ Check all now</button><button class="btn sm ghost" id="export-feed" aria-describedby="feed-export-scope feed-export-error">↧ Export collection feed</button></div></div>
     <p class="section-note" id="feed-export-scope">Collection feed export includes saved observations and is not limited by search.</p>
     <p class="banner warning" id="feed-export-error" role="alert" hidden></p>
-    <div class="layout-grid"><div class="content-panel"><div class="panel-tools"><input id="search-items" placeholder="Search observations..." aria-label="Search observations"><div class="toolbar-small"><select id="collection-choice" aria-label="Filter to collection"><option value="all">Every lens</option></select><select id="auto-interval" aria-label="Autocheck while this page is open"><option value="0">Manual check</option><option value="5">Look for due every 5 min*</option><option value="15">Look for due every 15 min*</option><option value="60">Look for due every hour*</option></select></div></div><div class="feed-list" id="feed-list" aria-live="polite"></div></div><aside class="side-stack"><div class="side-panel"><p class="eyebrow">How it works</p><h3>Pages and feeds → one view.</h3><div class="step"><strong>01</strong><span>Make a Lens for a feed URL or a CSS-selected webpage region.</span></div><div class="step"><strong>02</strong><span>Check updates. Meaningful changes become feed items.</span></div><div class="step"><strong>03</strong><span>Combine, intersect or subtract Lenses; exchange reviewable recipe files.</span></div><p class="mini">* Auto-check runs only while this tab is open and the browser permits it.</p></div><div class="side-panel"><p class="eyebrow">Signal microscope / rev0007</p><h3>Why was this included—or excluded?</h3><p>Inspect an observation against a selected collection. Witness paths represent source provenance, not independent verification of claims.</p><div class="field"><label for="trace-choose">Observation to inspect</label><select id="trace-choose"><option value="">Choose an observation</option></select></div><button class="btn sm ghost" id="trace-run" style="margin-top:9px">Show decision path</button><pre class="trace-result" id="trace-output" aria-live="polite">Select an observation to inspect its routing.</pre></div><div class="side-panel"><p class="eyebrow">Local, on purpose</p><h3>Feeds, not surveillance.</h3><p>The basic page works offline for imports, pasted snapshots, regression tests and collections. Direct fetching obeys browser CORS. The optional Bash companion can fetch public feeds without a third-party proxy.</p><button class="btn sm ghost" id="home-docs">Read the field notes ↗</button></div></aside></div>
+    <div class="layout-grid"><div class="content-panel"><div class="panel-tools"><input id="search-items" placeholder="Search observations..." aria-label="Search observations"><div class="toolbar-small"><select id="collection-choice" aria-label="Filter to collection"><option value="all">Every lens</option></select><select id="auto-interval" aria-label="Autocheck while this page is open"><option value="0">Manual check</option><option value="5">Look for due every 5 min*</option><option value="15">Look for due every 15 min*</option><option value="60">Look for due every hour*</option></select></div></div><p class="reading-results" id="reading-results" role="status" aria-live="polite" aria-atomic="true" tabindex="-1"></p><div class="feed-list" id="feed-list" aria-describedby="reading-results"></div><div class="reading-footer" id="reading-footer"></div></div><aside class="side-stack"><div class="side-panel"><p class="eyebrow">How it works</p><h3>Pages and feeds → one view.</h3><div class="step"><strong>01</strong><span>Make a Lens for a feed URL or a CSS-selected webpage region.</span></div><div class="step"><strong>02</strong><span>Check updates. Meaningful changes become feed items.</span></div><div class="step"><strong>03</strong><span>Combine, intersect or subtract Lenses; exchange reviewable recipe files.</span></div><p class="mini">* Auto-check runs only while this tab is open and the browser permits it.</p></div><div class="side-panel"><p class="eyebrow">Signal microscope / rev0007</p><h3>Why was this included—or excluded?</h3><p>Inspect an observation against a selected collection. Witness paths represent source provenance, not independent verification of claims.</p><div class="field"><label for="trace-choose">Observation to inspect</label><select id="trace-choose"><option value="">Choose an observation</option></select></div><button class="btn sm ghost" id="trace-run" style="margin-top:9px">Show decision path</button><pre class="trace-result" id="trace-output" aria-live="polite">Select an observation to inspect its routing.</pre></div><div class="side-panel"><p class="eyebrow">Local, on purpose</p><h3>Feeds, not surveillance.</h3><p>The basic page works offline for imports, pasted snapshots, regression tests and collections. Direct fetching obeys browser CORS. The optional Bash companion can fetch public feeds without a third-party proxy.</p><button class="btn sm ghost" id="home-docs">Read the field notes ↗</button></div></aside></div>
   </section>
   <section class="view" id="view-sources" hidden><div class="section-title"><div><p class="eyebrow">01 / Sensing</p><h2>Your Lenses</h2><p>Feed URLs and webpage-watch recipes, versioned and yours.</p></div><button class="btn primary" id="sources-add">＋ Create lens</button></div><p class="section-note">RSS, Atom and JSON Feed are ordinary sources. For page watchers, choose a CSS region or repeated cards. Browser CORS may block arbitrary network fetches; you can always paste HTML or run the optional Bash bridge. Imported recipes begin paused.</p><div class="content-panel pulse-schedule" style="margin-bottom:15px"><div class="panel-tools"><strong>◷ The Patient Web · adaptive Pulse</strong><span class="mini">Quiet doubling · 429 / 503 Retry-After · ETag / Cache-Control · 45s host gap</span></div><p class="section-note" id="pulse-summary">Planning checks locally…</p><p class="mini">Schedules remain off until enabled in Observatory. Manual checks bypass ordinary due dates; extraordinarily long server delays require explicit review. Any page reload retains per-Lens plan dates in the local vault. No cloud scheduler.</p></div><div id="source-list" class="stack"></div></section>
   <section class="view" id="view-scout" hidden>
@@ -474,6 +476,8 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 <p id="private-restore-incoming" class="dependency-summary"></p>
 <p id="private-restore-current" class="section-note"></p>
 <p id="private-restore-validation" class="banner" style="overflow-wrap:anywhere"></p>
+<p id="private-restore-activity" class="banner" style="overflow-wrap:anywhere"></p>
+<details id="private-restore-lenses-details"><summary>Review all restored Lens destinations and enabled states</summary><div id="private-restore-lenses" style="overflow-wrap:anywhere"></div></details>
 <details><summary>Review saved state fields</summary><ul id="private-restore-fields" style="overflow-wrap:anywhere"></ul></details>
 <p class="mini">Replacement removes the current library from this tab. Export the current library first if you want to keep it. Restored Lens enabled states are retained; your existing open-tab schedule remains separate. Browser storage can still fail. Keep the original backup private.</p>
 <p class="mini">This review is temporary. Reloading or selecting another Import / Restore file discards it. Reviewing does not fetch sources or change your library.</p>
@@ -488,6 +492,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 <input type="file" id="import-file" accept=".json,.opml,.xml,application/json,text/xml" hidden>
 <dialog id="deletion-dependency-dialog" aria-labelledby="deletion-dependency-title"><div class="dialog-head"><div><h2 id="deletion-dependency-title">Review collection dependencies</h2><p>Nothing has been deleted.</p></div><button class="xbtn" type="button" data-close="deletion-dependency-dialog" aria-label="Close dependency guidance">×</button></div><div class="dialog-content"><p id="deletion-dependency-summary" class="dependency-summary" tabindex="-1" autofocus></p><p>Use the matching Edit button below, or close this message and open Collections, to edit each collection listed below and remove or replace this member. Changes stay in the editor until you save. Save those changes, then try Delete again.</p><p>Intersection and Subtraction require at least two members: choose replacements or explicitly change the operator. For Subtraction, review the base member before saving; removing the old base can select another member in the editor.</p><ol id="deletion-dependency-list" class="dependency-list"></ol></div><div class="dialog-footer"><button class="btn primary" type="button" data-close="deletion-dependency-dialog">Close</button></div></dialog>
 <dialog id="reading-dialog" aria-labelledby="reading-dialog-title"><div class="dialog-head"><div><h2 id="reading-dialog-title">Read saved text</h2><p id="reading-dialog-source"></p></div><button class="xbtn" type="button" data-close="reading-dialog" aria-label="Close saved text">×</button></div><div class="dialog-content"><p id="reading-dialog-context" class="dependency-summary" tabindex="-1">This is the text saved with this observation. Captures can shorten or normalize text.</p><div id="reading-dialog-text" class="saved-reading-text"></div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="reading-dialog">Close</button></div></dialog>
+<dialog id="scout-feed-paste-dialog" aria-labelledby="scout-feed-paste-title"><div class="dialog-head"><div><h2 id="scout-feed-paste-title">Inspect pasted feed</h2><p>Keep the original page and its feed advertisement available.</p></div><button class="xbtn" type="button" id="scout-feed-paste-x" aria-label="Cancel pasted feed">×</button></div><form id="scout-feed-paste-form"><p id="scout-feed-paste-form-error" class="dialog-error" data-form-error tabindex="-1" hidden></p><div class="dialog-content"><p class="mini">Candidate address used to resolve links:</p><p id="scout-feed-paste-url" class="mono" style="overflow-wrap:anywhere"></p><p class="mini">This address is parsing context, not verified origin. The original page, headers and proof stay unchanged. No address is fetched.</p><div class="field"><label for="scout-feed-paste-raw">RSS / Atom / JSON Feed source</label><textarea id="scout-feed-paste-raw" rows="10" spellcheck="false" placeholder="Paste the full feed source, not the visible page text. Up to 2 million characters."></textarea></div><p class="mini">Inspect replaces the current feed capture choice, even if this text is rejected. It creates no Lens or observations. Capture stays a separate choice after inspection.</p></div><div class="dialog-footer"><button class="btn ghost" type="button" id="scout-feed-paste-cancel">Cancel</button><button class="btn primary" type="submit">Inspect pasted feed</button></div></form></dialog>
 <dialog id="trace-dialog" aria-labelledby="trace-dialog-title"><div class="dialog-head"><div><h2 id="trace-dialog-title">Why this signal?</h2><p>Local derivation path; no external verification implied.</p></div><button class="xbtn" type="button" data-close="trace-dialog" aria-label="Close">×</button></div><pre id="trace-dialog-result" class="trace-full"></pre><div class="dialog-footer"><button class="btn ghost" type="button" data-close="trace-dialog">Close</button></div><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p></div></dialog>
 <div id="toast" role="status" aria-live="polite" hidden></div>
 <script id="progrss-core">
@@ -3280,6 +3285,35 @@ function searchObservationRows(rows,search){
     return [{...row,item}];
   });
 }
+// Display-only reading window. A changed library, scope, search, or eligible row
+// sequence starts from the first batch; nothing is saved or acquired here.
+const READING_BATCH=150;
+let readingWindow=null;
+function readingRowsMatch(context,rows){return context.items.length===rows.length&&rows.every((row,index)=>row.item===context.items[index]);}
+function renderReadingProgress(rows,search,collectionName){
+  if(!readingWindow||readingWindow.library!==state||readingWindow.collection!==activeCollection||readingWindow.search!==search||!readingRowsMatch(readingWindow,rows))
+    readingWindow={library:state,collection:activeCollection,search,items:rows.map(row=>row.item),shown:READING_BATCH};
+  const context=readingWindow,shown=Math.min(context.shown,rows.length),remaining=rows.length-shown;
+  const status=$('reading-results'),message='Showing '+shown+' of '+rows.length+' matching feed '+(rows.length===1?'entry':'entries')+' in “'+collectionName+'”. Shared links are combined.';
+  if(status.textContent!==message)status.textContent=message;
+  const controls=[];
+  if(remaining)controls.push(action('Show '+Math.min(READING_BATCH,remaining)+' more',event=>showMoreReading(context,event?.currentTarget),'primary','Show '+Math.min(READING_BATCH,remaining)+' more matching feed entries','reading-more'));
+  if(shown>READING_BATCH)controls.push(action('Back to filters',()=>focusAction($('search-items')),'ghost','Back to Search observations and collection filters'));
+  $('reading-footer').replaceChildren(...controls);
+  return shown;
+}
+function showMoreReading(context,opener){
+  if(context!==readingWindow||context.library!==state||currentView!=='home'||document.querySelector('dialog[open]')||!opener?.isConnected||opener.disabled||opener.closest('[hidden],[inert]'))return;
+  const search=$('search-items').value.trim().toLocaleLowerCase();
+  if(context.collection!==activeCollection||context.search!==search)return;
+  const rows=searchObservationRows(C.composeEvidence(state,activeCollection),search);
+  if(!readingRowsMatch(context,rows)){
+    renderHome();notify('The reading list changed. Showing its first matching entries.');focusAction($('reading-results'));return;
+  }
+  const next=rows[context.shown];if(!next)return;
+  context.shown=Math.min(rows.length,context.shown+READING_BATCH);renderHome();
+  focusAction('observation-heading:'+next.item.id)||focusAction($('reading-results'));
+}
 function relative(iso){const d=Date.parse(iso);if(!d)return 'undated';const sec=Math.max(0,Math.round((Date.now()-d)/1000));return sec<60?'just now':sec<3600?Math.floor(sec/60)+'m ago':sec<86400?Math.floor(sec/3600)+'h ago':new Date(d).toLocaleDateString();}
 function updateSelector(){const select=$('collection-choice'),keep=activeCollection;select.replaceChildren(h('option',{value:'all',text:'Every lens'}));state.collections.forEach(c=>select.append(h('option',{value:c.id,text:c.title})));if(keep!=='all'&&!state.collections.some(c=>c.id===keep))activeCollection='all';select.value=activeCollection;}
 function renderHomeIntroduction(){
@@ -3301,6 +3335,7 @@ function renderHome(){
   $('feed-export-scope').textContent='Collection feed export: '+Math.min(all.length,250)+' of '+all.length+' entries from "'+exportName+'". Search does not limit this file. Includes saved observation text and links.';
   setFeedExportError(feedExportIdentityIssue(all.slice(0,250).map(r=>r.item)));
   renderTraceChoices();traceSelected();
+  const shown=renderReadingProgress(filtered,search,exportName);
   if(!filtered.length){
     const wider=!all.length&&activeCollection!=='all'?C.composeEvidence(state,'all'):[];
     const recovery=all.length?{
@@ -3324,9 +3359,9 @@ function renderHome(){
         action(state.sources.length?'View Lenses':'Make a Lens',()=>{if(state.sources.length){go('sources');focusAction($('sources-add'))}else openLens()},recovery?'ghost':'primary')
       ])
     ]));return;}
-  list.replaceChildren(...(filtered.length>150?[h('p',{class:'section-note',style:'padding:14px 19px 0;margin-bottom:0',text:'Showing 150 of '+filtered.length+' matching feed entries (shared links are combined). Refine Search observations to narrow the results.'})]:[]),...filtered.slice(0,150).map(({item,witnesses})=>{
+  list.replaceChildren(...filtered.slice(0,shown).map(({item,witnesses})=>{
     let safeLink='';try{if(item.url)safeLink=C.safeUrl(item.url)}catch{}
-    const title= h('h3',{},[safeLink ? h('a',{href:safeLink,target:'_blank',rel:'noopener noreferrer',text:item.title}) : h('span',{text:item.title})]);
+    const title= h('h3',{tabindex:'-1','data-focus-key':'observation-heading:'+item.id},[safeLink ? h('a',{href:safeLink,target:'_blank',rel:'noopener noreferrer',text:item.title}) : h('span',{text:item.title})]);
     return h('article',{class:'feed-item'},[
       h('span',{class:'feed-bullet '+(item.kind==='removed'?'removed':item.kind==='changed'?'changed':'')}),
       h('div',{class:'feed-inner'},[
@@ -3924,15 +3959,23 @@ function privateFieldMeasure(value){
   if(value&&typeof value==='object')return Object.keys(value).length+' keys';
   return value===undefined?'absent':value===null?'null':typeof value;
 }
+function privateRestoreActivity(library){
+  const enabled=library.sources.filter(source=>source.enabled).length,minutes=Number($('auto-interval').value)||0;
+  const schedule=minutes>0?'Current open-tab schedule: due checks every '+minutes+' minutes. '+(enabled?'Enabled restored Lenses may be checked automatically after replacement.':'All restored Lenses are paused; the schedule setting is unchanged.'):
+    'Current open-tab schedule: Manual check. Replacement will not turn on automatic checking.';
+  return enabled+' of '+library.sources.length+' restored Lenses are enabled. '+schedule;
+}
 function clearPrivateRestoreReview(){
   privateRestoreReview=null;$('private-restore-review').hidden=true;
-  for(const id of ['file-summary','incoming','current','validation'])$('private-restore-'+id).textContent='';
-  $('private-restore-fields').replaceChildren();
+  for(const id of ['file-summary','incoming','current','validation','activity'])$('private-restore-'+id).textContent='';
+  $('private-restore-fields').replaceChildren();$('private-restore-lenses').replaceChildren();$('private-restore-lenses-details').open=false;
 }
 function renderPrivateRestoreReview(){
   if(!privateRestoreReview)return;
   const node=$('private-restore-current'),message='Current library now: '+privateLibrarySummary(state)+'. These will be replaced, not merged.';
   if(node.textContent!==message)node.textContent=message;
+  const activity=$('private-restore-activity'),summary=privateRestoreActivity(privateRestoreReview.validated);
+  if(activity.textContent!==summary)activity.textContent=summary;
 }
 function stagePrivateRestore(parsed,file,route,token,selectionSectionGeneration,selectionFocus){
   if(token!==importReadToken)return;
@@ -3942,6 +3985,9 @@ function stagePrivateRestore(parsed,file,route,token,selectionSectionGeneration,
   privateRestoreReview={validated,differences,legacy,route,token,filename};
   $('private-restore-file-summary').textContent='Selected file: '+filename+' · '+file.size.toLocaleString('en-US')+' bytes · Export time claimed by file: '+timestamp+'. Filename and time are not verified provenance.';
   $('private-restore-incoming').textContent='Validated replacement: '+privateLibrarySummary(validated)+'.';
+  $('private-restore-lenses').replaceChildren(validated.sources.length?h('ol',{},validated.sources.map(source=>h('li',{},[
+    h('strong',{text:source.title}),h('p',{class:'mini',text:(source.enabled?'Enabled':'Paused')+' · '+(source.type==='rss'?'RSS / Atom / JSON Feed':source.mode==='cards'?'Page cards':'Page region')}),h('p',{class:'mono',text:source.url})
+  ]))):h('p',{class:'mini',text:'This backup contains no Lenses.'}));
   const changed=differences.slice(0,30).map(key=>C.text(key,80)).join(', ')+(differences.length>30?' … ('+differences.length+' fields total)':'');
   $('private-restore-validation').textContent=differences.length?
     (legacy?'Older backup upgrade':'Ordinary Import normalization')+' will change these fields: '+changed+'. Values may be changed or removed. Keep the original archive.':
@@ -3962,7 +4008,7 @@ function applyPrivateRestore(){
   let replaced=false;
   try{
     renderPrivateRestoreReview();
-    if(!confirm('Replace the current library ('+privateLibrarySummary(state)+') with "'+review.filename+'" ('+privateLibrarySummary(review.validated)+')?'+(review.differences.length?' Reviewed normalization changes will apply.':'')+' This is not a merge. Browser storage can still fail. Continue?'))return;
+    if(!confirm('Replace the current library ('+privateLibrarySummary(state)+') with "'+review.filename+'" ('+privateLibrarySummary(review.validated)+')?'+(review.differences.length?' Reviewed normalization changes will apply.':'')+' '+privateRestoreActivity(review.validated)+' This is not a merge. Browser storage can still fail. Continue?'))return;
     if(review!==privateRestoreReview||review.token!==importReadToken)return;
     state=review.validated;replaced=true;clearPrivateRestoreReview();pending=null;renderImportPreview();resetRestoredWorkbenches();save();
     privateRecoveryFeedback((review.differences.length?'Reviewed private backup loaded with the listed normalization changes':'The 24 saved JSON state fields were loaded exactly')+' into this tab. Transient view and scheduling choices are separate. Check storage status before leaving; keep the original file.');go('home');
@@ -4892,6 +4938,7 @@ let scoutReport=null,scoutMarkupMemory='',scoutLinkHeader='',activeProof=null,pr
 let scoutIntent=0,scoutFileRead=null,scoutAnalyzeTimer=null,scoutUrlHint=null,scoutAwaitingAddress=false,scoutCheckActive=null;
 // One bounded acquisition only. This record and the raw body never enter state.
 let scoutFeedAcquisition=null,scoutCaptureControls=[],scoutFeedFileRead=null;
+let scoutFeedPaste=null;
 let scoutPageAcquisition=null,scoutPageControls=[];
 function scoutPageRecipe(item,report,id='scout-page'){
   return C.cleanRecipe({id,type:'page',url:item.url||report.siteUrl,title:item.title,mode:item.mode||'region',selector:item.selector||'',titleSelector:item.titleSelector||'',linkSelector:item.linkSelector||'',threshold:24,author:'local'});
@@ -4972,7 +5019,49 @@ async function loadScoutFeedFile(file,item,report,input,button,status,preview){
   }catch(error){if(current())status.textContent='Could not use this saved feed: '+error.message+'. Original page and prior preview are kept; previous capture eligibility is retired.';}
   finally{if(scoutFeedFileRead===job){scoutFeedFileRead=null;setScoutCheckBusy(button,false);button.textContent='Use saved feed…';input.value='';}}
 }
+function closeScoutFeedPaste(restoreFocus=true){
+  const context=scoutFeedPaste;scoutFeedPaste=null;
+  const dialog=$('scout-feed-paste-dialog');$('scout-feed-paste-raw').value='';$('scout-feed-paste-url').textContent='';clearDialogError('scout-feed-paste-dialog');
+  if(dialog.open)dialog.close();
+  if(restoreFocus&&context&&currentView==='scout'&&sectionNavigationGeneration===context.navigation&&state===context.library&&scoutSavedFeedContext(context.item,context.report)&&context.button.isConnected)context.button.focus({preventScroll:true});
+}
+function openScoutFeedPaste(item,report,button,status,preview){
+  if(!scoutSavedFeedContext(item,report))return notify('Analyze the current page again before inspecting a pasted feed.',true);
+  if(currentView!=='scout'||document.querySelector('dialog[open]'))return;
+  scoutFeedPaste={item,report,button,status,preview,url:item.url,library:state,token:scoutIntent,navigation:sectionNavigationGeneration};
+  $('scout-feed-paste-raw').value='';$('scout-feed-paste-url').textContent=item.url;clearDialogError('scout-feed-paste-dialog');
+  $('scout-feed-paste-dialog').showModal();$('scout-feed-paste-raw').focus();
+}
+function inspectScoutFeedPaste(){
+  const context=scoutFeedPaste,dialog=$('scout-feed-paste-dialog');if(!context||!dialog.open)return;
+  const {item,report,status,preview,url}=context;
+  const current=()=>scoutFeedPaste===context&&dialog.open&&currentView==='scout'&&sectionNavigationGeneration===context.navigation&&context.library===state&&context.token===scoutIntent&&item.url===url&&scoutSavedFeedContext(item,report);
+  clearDialogError('scout-feed-paste-dialog');
+  if(!current())return reportDialogError('scout-feed-paste-dialog','This page or candidate is no longer current. Cancel this draft and analyze the page again.');
+  retireScoutFeedFile();retireScoutCapture();
+  if(scoutCheckActive){setScoutCheckBusy(scoutCheckActive.button,false);scoutCheckActive.button.textContent='Check feed again';scoutCheckActive.status.textContent='Remote check retired after pasted feed inspection.';scoutCheckActive=null;}
+  try{
+    const body=$('scout-feed-paste-raw').value;
+    if(!body.trim())throw Error('Paste the full RSS, Atom or JSON Feed source');
+    if(body.length>C.LIMIT.characters)throw Error('Pasted feed exceeds 2 million characters');
+    const parsed=S.previewFeed(body,url),hint=S.inferSource(body);
+    if(hint&&hint.url!==url)throw Error('A source-address hint ('+hint.basis+') differs from this candidate URL. Aliases can legitimately differ, but Scout will not rebase this attachment. Cancel and use Paste or inspect source content to inspect it separately');
+    if(!current())return;
+    item.preview=parsed;holdScoutFeed(item,report,body,'scout-pasted-feed');renderScoutPreview(preview,parsed);
+    status.textContent='Pasted feed parsed as '+parsed.format+' · '+parsed.count+' usable entries from up to the first 250 source records. Candidate URL is borrowed parsing context; pasted origin is unverified. No address was fetched. Proof still replays the original advertisement.';
+    closeScoutFeedPaste();
+  }catch(error){if(current()){
+    status.textContent='Pasted feed was not accepted. Original page and prior preview are kept; previous capture eligibility is retired.';
+    reportDialogError('scout-feed-paste-dialog',error.message);
+  }}
+}
+$('scout-feed-paste-form').addEventListener('submit',event=>{event.preventDefault();inspectScoutFeedPaste();});
+for(const id of ['scout-feed-paste-x','scout-feed-paste-cancel'])$(id).addEventListener('click',()=>closeScoutFeedPaste());
+$('scout-feed-paste-dialog').addEventListener('cancel',event=>{event.preventDefault();closeScoutFeedPaste();});
+// A queued close from an older dialog must not discard a newly opened draft.
+$('scout-feed-paste-dialog').addEventListener('close',()=>{if(!$('scout-feed-paste-dialog').open&&scoutFeedPaste)closeScoutFeedPaste(false);});
 function invalidateScoutLoads(){
+  closeScoutFeedPaste(false);
   scoutIntent++;clearTimeout(scoutAnalyzeTimer);scoutAnalyzeTimer=null;retireScoutCapture();retireScoutFeedFile();scoutPageAcquisition=null;refreshScoutPageControls();
   $('scout-fetch').disabled=false;$('scout-use-saved').hidden=true;
   if(scoutCheckActive){setScoutCheckBusy(scoutCheckActive.button,false);scoutCheckActive.button.textContent='Check feed';scoutCheckActive.status.textContent='Check retired after newer input. Check again when ready.';scoutCheckActive=null;}
@@ -5014,7 +5103,8 @@ function renderScout(report){
         const file=h('input',{type:'file',accept:'.xml,.rss,.atom,.json,.txt,text/xml,application/json',hidden:'','aria-label':'Saved feed for '+candidate.url});
         const choose=action('Use saved feed…',()=>{if(scoutFeedFileRead?.button===choose)return;if(!scoutSavedFeedContext(candidate,report))return notify('Analyze the current page again before attaching a saved feed.',true);file.value='';file.click();},'ghost','Use saved feed file for '+candidate.url);
         file.addEventListener('change',()=>loadScoutFeedFile(file.files[0],candidate,report,file,choose,status,preview));
-        actions.push(choose,file);
+        const paste=action('Paste feed…',()=>openScoutFeedPaste(candidate,report,paste,status,preview),'ghost','Paste feed source for '+candidate.url);
+        actions.push(choose,file,paste);
       }
     }else{
       const prepare=action('Create paused Lens + prepare baseline',()=>prepareScoutPage(candidate,report),'ghost');
@@ -5025,7 +5115,7 @@ function renderScout(report){
       h('span',{class:'mini',text:(i+1)+' · '+candidate.format+' · '+candidate.confidence}),h('h4',{text:candidate.title}),
       h('p',{class:'mono',text:candidate.url||report.siteUrl}),
       ...(candidate.selector?[h('p',{text:'Suggested CSS: '+candidate.selector+(candidate.count?' · '+candidate.count+' matches':'' )})]:[]),
-      h('div',{class:'row-actions'},actions),...(candidate.kind==='feed'&&candidate.origin!=='body'?[h('p',{class:'mini',text:'Saved feed fallback: select a local file to inspect it using this candidate URL as context. File origin is not verified; the original page stays available.'})]:[]),status,captureNote,preview
+      h('div',{class:'row-actions'},actions),...(candidate.kind==='feed'&&candidate.origin!=='body'?[h('p',{class:'mini',text:'Local feed fallback: choose a saved file or Paste feed to inspect its source using this candidate URL as context. Origin is not verified; the original page stays available.'})]:[]),status,captureNote,preview
     ]);
   });
   if(!cards.length)cards.push(h('div',{class:'empty'},[h('h3',{text:'No feed or readable page region found'}),h('p',{text:'The saved source may be incomplete or rely on scripts. Try the page’s complete source or a direct feed URL.'})]));
