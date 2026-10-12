@@ -3327,6 +3327,17 @@ function renderHomeIntroduction(){
   $('home-reading-title').hidden=!hasLibrary;
   $('hero-add').textContent=hasLibrary?'＋ Make a Lens':'＋ Make your first Lens';
 }
+function finishClearedSearch(target,library,navigation,origin,focus){
+  const current=()=>state===library&&sectionNavigationGeneration===navigation&&currentView==='home'&&!document.querySelector('dialog[open]')&&target===$('search-items')&&target?.isConnected&&!target.disabled&&!target.closest('[hidden],[inert]')&&target.value==='';
+  if(!current()||(document.activeElement!==focus&&!(focus===origin&&!origin?.isConnected&&document.activeElement===document.body)))return;
+  focusAction(target);
+  if(!current()||document.activeElement!==target)return;
+  const rect=target.getBoundingClientRect(),height=window.innerHeight,margin=8;
+  if(![rect.top,rect.bottom,height].every(Number.isFinite)||rect.bottom<rect.top||height<rect.bottom-rect.top+margin*2)return;
+  const delta=rect.top<margin?rect.top-margin:rect.bottom>height-margin?rect.bottom-height+margin:0;
+  const top=Math.max(0,window.scrollY+delta);
+  if(delta&&top!==window.scrollY)window.scrollTo({top,left:window.scrollX,behavior:'instant'});
+}
 function renderHome(){
   renderHomeIntroduction();
   $('stat-sources').textContent=state.sources.filter(s=>s.enabled).length;
@@ -3345,7 +3356,7 @@ function renderHome(){
     const recovery=all.length?{
       heading:'Nothing matches this search.',
       detail:'Clear Search observations to show '+all.length+' feed '+(all.length===1?'entry':'entries')+' in “'+exportName+'”. The selected collection will stay the same.',
-      label:'Clear search',name:'Clear Search observations',run:()=>{$('search-items').value='';renderHome();focusAction($('search-items'))}
+      label:'Clear search',name:'Clear Search observations',run:event=>{const target=$('search-items'),library=state,navigation=sectionNavigationGeneration,origin=event?.currentTarget,focus=document.activeElement;target.value='';renderHome();finishClearedSearch(target,library,navigation,origin,focus)}
     }:wider.length?{
       heading:'No feed entries in this collection.',
       detail:'Every lens currently has '+wider.length+' feed '+(wider.length===1?'entry':'entries')+'. Switch scope to look beyond this collection.'+(search?' Your search will be kept.':''),
