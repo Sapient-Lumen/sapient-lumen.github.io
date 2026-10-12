@@ -23,6 +23,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 .trace-result{font:11px/1.6 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;max-height:150px;overflow:auto;color:var(--lime);background:#101c16;border:1px dashed #3f6147;border-radius:8px;padding:11px;margin-top:12px}
 .reading-results{padding:12px 19px;margin:0;color:var(--muted);font-size:12px;line-height:1.7}.reading-footer{padding:14px 19px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line)}.reading-footer:empty{display:none}.feed-inner h3[tabindex="-1"]:focus,.reading-results:focus{outline:2px solid var(--lime);outline-offset:3px;scroll-margin-block:20px}
 .feed-origin-action{border:0;background:none;padding:0;min-width:0;max-width:100%;text-align:left;overflow-wrap:anywhere;text-decoration:underline dotted;text-underline-offset:3px;cursor:pointer}.feed-origin-action:hover{color:var(--lime)}.feed-origin-action:focus-visible{outline:2px solid var(--lime);outline-offset:3px}.lens-context-fields{display:grid;gap:5px;margin:18px 0}.lens-context-fields dt{font-size:12px;color:var(--muted);margin-top:9px}.lens-context-fields dd{margin:0;overflow-wrap:anywhere;font-size:13px;line-height:1.7}.lens-context-fields .mono{font-size:12px}
+.stored-observation-details{margin-top:22px;padding-top:14px;border-top:1px solid var(--line)}.stored-observation-details summary{cursor:pointer;color:var(--teal);font-size:13px}.stored-observation-details dl{display:grid;gap:6px;margin:15px 0 0}.stored-observation-details dt{font-size:12px;color:var(--muted);margin-top:8px}.stored-observation-details dd{margin:0;font:12px/1.7 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere}.stored-observation-details .value-note{display:block;font:11px/1.6 var(--sans);color:var(--muted);white-space:normal;margin-top:5px}
 .saved-reading-text{font-size:14px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:18px;color:var(--ink)}
 .trace-full{font:12px/1.75 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;margin:0;padding:24px;max-height:60vh;overflow:auto;background:var(--panel);color:var(--lime)}
 .proposal-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:17px}.proposal-grid .peer-card{min-width:0}.proposal-grid textarea{min-height:90px}.proposal-grid select{width:100%}.proposal-report{white-space:pre-wrap;overflow-wrap:anywhere;max-height:320px;min-height:140px;overflow:auto;padding:13px;background:#111d17;border:1px solid #48634e;border-radius:9px;color:#c7dacc;font:11px/1.65 var(--mono);margin:12px 0}
@@ -493,7 +494,7 @@ dialog{width:min(700px,calc(100vw - 24px));max-height:92vh;overflow:auto;border:
 <input type="file" id="import-file" accept=".json,.opml,.xml,application/json,text/xml" hidden>
 <dialog id="deletion-dependency-dialog" aria-labelledby="deletion-dependency-title"><div class="dialog-head"><div><h2 id="deletion-dependency-title">Review collection dependencies</h2><p>Nothing has been deleted.</p></div><button class="xbtn" type="button" data-close="deletion-dependency-dialog" aria-label="Close dependency guidance">×</button></div><div class="dialog-content"><p id="deletion-dependency-summary" class="dependency-summary" tabindex="-1" autofocus></p><p>Use the matching Edit button below, or close this message and open Collections, to edit each collection listed below and remove or replace this member. Changes stay in the editor until you save. Save those changes, then try Delete again.</p><p>Intersection and Subtraction require at least two members: choose replacements or explicitly change the operator. For Subtraction, review the base member before saving; removing the old base can select another member in the editor.</p><ol id="deletion-dependency-list" class="dependency-list"></ol></div><div class="dialog-footer"><button class="btn primary" type="button" data-close="deletion-dependency-dialog">Close</button></div></dialog>
 <dialog id="lens-context-dialog" aria-labelledby="lens-context-title"><div class="dialog-head"><div><h2 id="lens-context-title">Current Lens</h2><p id="lens-context-status"></p></div><button class="xbtn" type="button" id="lens-context-x" aria-label="Close Lens details">×</button></div><div class="dialog-content"><p id="lens-context-note" class="dependency-summary" tabindex="-1">This is the current local Lens recipe for this reading row. It may differ from the recipe used when the observation was saved. Opening these details does not fetch the address.</p><dl id="lens-context-fields" class="lens-context-fields"></dl><p class="mini">These filters apply to this Lens’s observation title and saved text. Include matches any listed comma-separated term; any exclude match excludes that observation. Other Lenses can still contribute the same link. Author labels are not verified identities.</p></div><div class="dialog-footer"><button class="btn ghost" type="button" id="lens-context-close">Close</button><button class="btn primary" type="button" id="lens-context-manage">Find in Your Lenses</button></div></dialog>
-<dialog id="reading-dialog" aria-labelledby="reading-dialog-title"><div class="dialog-head"><div><h2 id="reading-dialog-title">Read saved text</h2><p id="reading-dialog-source"></p></div><button class="xbtn" type="button" data-close="reading-dialog" aria-label="Close saved text">×</button></div><div class="dialog-content"><p id="reading-dialog-context" class="dependency-summary" tabindex="-1">This is the text saved with this observation. Captures can shorten or normalize text.</p><div id="reading-dialog-text" class="saved-reading-text"></div></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="reading-dialog">Close</button></div></dialog>
+<dialog id="reading-dialog" aria-labelledby="reading-dialog-title"><div class="dialog-head"><div><h2 id="reading-dialog-title">Read saved text</h2><p id="reading-dialog-source"></p></div><button class="xbtn" type="button" data-close="reading-dialog" aria-label="Close saved text">×</button></div><div class="dialog-content"><p id="reading-dialog-context" class="dependency-summary" tabindex="-1">This is the text saved with this observation. Captures can shorten or normalize text.</p><div id="reading-dialog-text" class="saved-reading-text"></div><details id="reading-dialog-details" class="stored-observation-details"><summary>Stored observation details</summary><p class="section-note">These values belong to the selected saved observation. Imports can supply them; dates are unverified. The saved link may differ from the current Lens destination.</p><dl id="reading-dialog-fields"></dl></details></div><div class="dialog-footer"><button class="btn ghost" type="button" data-close="reading-dialog">Close</button></div></dialog>
 <dialog id="scout-feed-paste-dialog" aria-labelledby="scout-feed-paste-title"><div class="dialog-head"><div><h2 id="scout-feed-paste-title">Inspect pasted feed</h2><p>Keep the original page and its feed advertisement available.</p></div><button class="xbtn" type="button" id="scout-feed-paste-x" aria-label="Cancel pasted feed">×</button></div><form id="scout-feed-paste-form"><p id="scout-feed-paste-form-error" class="dialog-error" data-form-error tabindex="-1" hidden></p><div class="dialog-content"><p class="mini">Candidate address used to resolve links:</p><p id="scout-feed-paste-url" class="mono" style="overflow-wrap:anywhere"></p><p class="mini">This address is parsing context, not verified origin. The original page, headers and proof stay unchanged. No address is fetched.</p><div class="field"><label for="scout-feed-paste-raw">RSS / Atom / JSON Feed source</label><textarea id="scout-feed-paste-raw" rows="10" spellcheck="false" placeholder="Paste the full feed source, not the visible page text. Up to 2 million characters."></textarea></div><p class="mini">Inspect replaces the current feed capture choice, even if this text is rejected. It creates no Lens or observations. Capture stays a separate choice after inspection.</p></div><div class="dialog-footer"><button class="btn ghost" type="button" id="scout-feed-paste-cancel">Cancel</button><button class="btn primary" type="submit">Inspect pasted feed</button></div></form></dialog>
 <dialog id="trace-dialog" aria-labelledby="trace-dialog-title"><div class="dialog-head"><div><h2 id="trace-dialog-title">Why this signal?</h2><p>Local derivation path; no external verification implied.</p></div><button class="xbtn" type="button" data-close="trace-dialog" aria-label="Close">×</button></div><pre id="trace-dialog-result" class="trace-full"></pre><div class="dialog-footer"><button class="btn ghost" type="button" data-close="trace-dialog">Close</button></div><div class="vault-notice banner" data-vault-panel><p data-vault-message role="status" aria-live="polite" aria-atomic="true">Checking browser storage…</p><button class="btn sm ghost" type="button" data-vault-backup>Export private backup</button><p class="mini" data-private-recovery-status role="status" aria-live="polite" hidden></p></div></dialog>
 <div id="toast" role="status" aria-live="polite" hidden></div>
@@ -3375,6 +3376,22 @@ function renderHome(){
 }
 // Read-only local text view: no source fetch, reconstruction, or library mutation.
 let readingDialogContext=null;
+function storedObservationValue(value,limit,date=false){
+  if(value===undefined||value===null||value==='')return {text:'No value saved',note:''};
+  if(typeof value!=='string')return {text:'Not stored as text',note:'Saved value type: '+(Array.isArray(value)?'array':typeof value)+'. No value inferred.'};
+  const shortened=value.length>limit;
+  const notes=[];
+  if(shortened)notes.push('Display shortened; the saved value is unchanged.');
+  if(date&&(value.length>200||!Number.isFinite(Date.parse(value))))notes.push('Not recognized as a date; stored text shown without inferring a time.');
+  let shown=shortened?value.slice(0,limit):value;
+  if(shortened&&/[\uD800-\uDBFF]$/.test(shown))shown=shown.slice(0,-1);
+  return {text:shown+(shortened?'…':''),note:notes.join(' ')};
+}
+function renderStoredObservationDetails(item){
+  const fields=[['Stored observation time',storedObservationValue(item.observedAt,200,true)],['Stored publication/update value',storedObservationValue(item.published,200,true)],['Saved observation link',storedObservationValue(item.url,1200)]];
+  $('reading-dialog-details').open=false;
+  $('reading-dialog-fields').replaceChildren(...fields.flatMap(([label,value])=>[h('dt',{text:label}),h('dd',{},[h('span',{text:value.text}),...(value.note?[h('span',{class:'value-note',text:value.note})]:[])])]));
+}
 function openSavedObservation(item){
   if(currentView!=='home'||document.querySelector('dialog[open]'))return;
   if(!state.items.includes(item))return notify('This observation is no longer available in the current library.',true);
@@ -3383,6 +3400,7 @@ function openSavedObservation(item){
   $('reading-dialog-title').textContent='Saved text: '+(item.title||'Untitled observation');
   $('reading-dialog-source').textContent=kind+' · Lens: '+originTitle(item)+' · observed '+relative(item.observedAt);
   $('reading-dialog-text').textContent=typeof item.summary==='string'&&item.summary?item.summary:'No text was saved with this observation.';
+  renderStoredObservationDetails(item);
   show('reading-dialog');$('reading-dialog').scrollTop=0;$('reading-dialog-context').focus({preventScroll:true});
 }
 function closeSavedObservation(){
@@ -3699,23 +3717,25 @@ async function requestRemote(url,validators={}){
     return json;
   }
   const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),13000);
-  let sizeError=null;
+  let sizeError=null,readableHttpErrorStatus=0;
   try {
     // Let the browser perform cache validation automatically. Cross-origin
     // ETags are inaccessible unless a publisher exposes the response headers.
     const r=await fetch(target,{mode:'cors',redirect:'error',credentials:'omit',headers,signal:controller.signal,cache:'no-cache'});
     if(r.status===304)return {url:target,status:304,notModified:true,body:'',etag:r.headers.get('ETag')||'',lastModified:r.headers.get('Last-Modified')||'',linkHeader:r.headers.get('Link')||'',cacheControl:r.headers.get('Cache-Control')||''};
     if(r.status===429||r.status===503)return {url:target,status:r.status,notModified:false,body:'',cacheControl:r.headers.get('Cache-Control')||'',retryAfter:r.headers.get('Retry-After')||''};
-    if(!r.ok)throw Error('HTTP '+r.status);
+    if(!r.ok){readableHttpErrorStatus=r.status;throw Error('HTTP '+r.status);}
     const raw=await r.text();
     if(raw.length>C.LIMIT.characters){
       sizeError=Error('Fetched content exceeds the '+C.LIMIT.characters.toLocaleString('en-US')+'-character limit (UTF-16 code units). Use a smaller feed/page URL or a smaller saved file of the matching type. Pasting this full response will also fail.');
-      throw sizeError;
+      sizeError.contentLimit=C.LIMIT.characters;throw sizeError;
     }
     return {url:target,status:r.status,notModified:false,body:raw,etag:r.headers.get('ETag')||'',lastModified:r.headers.get('Last-Modified')||'',linkHeader:r.headers.get('Link')||'',cacheControl:r.headers.get('Cache-Control')||''};
   }catch(error){
     if(sizeError&&error===sizeError)throw error;
-    throw Error('Direct browser fetch failed (possibly CORS): '+error.message+'. Use Paste or `bash ProgRSS.html serve` for a local bridge.');
+    const failure=Error('Direct browser fetch failed (possibly CORS): '+error.message+'. Use Paste or `bash ProgRSS.html serve` for a local bridge.');
+    if(readableHttpErrorStatus)failure.httpStatus=readableHttpErrorStatus;
+    throw failure;
   }
   finally{clearTimeout(timeout)}
 }
@@ -3838,7 +3858,7 @@ function resetRestoredWorkbenches(){
   scoutReport=null;scoutMarkupMemory='';scoutLinkHeader='';activeProof=null;proofReplay=null;pendingDiscoveryCourierId=null;
   renderScout(null);$('scout-status').textContent='No discovery selected.';renderProofWorkbench();
 }
-function previewImport(bundle){try{let plan=C.importPreview(bundle,state);if(plan.sources.length+state.sources.length>C.LIMIT.source || plan.collections.length+state.collections.length>C.LIMIT.collection)throw Error('Import would exceed library limits');pending={plan,bundle,parcelId:null};renderImportPreview();go('peers');notify('Review incoming recipes before adding them.')}catch(error){notify('Import rejected: '+error.message,true)}}
+function previewImport(bundle,{openExchange=true}={}){try{let plan=C.importPreview(bundle,state);if(plan.sources.length+state.sources.length>C.LIMIT.source || plan.collections.length+state.collections.length>C.LIMIT.collection)throw Error('Import would exceed library limits');pending={plan,bundle,parcelId:null};renderImportPreview();if(openExchange)go('peers');notify(openExchange?'Review incoming recipes before adding them.':'Recipes are ready in Share & import. Review them before adding them.')}catch(error){notify('Import rejected: '+error.message,true)}}
 let recipeExportPreview=null;
 function recipeSharingPlan(){
   const name=activeCollection==='all'?'Every lens':state.collections.find(c=>c.id===activeCollection)?.title;
@@ -4108,14 +4128,14 @@ function rejectedXMLFeedGuidance(raw){
   }catch{return '';}
 }
 
-async function doImport(file){if(!file)return;const token=++importReadToken,selectionSectionGeneration=sectionNavigationGeneration,selectionFocus=document.activeElement;clearFileImportReviews();if(file.size>ORDINARY_IMPORT_BYTES)return notify('Import file exceeds 12MB (12,000,000 bytes). For a private backup, use Field notes → Restore private backup (up to 32,000,000 bytes).',true);let raw;try{raw=await readImportText(file,token);if(token!==importReadToken)return;if(/\.opml$|\.xml$/i.test(file.name)){const recipes=C.parseOPML(raw);previewImport({schema:C.SCHEMA,sources:recipes,collections:[]});return;}
+async function doImport(file){if(!file)return;const token=++importReadToken,selectionSectionGeneration=sectionNavigationGeneration,selectionFocus=document.activeElement;clearFileImportReviews();if(file.size>ORDINARY_IMPORT_BYTES)return notify('Import file exceeds 12MB (12,000,000 bytes). For a private backup, use Field notes → Restore private backup (up to 32,000,000 bytes).',true);let raw;try{raw=await readImportText(file,token);if(token!==importReadToken)return;if(/\.opml$|\.xml$/i.test(file.name)){const recipes=C.parseOPML(raw);previewImport({schema:C.SCHEMA,sources:recipes,collections:[]},{openExchange:selectionSectionGeneration===sectionNavigationGeneration&&!document.querySelector('dialog[open]')});return;}
     const parsed=JSON.parse(raw);
     if(parsed&&Array.isArray(parsed.items)&&typeof parsed.version==='string'&&/^https?:\/\/(www\.)?jsonfeed\.org\/version\/1(\.1)?\/?$/.test(parsed.version)){notify('This is a JSON Feed of observations. Use Lenses → Paste on an RSS / Atom / JSON Feed Lens, choose this file, then Process snapshot. No recipes or observations were imported.',true);return;}
     if(parsed.schema==='progrss.private.v1' && parsed.state){
       stagePrivateRestore(parsed,file,'ordinary',token,selectionSectionGeneration,selectionFocus);return;
     }
     if([Q.SCHEMA,C.PATCH_SCHEMA,G.SCHEMA,C.SCHEMA,D.SCHEMA,L.SCHEMA,T.SCHEMA,W.HEAD,W.SIGHT,E.REQUEST,E.REPLY,E.FORK,Y.SCHEMA].includes(parsed.schema)){receiveCourier(parsed,'file',{openExchange:selectionSectionGeneration===sectionNavigationGeneration});return;}
-    previewImport(parsed);
+    previewImport(parsed,{openExchange:selectionSectionGeneration===sectionNavigationGeneration&&!document.querySelector('dialog[open]')});
   }catch(error){if(token===importReadToken)notify(rejectedXMLFeedGuidance(raw)||'Import failed: '+error.message,true)}
 }
 function loadDemo(){if(state.sources.some(s=>s.id==='demo-blog'))return notify('Offline demo already present.');const feed={id:'demo-blog',title:'DEMO · Indie web posts',url:'https://example.org/blog.xml',type:'rss',include:'',exclude:'',selector:'',enabled:false,version:1,author:'ProgRSS sample',origin:'demo'};const page={id:'demo-projects',title:'DEMO · Project board changes',url:'https://example.org/projects',type:'page',mode:'cards',selector:'.project',include:'',exclude:'',enabled:false,version:1,author:'ProgRSS sample',origin:'demo'};
@@ -5335,6 +5355,7 @@ async function loadScoutFile(file){
   finally{if(scoutFileRead===intent)scoutFileRead=null;}
 }
 function scoutFetchDetail(error){
+  if(Number.isInteger(error?.httpStatus)&&error.httpStatus>=400&&error.httpStatus<=599)return 'The site returned HTTP '+error.httpStatus;
   const message=String(error?.message||error),prefix='Direct browser fetch failed (possibly CORS): ',suffix='. Use Paste or `bash ProgRSS.html serve` for a local bridge.';
   // Rephrase only the shared transport's exact legacy wrapper here. Other
   // callers, known size errors, and original low-level details stay intact.
@@ -5342,16 +5363,32 @@ function scoutFetchDetail(error){
 }
 async function fetchScout(){
   const button=$('scout-fetch');if(button.disabled)return;
-  const intent=beginScoutLoad();
+  const intent=beginScoutLoad();let addressAccepted=false,responseReceived=false;
   button.disabled=true;$('scout-status').textContent='Fetching the user-selected URL…';
-  try{const result=await requestRemote(intent.url);
+  try{const target=C.safeUrl(intent.url);addressAccepted=true;const result=await requestRemote(target);responseReceived=true;
     if(!intent.current())return;
     if(result.notModified)throw Error('Unexpected conditional response to an unconditional discovery request');
-    if(result.status===429||result.status===503)throw Error('HTTP '+result.status+': '+(result.status===429?'the site asked for fewer requests':'the site is temporarily unavailable')+'. Try again later.');
+    if(result.status===429||result.status===503){const failure=Error('HTTP '+result.status);failure.httpStatus=result.status;throw failure;}
     if(typeof result.body!=='string'||!result.body.trim())throw Error('The response contained no page or feed content.');
     const responseUrl=C.safeUrl(result.url||intent.url);$('scout-url').value=responseUrl;scoutUrlHint=null;scoutAddressNote();
     $('scout-html').value=result.body;$('scout-header').value=result.linkHeader||'';analyzeScout(result.body,result.linkHeader||'',true);
-  }catch(err){if(intent.current()){const detail=scoutFetchDetail(err);$('scout-status').textContent='SCOUT FETCH ERROR: '+detail+'\nDrop a saved page/feed here or paste its source to continue in this browser. Your draft'+(scoutReport?' and earlier findings are':' is')+' unchanged.';$('scout-offline-help').open=true;$('scout-use-saved').hidden=false;notify('Scout: '+detail,true)}}
+  }catch(err){if(intent.current()){
+    const status=Number.isInteger(err?.httpStatus)&&err.httpStatus>=400&&err.httpStatus<=599?err.httpStatus:0;
+    const limitExceeded=err?.contentLimit===C.LIMIT.characters;
+    const detail=addressAccepted?scoutFetchDetail(err):'Enter a complete, credential-free HTTP(S) address.';
+    const advice=!addressAccepted?'Include https:// or http://, then choose Scan address. No request was made.':
+      limitExceeded?'Use a smaller matching page or feed source; this response was not analyzed.':
+      status===404?'This address was not found. Check the site or feed address before scanning again.':
+      status===401||status===403?'The site refused this read. Scout sends no sign-in credentials. Use an address that permits public reading, or supply saved content you can already read.':
+      status===429?'The site asked for fewer requests. Wait before choosing Scan address again; Scout will not retry automatically.':
+      status===503?'The site is temporarily unavailable. Try again later if you choose; Scout will not retry automatically.':
+      status?'Check the address or try again later if you choose. Scout will not retry automatically.':
+      responseReceived?'The response did not provide usable page or feed content. Check the address before scanning again.':
+      'Drop a saved page/feed here or paste its source to continue in this browser.';
+    $('scout-status').textContent=(!addressAccepted?'SCOUT ADDRESS ERROR: ':status||responseReceived||limitExceeded?'SCOUT RESPONSE ERROR: ':'SCOUT FETCH ERROR: ')+detail+'\n'+advice+' Your draft'+(scoutReport?' and earlier findings are':' is')+' unchanged.';
+    if(addressAccepted&&!status&&!responseReceived&&!limitExceeded){$('scout-offline-help').open=true;$('scout-use-saved').hidden=false;}
+    notify('Scout: '+detail,true);
+  }}
   finally{if(intent.token===scoutIntent)button.disabled=false}
 }
 function demoScout(){
