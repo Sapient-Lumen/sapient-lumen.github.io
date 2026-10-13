@@ -3642,9 +3642,13 @@ function openPaste(s,preparedBody=null,preparedKind='page'){
   $('paste-source-id').value=s.id;$('paste-title').textContent='Capture: '+s.title;
   if(typeof preparedBody==='string'){
     $('paste-raw').value=preparedBody;
-    pastePreparation={kind:['existing-feed','existing-page'].includes(preparedKind)?preparedKind:'page',source:s,library:state,recipe:JSON.stringify(C.cleanRecipe(s)),enabled:s.enabled,navigation:sectionNavigationGeneration,committed:false};
+    pastePreparation={kind:['existing-feed','existing-page','existing-page-comparison'].includes(preparedKind)?preparedKind:'page',source:s,library:state,recipe:JSON.stringify(C.cleanRecipe(s)),enabled:s.enabled,navigation:sectionNavigationGeneration,committed:false};
     $('paste-preparation-note').hidden=false;
     if(pastePreparation.kind==='existing-feed')$('paste-preparation-note').textContent='Prepared for existing Lens: '+s.title+' · '+s.url+' · '+(s.enabled?'enabled':'paused')+'. This preparation leaves the recipe and observations unchanged, and preserves the existing schedule. Process snapshot captures new or edited events in this same Lens; Cancel discards this draft. Full inspected feed supplied as editable text, with possible newline normalization. Entries from up to the first 250 source records are parsed; existing filters affect reading. A selected file takes priority. Ordinary retention keeps up to 1,200 observation events and can remove the oldest. Supplied content does not verify its origin.';
+    else if(pastePreparation.kind==='existing-page-comparison'){
+      pastePreparation.baseline=state.snapshots[s.id];pastePreparation.baselineJSON=JSON.stringify(pastePreparation.baseline);
+      $('paste-preparation-note').textContent='Prepared comparison for existing Lens: '+s.title+' · '+s.url+'. Opening or Cancel changes no saved observations or baseline. Process snapshot compares your edited draft with this Lens’s current baseline, then replaces that baseline even when no new events are found. The Lens stays paused. Current inspected HTML is supplied as editable text; textarea line endings may be normalized. A selected file takes priority. Ordinary retention keeps up to 1,200 observation events and can remove the oldest. Supplied content does not verify its origin. Check browser storage status before leaving.';
+    }
     else if(pastePreparation.kind==='existing-page')$('paste-preparation-note').textContent='Prepared first baseline for existing Lens: '+s.title+'. Process snapshot creates the first comparison baseline with zero new observation events; Cancel discards this draft. Opening this draft creates no Lens and changes no saved recipe, observations or baseline. The Lens stays paused. Current inspected HTML is supplied as editable text; textarea line endings may be normalized. A selected file takes priority. Supplied content does not verify its origin. Target: '+s.url+' · '+s.mode+' · CSS '+(s.selector||'(main or body)')+(s.mode==='cards'?' · title '+(s.titleSelector||'(heading)')+' · link '+(s.linkSelector||'a[href]'):'')+'. Check browser storage status before leaving.';
     else $('paste-preparation-note').textContent='Prepared from Scout: '+s.url+' · '+s.mode+' · CSS '+(s.selector||'(main or body)')+(s.mode==='cards'?' · title '+(s.titleSelector||'(heading)')+' · link '+(s.linkSelector||'a[href]'):'')+'. Full HTML is supplied as an editable draft; textarea line endings may be normalized. Process snapshot uses your edited draft. If you choose a file, it takes priority. Process creates the first comparison baseline with 0 observation events. Cancel or a refusal before capture keeps this paused Lens without a baseline. Check browser storage status before leaving.';
   }
@@ -3655,13 +3659,13 @@ function closePreparedPaste(){
   const prepared=pastePreparation;pastePreparation=null;pasteReadToken++;$('paste-dialog').close();
   if(!prepared)return;
   if(state===prepared.library&&state.sources.includes(prepared.source)){
-    if(!prepared.committed)notify(prepared.kind==='existing-feed'?'Feed capture draft closed without saving its text.':prepared.kind==='existing-page'?'First-baseline draft closed without saving its text. This draft did not change the existing Lens.':'Capture draft closed. The Lens remains in this tab; this draft did not create a baseline. Check browser storage status.');
+    if(!prepared.committed)notify(prepared.kind==='existing-feed'?'Feed capture draft closed without saving its text.':prepared.kind==='existing-page-comparison'?'Page comparison draft closed without saving its text or changing the baseline.':prepared.kind==='existing-page'?'First-baseline draft closed without saving its text. This draft did not change the existing Lens.':'Capture draft closed. The Lens remains in this tab; this draft did not create a baseline. Check browser storage status.');
     if(currentView==='sources'&&sectionNavigationGeneration===prepared.navigation)focusAction('lens-paste:'+prepared.source.id);
   }
 }
 function preparedPasteCurrent(prepared,s){
   return pastePreparation===prepared&&prepared.library===state&&prepared.source===s&&state.sources.includes(s)&&(prepared.kind==='existing-feed'?s.type==='rss'&&s.enabled===prepared.enabled:s.enabled===false)&&
-    !prepared.committed&&JSON.stringify(C.cleanRecipe(s))===prepared.recipe;
+    !prepared.committed&&JSON.stringify(C.cleanRecipe(s))===prepared.recipe&&(prepared.kind!=='existing-page-comparison'||(currentView==='sources'&&sectionNavigationGeneration===prepared.navigation&&scoutPageComparisonSnapshot(s)===prepared.baseline&&JSON.stringify(prepared.baseline)===prepared.baselineJSON));
 }
 function processPreparedPage(s,body,prepared,current){
   if(!preparedPasteCurrent(prepared,s))throw Error('Prepared Lens or library changed. Close this draft and open Capture again.');
@@ -3675,6 +3679,18 @@ function processPreparedPage(s,body,prepared,current){
   if(!current()||!preparedPasteCurrent(prepared,s)||state!==library||JSON.stringify({sources:state.sources,collections:state.collections,items:state.items,snapshots:state.snapshots})!==before)throw Error('Draft, Lens or library changed during capture. Nothing was captured.');
   state.items=draft.items;state.snapshots=draft.snapshots;Object.assign(s,update);prepared.committed=true;
   save();notify((capture.mode==='region'&&capture.content===''?'Empty first page baseline':'First page baseline')+' captured in this tab · 0 observation events. Lens stays paused. Check browser storage status before leaving.');
+}
+function processPreparedPageComparison(s,body,prepared,current){
+  if(!preparedPasteCurrent(prepared,s))throw Error('Prepared Lens, baseline or library changed. Close this draft and prepare the comparison again.');
+  const library=state,before=JSON.stringify({sources:state.sources,collections:state.collections,items:state.items,snapshots:state.snapshots}),existing=[...state.items];
+  const draft={items:[...existing],snapshots:{...state.snapshots}},capture=C.extractPage(body,s),result=C.ingestPage(draft,s,capture);
+  if(result.baseline)throw Error('The comparison baseline is no longer available. Nothing was captured.');
+  const removed=existing.filter(item=>!draft.items.includes(item)).length;
+  const update={lastScan:new Date().toISOString(),lastError:'',lastOutcome:'captured',lastItems:result.added};
+  C.validateBackupRecipes({schema:C.SCHEMA,sources:state.sources.map(x=>x===s?{...s,...update}:x),collections:state.collections});
+  if(!current()||!preparedPasteCurrent(prepared,s)||state!==library||JSON.stringify({sources:state.sources,collections:state.collections,items:state.items,snapshots:state.snapshots})!==before)throw Error('Draft, Lens, baseline or library changed during comparison. Nothing was captured.');
+  state.items=draft.items;state.snapshots=draft.snapshots;Object.assign(s,update);prepared.committed=true;
+  save();notify('Compared page in existing Lens: '+s.title+' · '+result.added+' new observation event'+(result.added===1?'':'s')+'. Baseline updated. '+(removed?removed+' oldest event'+(removed===1?' was':'s were')+' removed by the 1,200-event retention limit. ':'')+'Lens stays paused. Check browser storage status before leaving.');
 }
 function processPreparedFeed(s,body,prepared,current){
   if(!preparedPasteCurrent(prepared,s))throw Error('Prepared Lens or library changed. Close this draft and open Capture again.');
@@ -3722,14 +3738,14 @@ $('paste-form').addEventListener('submit',async e=>{e.preventDefault();clearDial
     if(state!==library||state.sources.find(x=>x.id===s.id)!==s||s.version!==version)throw Error('Library or Lens changed while reading. Open Capture again.');
     if(($('paste-file').files[0]||null)!==(file||null))throw Error('Selected file changed while reading. Process the snapshot again.');
     if(!value.trim())throw Error('Paste content or select a file');
-    if(prepared)(prepared.kind==='existing-feed'?processPreparedFeed:processPreparedPage)(s,value,prepared,()=>token===pasteReadToken&&dialog.open&&ownsAcquisition(s,acquisition)&&$('paste-raw').value===submittedText&&($('paste-file').files[0]||null)===(file||null));
+    if(prepared)(prepared.kind==='existing-feed'?processPreparedFeed:prepared.kind==='existing-page-comparison'?processPreparedPageComparison:processPreparedPage)(s,value,prepared,()=>token===pasteReadToken&&dialog.open&&ownsAcquisition(s,acquisition)&&$('paste-raw').value===submittedText&&($('paste-file').files[0]||null)===(file||null));
     else processContent(s,value,{offline:true});
     close('paste-dialog');if(!prepared)focusAction('lens-paste:'+s.id);
   }catch(error){if((!acquisition||ownsAcquisition(s,acquisition))&&token===pasteReadToken&&dialog.open){
     const detail=prepared&&!prepared.committed?error.message.replace('; previous snapshot kept',''):error.message;
     const retained=prepared&&prepared.library===state&&state.sources.includes(prepared.source);
-    const feedDraft=prepared?.kind==='existing-feed';
-    reportDialogError('paste-dialog',prepared?(prepared.committed?(feedDraft?'Feed capture':'Baseline')+' is in this tab, but follow-up failed. Check browser storage status: ':(feedDraft?'No feed entries captured from this draft. ':'No baseline captured from this draft. ')+(retained?'The Lens recipe remains: ':'The prepared Lens is no longer current here: '))+detail:'Snapshot: '+detail);
+    const feedDraft=prepared?.kind==='existing-feed',comparisonDraft=prepared?.kind==='existing-page-comparison';
+    reportDialogError('paste-dialog',prepared?(prepared.committed?(feedDraft?'Feed capture':comparisonDraft?'Page comparison':'Baseline')+' is in this tab, but follow-up failed. Check browser storage status: ':(feedDraft?'No feed entries captured from this draft. ':comparisonDraft?'No page comparison captured from this draft. ':'No baseline captured from this draft. ')+(retained?'The Lens recipe remains: ':'The prepared Lens is no longer current here: '))+detail:'Snapshot: '+detail);
   }}
 });
 async function detectBridge(){if(location.protocol!=='http:'||location.hostname!=='127.0.0.1'){setBridge(false);return}try{const r=await fetch('/api/status',{credentials:'omit',cache:'no-store'});let x=await r.json();setBridge(Boolean(r.ok&&x.project==='ProgRSS'&&x.broker))}catch{setBridge(false)}}
@@ -5073,17 +5089,19 @@ function scoutPageCurrent(item,report){
     ['scout-url','scout-html','scout-header'].every((id,i)=>$(id).value===a.inputs[i]);}catch{return false;}
 }
 function refreshScoutPageControls(){
-  for(const {item,report,button,note,existingButton,existingNote} of scoutPageControls){
+  for(const {item,report,button,note,existingButton,existingNote,comparisonButton} of scoutPageControls){
     const ready=scoutPageCurrent(item,report);button.disabled=!ready;
     note.textContent=ready?'Prepare creates a paused page Lens now and opens Capture with the full supplied HTML as an editable draft. Process snapshot establishes its first comparison baseline with 0 observations. Cancel or a refusal before capture keeps the recipe without a baseline. Create alone saves only the recipe.':
       'Earlier page finding: choose Analyze now before preparing its baseline. Create alone still saves only the recipe; this preview is not a baseline.';
     if(existingButton){
       const matches=scoutEquivalentPages(item,report),target=matches.length===1?matches[0]:null;
       const eligible=target&&target.enabled===false&&!Object.prototype.hasOwnProperty.call(state.snapshots,target.id);
+      const comparisonEligible=target&&target.enabled===false&&scoutPageComparisonSnapshot(target);
+      if(comparisonButton){comparisonButton.hidden=!comparisonEligible;comparisonButton.disabled=!ready||!comparisonEligible;comparisonButton.setAttribute('aria-label',target?'Prepare comparison for existing Lens: '+target.title+' ('+target.id+')':'Prepare comparison for existing Lens');}
       existingButton.hidden=!eligible;existingButton.disabled=!ready||!eligible;
       existingButton.setAttribute('aria-label',target?'Prepare first baseline for existing Lens: '+target.title+' ('+target.id+')':'Prepare first baseline for existing Lens');
       existingNote.hidden=matches.length===0;
-      existingNote.textContent=matches.length>1?'Several Lenses use this same page recipe. Choose the intended Lens in Lenses; this shortcut will not guess.':target?(eligible?'Existing paused Lens: '+target.title+'. Prepare uses the current inspected HTML in an editable draft; opening or Cancel saves nothing. Only Process snapshot creates its first comparison baseline with zero new observation events.':'Existing Lens: '+target.title+'. This shortcut needs a paused Lens without a baseline. Use its own Capture workflow for a later snapshot.') :'';
+      existingNote.textContent=matches.length>1?'Several Lenses use this same page recipe. Choose the intended Lens in Lenses; this shortcut will not guess.':target?(eligible?'Existing paused Lens: '+target.title+'. Prepare uses the current inspected HTML in an editable draft; opening or Cancel saves nothing. Only Process snapshot creates its first comparison baseline with zero new observation events.':comparisonEligible?'Existing paused Lens: '+target.title+'. Prepare comparison reuses the current inspected HTML as an editable draft. Opening or Cancel saves nothing; Process snapshot updates the baseline and may add events or remove the oldest under ordinary retention.':'Existing Lens: '+target.title+'. This shortcut needs a paused Lens without a baseline. Use its own Capture workflow for a later snapshot.') :'';
     }
   }
 }
@@ -5248,7 +5266,8 @@ function renderScout(report){
     }else{
       const prepare=action('Create paused Lens + prepare baseline',()=>prepareScoutPage(candidate,report),'ghost');
       const existingButton=action('Prepare first baseline for existing Lens…',()=>prepareScoutExistingPage(candidate,report),'ghost');
-      actions.push(prepare,existingButton);scoutPageControls.push({item:candidate,report,button:prepare,note:captureNote,existingButton,existingNote});
+      const comparisonButton=action('Prepare comparison for existing Lens…',event=>prepareScoutPageComparison(candidate,report,event.currentTarget),'ghost');
+      actions.push(prepare,existingButton,comparisonButton);scoutPageControls.push({item:candidate,report,button:prepare,note:captureNote,existingButton,existingNote,comparisonButton});
     }
     actions.push(action('♧ Make replayable proof',()=>selectScoutProof(report,candidate),'ghost'));
     return h('article',{class:'scout-result'},[
@@ -5310,6 +5329,32 @@ function scoutPageFunctionalRecipe(source){
 function scoutEquivalentPages(item,report){
   let recipe;try{recipe=scoutPageFunctionalRecipe(scoutPageRecipe(item,report));}catch{return [];}
   return state.sources.filter(source=>{try{return source.type==='page'&&scoutPageFunctionalRecipe(source)===recipe;}catch{return false;}});
+}
+function scoutPageComparisonSnapshot(source){
+  if(source.type!=='page'||!Object.prototype.hasOwnProperty.call(state.snapshots,source.id))return null;
+  const snapshot=state.snapshots[source.id];
+  if(!snapshot||snapshot.mode!==source.mode)return null;
+  if(source.mode==='region')return typeof snapshot.text==='string'?snapshot:null;
+  if(source.mode!=='cards')return null;
+  if(Array.isArray(snapshot.entries))return snapshot.entries.every(card=>card&&['key','title','summary','url'].every(key=>typeof card[key]==='string'))?snapshot:null;
+  return !Object.prototype.hasOwnProperty.call(snapshot,'entries')&&Array.isArray(snapshot.keys)&&snapshot.keys.every(key=>typeof key==='string')?snapshot:null;
+}
+function prepareScoutPageComparison(item,report,opener){
+  try{
+    if(currentView!=='scout'||!scoutPageCurrent(item,report)||!opener?.isConnected||opener.closest('[hidden],[inert]'))throw Error('Analyze this current page again before preparing a comparison.');
+    if(document.querySelector('dialog[open]'))throw Error('Close the current dialog before preparing a comparison.');
+    const matches=scoutEquivalentPages(item,report);
+    if(matches.length!==1)throw Error(matches.length?'Several Lenses use this same page recipe. Choose the intended Lens in Lenses; nothing was prepared.':'No exact matching existing page Lens remains. Nothing was prepared.');
+    const source=matches[0],library=state,acquisition=scoutPageAcquisition,recipe=JSON.stringify(C.cleanRecipe(source)),baseline=scoutPageComparisonSnapshot(source),baselineJSON=JSON.stringify(baseline),navigation=sectionNavigationGeneration,focus=document.activeElement;
+    if(source.enabled!==false||!baseline)throw Error('This comparison shortcut needs a paused Lens with a compatible saved baseline. Nothing was prepared.');
+    C.validateBackupRecipes({schema:C.SCHEMA,sources:state.sources,collections:state.collections});
+    const current=()=>currentView==='sources'&&sectionNavigationGeneration===navigation+1&&state===library&&state.sources.includes(source)&&source.enabled===false&&JSON.stringify(C.cleanRecipe(source))===recipe&&scoutPageComparisonSnapshot(source)===baseline&&JSON.stringify(baseline)===baselineJSON&&scoutPageAcquisition===acquisition&&scoutPageCurrent(item,report)&&scoutEquivalentPages(item,report).length===1&&!document.querySelector('dialog[open]');
+    go('sources');
+    if(!current()||(document.activeElement!==focus&&!(focus===opener&&document.activeElement===document.body)))throw Error('Lens, baseline or active view changed. Nothing was prepared.');
+    const target=[...document.querySelectorAll('[data-focus-key]')].find(node=>node.dataset.focusKey==='lens-paste:'+source.id&&!node.disabled&&!node.closest('[hidden],[inert]'));
+    if(!focusAction(target)||document.activeElement!==target||!current())throw Error('Lens, baseline or active view changed. Nothing was prepared.');
+    openPaste(source,acquisition.body,'existing-page-comparison');
+  }catch(error){notify('Scout page comparison: '+error.message,true);}
 }
 function prepareScoutExistingPage(item,report){
   try{
