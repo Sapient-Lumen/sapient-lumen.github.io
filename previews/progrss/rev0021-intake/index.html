@@ -3659,7 +3659,8 @@ function openPaste(s,preparedBody=null,preparedKind='page'){
   if(pastePreparation?.kind==='existing-page-comparison')$('paste-raw').closest('.field').after(actions);
   else $('paste-form').append(actions);
   show('paste-dialog');
-  if(pastePreparation){$('paste-dialog').scrollTop=0;$('paste-preparation-note').focus({preventScroll:true});}
+  $('paste-dialog').scrollTop=0;
+  if(pastePreparation)$('paste-preparation-note').focus({preventScroll:true});
 }
 function closePreparedPaste(){
   const prepared=pastePreparation;pastePreparation=null;pasteReadToken++;$('paste-dialog').close();
