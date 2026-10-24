@@ -1,0 +1,18 @@
+{
+  "schema": "lumen.archived-edition/v1",
+  "edition": "rev0074",
+  "original_repository": "Sapient-Lumen/sapient-lumen.github.io",
+  "original_commit": "df54e985d0ae6945a259a6e1f8f858e2d3d07742",
+  "original_paths": [
+    "index.html",
+    "Lumen.html"
+  ],
+  "file": "Lumen.html",
+  "bytes": 14784491,
+  "sha256": "8bcd06110384a91e7755aba9764da4c59a5aac45c50cef9f3e2733f2fdac7589",
+  "git_blob_sha": "de8337f8ac45307b5e18850b64835afc3a72417c",
+  "original_publication_date": "2026-10-23",
+  "reference_clock": "2026-10-23T15:30:00Z",
+  "original_bytes_unchanged": true,
+  "license_notice": "Original attribution and notices remain in the HTML; this record adds no license grant."
+}
