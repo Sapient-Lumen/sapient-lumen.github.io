@@ -1,6 +1,6 @@
 {
   "schema": "lumen.public-reading-edition/v1",
-  "revision": "0270",
+  "revision": "0271",
   "engineRevision": "0265",
   "title": "Reasons before power: a first reading edition",
   "purpose": "An ongoing work of inquiry, writing and construction; coherent releases remain open to revision, growth and deliberate reduction.",
@@ -8,17 +8,17 @@
     "index.html",
     "Lumen.html"
   ],
-  "bytes": 15968426,
-  "sha256": "093505420966d4313a356f685497b0b51b3d6405889c45a4aafa9505527d7653",
-  "gitBlobSha": "b20950cf2f1e4e155562e404e2127a499d84d9bc",
-  "acceptedStateRevision": 348,
-  "acceptedStateSha256": "e65115cf26edd4b1b65f34df2b82d27ba420940792c89d269cafe6db9c626606",
-  "acceptedJournalSha256": "451452a98efac4c2aa446608a56f835ad86b196c98959d1a4ada5b70d180bb7d",
+  "bytes": 16081498,
+  "sha256": "b9802d42ca8df92f06b996d9cef78d47d1fb94c0a92c1e5c124542a1e10271d7",
+  "gitBlobSha": "82b2e3a8ec9580afb0ccf7cee13c73ef5dede1cc",
+  "acceptedStateRevision": 352,
+  "acceptedStateSha256": "706370df402751d8af64298295caf2d2c469313760b430e86eefe87fcee2578b",
+  "acceptedJournalSha256": "9a731077b78bb6a564fba4ce78b31693b3d4ccec6356d9ed3a6dc5a80054fcff",
   "works": 7,
   "textBlocks": 267,
   "sourcePrologueEndLine": 115,
-  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/2e80df77b28656d48fc19bb233740f00d900ae48/Lumen.html",
+  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/b67c0b81aa268ca33f3a9be0ed8c5e5238bf8f20/Lumen.html",
   "scope": "Short source-first argument, four complete dated philosophical essays, and one workshop essay; not the entire prior series or private planning corpus.",
   "fieldNotesVault": "vault/field-notes-rev0074/Lumen.html",
-  "change": "Add What changed when the file changed?, a source-linked workshop essay. Prior250passages and213format/list records exact; previous works shift one display position."
+  "change": "Separate Begin with the argument from Latest writing; correct stale Private reading experiment label to Reading edition. All267passages and230format/list records remain exact."
 }
