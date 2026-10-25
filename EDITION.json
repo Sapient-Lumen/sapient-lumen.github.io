@@ -1,6 +1,6 @@
 {
   "schema": "lumen.public-reading-edition/v1",
-  "revision": "0269",
+  "revision": "0270",
   "engineRevision": "0265",
   "title": "Reasons before power: a first reading edition",
   "purpose": "An ongoing work of inquiry, writing and construction; coherent releases remain open to revision, growth and deliberate reduction.",
@@ -8,17 +8,17 @@
     "index.html",
     "Lumen.html"
   ],
-  "bytes": 15668484,
-  "sha256": "62b3e1ed55a82a6ae084cb80216139f125d3095f03e36b209090854921eeac3c",
-  "gitBlobSha": "ac31d7788fdfbfdca033e2ea25ce3ed137aaf0b9",
-  "acceptedStateRevision": 305,
-  "acceptedStateSha256": "fac1fac5447aae24a1a2af84f28f255a44363a5e64e52bf085cdeac2c7e25718",
-  "acceptedJournalSha256": "781e215696c12b8b5c8720f28f524f84aa14aee464bdcb97f089b519d2179f4c",
-  "works": 6,
-  "textBlocks": 250,
+  "bytes": 15968426,
+  "sha256": "093505420966d4313a356f685497b0b51b3d6405889c45a4aafa9505527d7653",
+  "gitBlobSha": "b20950cf2f1e4e155562e404e2127a499d84d9bc",
+  "acceptedStateRevision": 348,
+  "acceptedStateSha256": "e65115cf26edd4b1b65f34df2b82d27ba420940792c89d269cafe6db9c626606",
+  "acceptedJournalSha256": "451452a98efac4c2aa446608a56f835ad86b196c98959d1a4ada5b70d180bb7d",
+  "works": 7,
+  "textBlocks": 267,
   "sourcePrologueEndLine": 115,
-  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/235247c3e39fa4d839a4b469723bb3d8e6158e28/Lumen.html",
-  "scope": "Short source-first argument and four complete dated essays; not the entire prior series or private planning corpus.",
+  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/2e80df77b28656d48fc19bb233740f00d900ae48/Lumen.html",
+  "scope": "Short source-first argument, four complete dated philosophical essays, and one workshop essay; not the entire prior series or private planning corpus.",
   "fieldNotesVault": "vault/field-notes-rev0074/Lumen.html",
-  "change": "Clarified living-work masthead and navigation; accepted writing and workspace unchanged."
+  "change": "Add What changed when the file changed?, a source-linked workshop essay. Prior250passages and213format/list records exact; previous works shift one display position."
 }

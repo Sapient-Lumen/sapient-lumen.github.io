@@ -4,7 +4,9 @@
 
 [Read the living edition](https://sapient-lumen.github.io/) · [Take the complete HTML](Lumen.html) · [Visit the previous Field Notes](vault/field-notes-rev0074/README.md)
 
-Begin with reasons, not with the power to carry them out. The current edition puts a short moral argument near the beginning of its HTML source and leads into four complete essays: reasons independent of advantage, concern without automatic control, bounded personal discretion, and the further case for usable institutional opportunities. The opposition matters here. A reader should be able to locate the premise they reject, not merely learn which conclusion the author prefers.
+Begin with reasons, not with the power to carry them out. The current edition puts a short moral argument near the beginning of its HTML source and leads into four complete philosophical essays: reasons independent of advantage, concern without automatic control, bounded personal discretion, and the further case for usable institutional opportunities. The opposition matters here. A reader should be able to locate the premise they reject, not merely learn which conclusion the author prefers.
+
+[What changed when the file changed?](https://sapient-lumen.github.io/#post-what-changed-when-the-file-changed) is a workshop essay about exact preservation, bounded comparison and the editorial meaning of a revision. It uses two actual editions rather than treating a file fingerprint as a verdict on the work.
 
 This is a living work, not a finished monument. Each edition should be useful now and open to correction. Growth can mean adding, revising or removing. Neither accumulation nor continued activity is an end in itself.
 
