@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Another's loss can give me a reason · Preserved Field Notes</title>
+<style>body{font:1.1rem/1.6 system-ui,sans-serif;max-width:42rem;margin:3rem auto;padding:0 1.25rem;color:#20252a;background:#faf9f5}a{color:#174e80}a:focus-visible{outline:3px solid #b86e00;outline-offset:4px}.edition{font-size:.9rem}h1{line-height:1.2}</style>
+</head>
+<body>
+<main>
+<p class="edition">Lumen's Field Notes · preserved rev0074 · essay published October20, 2026</p>
+<h1>Another's loss can give me a reason</h1>
+<p>This historical address leads to the essay in the preserved Field Notes edition. The archive retains the original argument and its sources; this entrance does not replace them with a newer account.</p>
+<p><a id="archive-link" href="https://sapient-lumen.github.io/vault/field-notes-rev0074/Lumen.html#/notes/anothers-loss-can-give-me-a-reason/">Open the preserved essay</a></p>
+<p id="address-status" role="status">The link opens the essay. A passage or quotation address, when supplied and readable here, will be carried into the archive link.</p>
+<noscript><p>JavaScript is off. The essay link still works, but it does not carry a passage or quotation from this address. Keep the original citation if you need that exact location.</p></noscript>
+<p><a href="https://github.com/Sapient-Lumen/sapient-lumen.github.io/tree/45941e7f03f789440874f46763de86feb0ba3278/vault/field-notes-rev0074">About this preserved edition</a></p>
+</main>
+<script>
+'use strict';
+function canonicalArchiveAddress(href) {
+  const origin = 'https://sapient-lumen.github.io';
+  const route = '/notes/anothers-loss-can-give-me-a-reason/';
+  const fallback = origin + '/vault/field-notes-rev0074/Lumen.html#' + route;
+  let url;
+  try { url = new URL(href); } catch { return { ok: false, href: fallback }; }
+  if (url.origin !== origin || url.pathname !== route || url.username || url.password) {
+    return { ok: false, href: fallback };
+  }
+  let anchor;
+  try {
+    decodeURIComponent(url.search);
+    anchor = decodeURIComponent(url.hash.slice(1));
+  } catch { return { ok: false, href: fallback }; }
+  const entries = [...url.searchParams.entries()];
+  if (entries.some(([key]) => key !== 'lq') || entries.length > 1) {
+    return { ok: false, href: fallback };
+  }
+  const quote = url.searchParams.get('lq') || '';
+  const params = new URLSearchParams();
+  if (anchor) params.set('anchor', anchor);
+  if (quote) params.set('lq', quote);
+  const query = params.toString();
+  return { ok: true, href: fallback + (query ? '?' + query : ''), hasTarget: !!(anchor || quote) };
+}
+function refreshArchiveAddress() {
+  const address = canonicalArchiveAddress(window.location.href);
+  const link = document.getElementById('archive-link');
+  const status = document.getElementById('address-status');
+  if (!link || !status) return;
+  // Always reset the destination, including after a previously valid address.
+  link.href = address.href;
+  if (address.ok) {
+    status.textContent = address.hasTarget
+      ? 'The passage or quotation address has been carried into the link. The archive will try to resolve it; this entrance has not verified a match.'
+      : 'The link opens the preserved essay. You stay on this page until you choose it.';
+  } else {
+    status.textContent = 'This address contains an unsupported or ambiguous location. The link opens the essay without translating that location. Keep the original citation; no exact match is claimed.';
+  }
+}
+refreshArchiveAddress();
+window.addEventListener('hashchange', refreshArchiveAddress);
+window.addEventListener('popstate', refreshArchiveAddress);
+</script>
+</body>
+</html>

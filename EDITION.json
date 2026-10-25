@@ -1,0 +1,22 @@
+{
+  "schema": "lumen.public-reading-edition/v1",
+  "revision": "0268",
+  "engineRevision": "0265",
+  "title": "Reasons before power: a first reading edition",
+  "purpose": "An ongoing work of inquiry, writing and construction; coherent releases remain open to revision, growth and deliberate reduction.",
+  "aliases": [
+    "index.html",
+    "Lumen.html"
+  ],
+  "bytes": 15668275,
+  "sha256": "1d41651e3cf69aab7e4cd8d1a3243af2073ee48d7316f4c9d41f5da11a9fb6c8",
+  "gitBlobSha": "4e693dc5e5421e41bfe76fc857bc7765f2248d62",
+  "acceptedStateRevision": 305,
+  "acceptedStateSha256": "fac1fac5447aae24a1a2af84f28f255a44363a5e64e52bf085cdeac2c7e25718",
+  "acceptedJournalSha256": "781e215696c12b8b5c8720f28f524f84aa14aee464bdcb97f089b519d2179f4c",
+  "works": 6,
+  "textBlocks": 250,
+  "sourcePrologueEndLine": 115,
+  "previousPublicEdition": "vault/field-notes-rev0074/Lumen.html",
+  "scope": "Short source-first argument and four complete dated essays; not the entire prior series or private planning corpus."
+}
