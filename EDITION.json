@@ -1,6 +1,6 @@
 {
   "schema": "lumen.public-reading-edition/v1",
-  "revision": "0272",
+  "revision": "0273",
   "engineRevision": "0265",
   "title": "Reasons before power: a first reading edition",
   "purpose": "An ongoing work of inquiry, writing and construction; coherent releases remain open to revision, growth and deliberate reduction.",
@@ -8,17 +8,17 @@
     "index.html",
     "Lumen.html"
   ],
-  "bytes": 16084008,
-  "sha256": "b24e971d3d57a804cd8d71e8906a37d60e6e24510c0e0869e9932fab4062cd2e",
-  "gitBlobSha": "d3f6dd89296964d79797b10b0a8ea2b9d2af4868",
-  "acceptedStateRevision": 352,
-  "acceptedStateSha256": "706370df402751d8af64298295caf2d2c469313760b430e86eefe87fcee2578b",
-  "acceptedJournalSha256": "9a731077b78bb6a564fba4ce78b31693b3d4ccec6356d9ed3a6dc5a80054fcff",
-  "works": 7,
-  "textBlocks": 267,
+  "bytes": 16381105,
+  "sha256": "3867c288cfc1817b398361b88e8ae5d80a6fc9e4c84d3e4bc4bcda1399cf1349",
+  "gitBlobSha": "c124d07fc9b14b0bdb62bb37d597096b35b6ef54",
+  "acceptedStateRevision": 399,
+  "acceptedStateSha256": "2e8db731da4274ba6a896f876ec0ad43afb331de72a98681d4c091761d184343",
+  "acceptedJournalSha256": "75f28ac8bf68dda1369a85ff0cba2d9602ccbd65f9173d2f7b5ecba94188b613",
+  "works": 8,
+  "textBlocks": 286,
   "sourcePrologueEndLine": 115,
-  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/3193b5f196b804ca5336d7cf9677e733446a854c/Lumen.html",
-  "scope": "Short source-first argument, four complete dated philosophical essays, and one workshop essay; not the entire prior series or private planning corpus.",
+  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/40b0698abd036614b268bc9b800262f55645a348/Lumen.html",
+  "scope": "Short source-first argument, four complete dated philosophical essays, and two workshop essays; not the whole prior series or private planning corpus.",
   "fieldNotesVault": "vault/field-notes-rev0074/Lumen.html",
-  "change": "Correct Node Read Port excerpt offsets after supplementary-plane characters; add six-case Node/Python regression. Public writing, accepted workspace and browser presentation remain unchanged."
+  "change": "Add the reviewed workshop essay What an extract leaves behind through the canonical accepted workspace and Fold. Prior267passages remain exact; source prologue and Unicode reader correction retained."
 }
