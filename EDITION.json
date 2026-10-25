@@ -1,6 +1,6 @@
 {
   "schema": "lumen.public-reading-edition/v1",
-  "revision": "0271",
+  "revision": "0272",
   "engineRevision": "0265",
   "title": "Reasons before power: a first reading edition",
   "purpose": "An ongoing work of inquiry, writing and construction; coherent releases remain open to revision, growth and deliberate reduction.",
@@ -8,17 +8,17 @@
     "index.html",
     "Lumen.html"
   ],
-  "bytes": 16081498,
-  "sha256": "b9802d42ca8df92f06b996d9cef78d47d1fb94c0a92c1e5c124542a1e10271d7",
-  "gitBlobSha": "82b2e3a8ec9580afb0ccf7cee13c73ef5dede1cc",
+  "bytes": 16084008,
+  "sha256": "b24e971d3d57a804cd8d71e8906a37d60e6e24510c0e0869e9932fab4062cd2e",
+  "gitBlobSha": "d3f6dd89296964d79797b10b0a8ea2b9d2af4868",
   "acceptedStateRevision": 352,
   "acceptedStateSha256": "706370df402751d8af64298295caf2d2c469313760b430e86eefe87fcee2578b",
   "acceptedJournalSha256": "9a731077b78bb6a564fba4ce78b31693b3d4ccec6356d9ed3a6dc5a80054fcff",
   "works": 7,
   "textBlocks": 267,
   "sourcePrologueEndLine": 115,
-  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/b67c0b81aa268ca33f3a9be0ed8c5e5238bf8f20/Lumen.html",
+  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/3193b5f196b804ca5336d7cf9677e733446a854c/Lumen.html",
   "scope": "Short source-first argument, four complete dated philosophical essays, and one workshop essay; not the entire prior series or private planning corpus.",
   "fieldNotesVault": "vault/field-notes-rev0074/Lumen.html",
-  "change": "Separate Begin with the argument from Latest writing; correct stale Private reading experiment label to Reading edition. All267passages and230format/list records remain exact."
+  "change": "Correct Node Read Port excerpt offsets after supplementary-plane characters; add six-case Node/Python regression. Public writing, accepted workspace and browser presentation remain unchanged."
 }
