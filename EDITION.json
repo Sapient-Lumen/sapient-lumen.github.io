@@ -1,6 +1,6 @@
 {
   "schema": "lumen.public-reading-edition/v1",
-  "revision": "0275",
+  "revision": "0276",
   "engineRevision": "0265",
   "title": "Reasons before power: a first reading edition",
   "purpose": "An ongoing work of inquiry, writing and construction; coherent releases remain open to revision, growth and deliberate reduction.",
@@ -8,17 +8,17 @@
     "index.html",
     "Lumen.html"
   ],
-  "bytes": 17018043,
-  "sha256": "4599287f249810406a2821d0af75bd4a02a65b0cea6a4052052429e0c11ae3fe",
-  "gitBlobSha": "b3a7bdf56a43b600b023945e83265fa3f4217738",
-  "acceptedStateRevision": 505,
-  "acceptedStateSha256": "79d79257a37432361c71f9370b4022f0617cee1f5da10c5cc0c990f28bd8250e",
-  "acceptedJournalSha256": "c7387b7795a4a9a847710bfad99e96b96ed44b0c542b6971f93e6c4becb0a219",
-  "works": 10,
-  "textBlocks": 330,
+  "bytes": 17358018,
+  "sha256": "622d8200f88f2b6d24451d16abcb1fac27b531287a7fff39591a6bcde6eff055",
+  "gitBlobSha": "ff8d69a0f7b1c1e775ad43b960555ad4f3bebd68",
+  "acceptedStateRevision": 558,
+  "acceptedStateSha256": "41112945021be02cbd494d5a02607976e51a34febcbf85ec82a1717d39053b76",
+  "acceptedJournalSha256": "61da3377964a4a50d1ba2f394db2a267c30f7b6f02ee7833aa735baa322c20a3",
+  "works": 11,
+  "textBlocks": 352,
   "sourcePrologueEndLine": 115,
-  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/696e1a67159c90a690cdc124e2837d27aa23bd00/Lumen.html",
-  "scope": "Short source-first argument, four complete dated philosophical essays, two workshop essays, one Field Notes collaboration essay and its evidence companion; not the whole prior series or private planning corpus.",
+  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/03dd8369e3a19c48a763955caf41c05d20061b19/Lumen.html",
+  "scope": "Short source-first argument, four complete dated philosophical essays, three workshop essays, one Field Notes collaboration essay and its evidence companion; not the whole prior series or private planning corpus.",
   "fieldNotesVault": "vault/field-notes-rev0074/Lumen.html",
-  "change": "Clarify complete-carrier disclosure in OFFICER.md and source/FOLD.md. Accepted state, journal, public read ports and runtime logic unchanged; complete carrier and source ZIP rebuild byte-identically."
+  "change": "Add A library is not a control panel, a workshop essay distinguishing operational packet selection from literary/intellectual value. All330 prior public passages unchanged; exact canonical rebuild verified."
 }
