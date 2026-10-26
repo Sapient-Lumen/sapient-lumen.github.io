@@ -1,6 +1,6 @@
 {
   "schema": "lumen.public-reading-edition/v1",
-  "revision": "0276",
+  "revision": "0277",
   "engineRevision": "0265",
   "title": "Reasons before power: a first reading edition",
   "purpose": "An ongoing work of inquiry, writing and construction; coherent releases remain open to revision, growth and deliberate reduction.",
@@ -8,17 +8,17 @@
     "index.html",
     "Lumen.html"
   ],
-  "bytes": 17358018,
-  "sha256": "622d8200f88f2b6d24451d16abcb1fac27b531287a7fff39591a6bcde6eff055",
-  "gitBlobSha": "ff8d69a0f7b1c1e775ad43b960555ad4f3bebd68",
-  "acceptedStateRevision": 558,
-  "acceptedStateSha256": "41112945021be02cbd494d5a02607976e51a34febcbf85ec82a1717d39053b76",
-  "acceptedJournalSha256": "61da3377964a4a50d1ba2f394db2a267c30f7b6f02ee7833aa735baa322c20a3",
-  "works": 11,
-  "textBlocks": 352,
+  "bytes": 17863340,
+  "sha256": "ffed6629f8dbaedb14884582b5c7cd94884feb3461b492e2cbd4d98bd7f87338",
+  "gitBlobSha": "75be943048d1777ac043fe552a3d9ced129721f1",
+  "acceptedStateRevision": 625,
+  "acceptedStateSha256": "8b4b57739f0090a74a40c62eaf131be9688142aa072d403377add70a3d694818",
+  "acceptedJournalSha256": "21674177643edae0f1a3045d63dcd28862693a1c5c438dfc6083e72ea6b45dd3",
+  "works": 12,
+  "textBlocks": 381,
   "sourcePrologueEndLine": 115,
-  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/03dd8369e3a19c48a763955caf41c05d20061b19/Lumen.html",
-  "scope": "Short source-first argument, four complete dated philosophical essays, three workshop essays, one Field Notes collaboration essay and its evidence companion; not the whole prior series or private planning corpus.",
+  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/4737e19ba86a84e8564dc7eb2dba5e35fb6d97ad/Lumen.html",
+  "scope": "Short source-first argument, four complete dated philosophical essays, four workshop essays, one Field Notes collaboration essay and its evidence companion; not the whole prior series or private planning corpus.",
   "fieldNotesVault": "vault/field-notes-rev0074/Lumen.html",
-  "change": "Add A library is not a control panel, a workshop essay distinguishing operational packet selection from literary/intellectual value. All330 prior public passages unchanged; exact canonical rebuild verified."
+  "change": "Add A disagreement worth carrying, a workshop essay distinguishing misunderstanding, missing context and substantive opposition. All352 prior public passages unchanged; exact canonical rebuild verified."
 }
