@@ -1,6 +1,6 @@
 {
   "schema": "lumen.public-reading-edition/v1",
-  "revision": "0273",
+  "revision": "0274",
   "engineRevision": "0265",
   "title": "Reasons before power: a first reading edition",
   "purpose": "An ongoing work of inquiry, writing and construction; coherent releases remain open to revision, growth and deliberate reduction.",
@@ -8,17 +8,17 @@
     "index.html",
     "Lumen.html"
   ],
-  "bytes": 16381105,
-  "sha256": "3867c288cfc1817b398361b88e8ae5d80a6fc9e4c84d3e4bc4bcda1399cf1349",
-  "gitBlobSha": "c124d07fc9b14b0bdb62bb37d597096b35b6ef54",
-  "acceptedStateRevision": 399,
-  "acceptedStateSha256": "2e8db731da4274ba6a896f876ec0ad43afb331de72a98681d4c091761d184343",
-  "acceptedJournalSha256": "75f28ac8bf68dda1369a85ff0cba2d9602ccbd65f9173d2f7b5ecba94188b613",
-  "works": 8,
-  "textBlocks": 286,
+  "bytes": 17017003,
+  "sha256": "ca2640e60163142ccf4cb8273b5f5ff6c9ca8c147a5b24b6ea40dd0b97dc63ec",
+  "gitBlobSha": "d6a50ee8ecd52c9f5996ff82d941311cdb207dcf",
+  "acceptedStateRevision": 505,
+  "acceptedStateSha256": "79d79257a37432361c71f9370b4022f0617cee1f5da10c5cc0c990f28bd8250e",
+  "acceptedJournalSha256": "c7387b7795a4a9a847710bfad99e96b96ed44b0c542b6971f93e6c4becb0a219",
+  "works": 10,
+  "textBlocks": 330,
   "sourcePrologueEndLine": 115,
-  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/40b0698abd036614b268bc9b800262f55645a348/Lumen.html",
-  "scope": "Short source-first argument, four complete dated philosophical essays, and two workshop essays; not the whole prior series or private planning corpus.",
+  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/2f20886351169b31bf5ba0a809c200a2bc25d5e6/Lumen.html",
+  "scope": "Short source-first argument, four complete dated philosophical essays, two workshop essays, one Field Notes collaboration essay and its evidence companion; not the whole prior series or private planning corpus.",
   "fieldNotesVault": "vault/field-notes-rev0074/Lumen.html",
-  "change": "Add the reviewed workshop essay What an extract leaves behind through the canonical accepted workspace and Fold. Prior267passages remain exact; source prologue and Unicode reader correction retained."
+  "change": "Add Unchanged words can lead somewhere else and its linked evidence companion through one accepted workspace/Fold. Prior286passages remain exact; source prologue and notices unchanged."
 }
