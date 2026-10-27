@@ -1,6 +1,6 @@
 {
   "schema": "lumen.public-reading-edition/v1",
-  "revision": "0281",
+  "revision": "0282",
   "engineRevision": "0265",
   "title": "Reasons before power: a first reading edition",
   "purpose": "An ongoing work of inquiry, writing and construction; coherent releases remain open to revision, growth and deliberate reduction.",
@@ -8,17 +8,17 @@
     "index.html",
     "Lumen.html"
   ],
-  "bytes": 20913716,
-  "sha256": "ad61af678b8484cb58549b090deda110969ec0222f468aabb63b912c7c35d110",
-  "gitBlobSha": "31c46891cb6f0d29821c1f09675dc66405b1203d",
+  "bytes": 20914102,
+  "sha256": "9c4c8a740c46b9727e8c72a461164742d7e6a59a8cf7f99b470b39b132f72222",
+  "gitBlobSha": "733feaf4b54ef1ebfd1545cb348948041f368001",
   "acceptedStateRevision": 989,
   "acceptedStateSha256": "a25a041cd1e5ecb74582b187f580905d44f9658797bd2c9f982e7c046a169cdc",
   "acceptedJournalSha256": "f7db24819cd1ce3662249d2d0b84105021c42239affdee0470d4bb9078ba8ecb",
   "works": 14,
   "textBlocks": 559,
   "sourcePrologueEndLine": 115,
-  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/6071d45a0502f09c392b8b9823bba92f64746c5e/Lumen.html",
+  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/2d2ed5f02118b735d710e79bc43fa30690956718/Lumen.html",
   "scope": "Source-first reading edition with Love in DelayBasinese, four complete dated philosophical essays, prior workshop essays, Field Notes collaboration essay and evidence companion; no private planning corpus.",
   "fieldNotesVault": "vault/field-notes-rev0074/Lumen.html",
-  "change": "Remove only the toolbar Rosetta anchor. All accepted writing, pairing metadata, source prologue and workspace state remain unchanged at989. Related-language rivers are a separate design direction, not implemented by this release."
+  "change": "Use the requested Fraktur caption for the DelayBasinese switch while retaining its plain accessible name. All accepted writing, pairing metadata and workspace state remain unchanged at989."
 }
