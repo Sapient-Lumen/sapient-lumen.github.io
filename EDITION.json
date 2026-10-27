@@ -1,6 +1,6 @@
 {
   "schema": "lumen.public-reading-edition/v1",
-  "revision": "0280",
+  "revision": "0281",
   "engineRevision": "0265",
   "title": "Reasons before power: a first reading edition",
   "purpose": "An ongoing work of inquiry, writing and construction; coherent releases remain open to revision, growth and deliberate reduction.",
@@ -8,17 +8,17 @@
     "index.html",
     "Lumen.html"
   ],
-  "bytes": 20913970,
-  "sha256": "40fec75b1b710012608f06659fd605d0956f0f14a10817c0cd81012394bc36f7",
-  "gitBlobSha": "4a4b7b75ff890d509b5593051db4e9ddd08f6997",
+  "bytes": 20913716,
+  "sha256": "ad61af678b8484cb58549b090deda110969ec0222f468aabb63b912c7c35d110",
+  "gitBlobSha": "31c46891cb6f0d29821c1f09675dc66405b1203d",
   "acceptedStateRevision": 989,
   "acceptedStateSha256": "a25a041cd1e5ecb74582b187f580905d44f9658797bd2c9f982e7c046a169cdc",
   "acceptedJournalSha256": "f7db24819cd1ce3662249d2d0b84105021c42239affdee0470d4bb9078ba8ecb",
   "works": 14,
   "textBlocks": 559,
   "sourcePrologueEndLine": 115,
-  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/10b1850efe6789a46f3d4e292667fc9961759191/Lumen.html",
+  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/6071d45a0502f09c392b8b9823bba92f64746c5e/Lumen.html",
   "scope": "Source-first reading edition with Love in DelayBasinese, four complete dated philosophical essays, prior workshop essays, Field Notes collaboration essay and evidence companion; no private planning corpus.",
   "fieldNotesVault": "vault/field-notes-rev0074/Lumen.html",
-  "change": "Add authored English Love delta1+delta2 and a reference-bound paired-reading switch. All441 prior public passages remain exact. Fourteen public works present as thirteen primary entries; source definition remains near line123."
+  "change": "Remove only the toolbar Rosetta anchor. All accepted writing, pairing metadata, source prologue and workspace state remain unchanged at989. Related-language rivers are a separate design direction, not implemented by this release."
 }
