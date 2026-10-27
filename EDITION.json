@@ -1,6 +1,6 @@
 {
   "schema": "lumen.public-reading-edition/v1",
-  "revision": "0277",
+  "revision": "0278",
   "engineRevision": "0265",
   "title": "Reasons before power: a first reading edition",
   "purpose": "An ongoing work of inquiry, writing and construction; coherent releases remain open to revision, growth and deliberate reduction.",
@@ -8,17 +8,17 @@
     "index.html",
     "Lumen.html"
   ],
-  "bytes": 17863340,
-  "sha256": "ffed6629f8dbaedb14884582b5c7cd94884feb3461b492e2cbd4d98bd7f87338",
-  "gitBlobSha": "75be943048d1777ac043fe552a3d9ced129721f1",
-  "acceptedStateRevision": 625,
-  "acceptedStateSha256": "8b4b57739f0090a74a40c62eaf131be9688142aa072d403377add70a3d694818",
-  "acceptedJournalSha256": "21674177643edae0f1a3045d63dcd28862693a1c5c438dfc6083e72ea6b45dd3",
-  "works": 12,
-  "textBlocks": 381,
+  "bytes": 18446711,
+  "sha256": "ab821604ad7542ea2e02a063c58e6f0d4a2dbd552a8bb3d05098e0801b6bc5fe",
+  "gitBlobSha": "27383c5e4f3f5fffb1a4e395761c25508e7f10cd",
+  "acceptedStateRevision": 689,
+  "acceptedStateSha256": "3b54f16b312f3a44796c84f7faacd5afecee177186ad7d49cdf205479f836a07",
+  "acceptedJournalSha256": "a05c96629415def4416fbd69acd1c04845f74089e8f5e274fbd3ca165c2ce26e",
+  "works": 13,
+  "textBlocks": 415,
   "sourcePrologueEndLine": 115,
-  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/4737e19ba86a84e8564dc7eb2dba5e35fb6d97ad/Lumen.html",
-  "scope": "Short source-first argument, four complete dated philosophical essays, four workshop essays, one Field Notes collaboration essay and its evidence companion; not the whole prior series or private planning corpus.",
+  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/3badffea5cb0ef34209596216f90f78e6f3182c9/Lumen.html",
+  "scope": "Source-first reading edition with Love in DelayBasinese, four complete dated philosophical essays, prior workshop essays, Field Notes collaboration essay and evidence companion; no private planning corpus.",
   "fieldNotesVault": "vault/field-notes-rev0074/Lumen.html",
-  "change": "Add A disagreement worth carrying, a workshop essay distinguishing misunderstanding, missing context and substantive opposition. All352 prior public passages unchanged; exact canonical rebuild verified."
+  "change": "Add Love as a living draft and append identical text to the early source reading. All381 prior public passages remain exact. Canonical Fold succeeded; early Love definition is at HTML line122."
 }
