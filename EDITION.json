@@ -1,6 +1,6 @@
 {
   "schema": "lumen.public-reading-edition/v1",
-  "revision": "0278",
+  "revision": "0279",
   "engineRevision": "0265",
   "title": "Reasons before power: a first reading edition",
   "purpose": "An ongoing work of inquiry, writing and construction; coherent releases remain open to revision, growth and deliberate reduction.",
@@ -8,17 +8,17 @@
     "index.html",
     "Lumen.html"
   ],
-  "bytes": 18446711,
-  "sha256": "ab821604ad7542ea2e02a063c58e6f0d4a2dbd552a8bb3d05098e0801b6bc5fe",
-  "gitBlobSha": "27383c5e4f3f5fffb1a4e395761c25508e7f10cd",
-  "acceptedStateRevision": 689,
-  "acceptedStateSha256": "3b54f16b312f3a44796c84f7faacd5afecee177186ad7d49cdf205479f836a07",
-  "acceptedJournalSha256": "a05c96629415def4416fbd69acd1c04845f74089e8f5e274fbd3ca165c2ce26e",
+  "bytes": 19187324,
+  "sha256": "9b3914c09a1336ecd95de46c895773c7a0749342fa24ad0e829f659dea1beee1",
+  "gitBlobSha": "72489b271cd54cef1640b6a56e14cc0598d0b7ec",
+  "acceptedStateRevision": 738,
+  "acceptedStateSha256": "cf66871ed85f33dda473292f0ff7384a4b316b4abb917e1d32ae87a74eddeb00",
+  "acceptedJournalSha256": "13ec26739d0b6e142340490a0da693dd6e79f20a27cecb0c5ee7996c77d90f7c",
   "works": 13,
-  "textBlocks": 415,
+  "textBlocks": 441,
   "sourcePrologueEndLine": 115,
-  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/3badffea5cb0ef34209596216f90f78e6f3182c9/Lumen.html",
+  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/cf3849e97d81eebf71214c3c31c419837da37a54/Lumen.html",
   "scope": "Source-first reading edition with Love in DelayBasinese, four complete dated philosophical essays, prior workshop essays, Field Notes collaboration essay and evidence companion; no private planning corpus.",
   "fieldNotesVault": "vault/field-notes-rev0074/Lumen.html",
-  "change": "Add Love as a living draft and append identical text to the early source reading. All381 prior public passages remain exact. Canonical Fold succeeded; early Love definition is at HTML line122."
+  "change": "Append Love delta2 on misrecognition and formed goodwill to the retained draft, public Love and early source reading. All415 prior public passages remain exact. Canonical Fold succeeded; delta2 begins at HTML line267."
 }
