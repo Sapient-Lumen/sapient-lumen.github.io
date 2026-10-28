@@ -1,6 +1,6 @@
 {
   "schema": "lumen.public-reading-edition/v1",
-  "revision": "0285",
+  "revision": "0286",
   "engineRevision": "0265",
   "title": "Reasons before power: a first reading edition",
   "purpose": "An ongoing work of inquiry, writing and construction; coherent releases remain open to revision, growth and deliberate reduction.",
@@ -8,19 +8,19 @@
     "index.html",
     "Lumen.html"
   ],
-  "bytes": 22122108,
-  "sha256": "793a6cbdef0affe69210f4f220aa6a6002cdbfdda42a593c088528686c3d5178",
-  "gitBlobSha": "271f0d5b5b80b9befb9318aee025c71e2219f271",
+  "bytes": 22125017,
+  "sha256": "f1eee2befb4bed68d3732967a88142d50b6b64f603327001a0a5b753d4d31d99",
+  "gitBlobSha": "488d96c2f346ce5e1068474610d14e473aee1d96",
   "acceptedStateRevision": 1014,
   "acceptedStateSha256": "9930bf35392fbe97863feb773020b31fa8ea449c85b0bb52424fd3c2cd6a9dc8",
   "acceptedJournalSha256": "788166081c32bb200506bc8279de84f39fc04e46c4b7b00860fafc3a688b7359",
   "works": 14,
   "textBlocks": 561,
   "sourcePrologueEndLine": 385,
-  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/69b80c091ca0794f2658103caf845648c57c7d98/Lumen.html",
+  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/7113bdabe6bf1fc4c85d4c61f6ffe765949e089a/Lumen.html",
   "scope": "Source-first reading edition with Love in DelayBasinese, four complete dated philosophical essays, prior workshop essays, Field Notes collaboration essay and evidence companion; no private planning corpus.",
   "fieldNotesVault": "vault/field-notes-rev0074/Lumen.html",
-  "change": "Add two explicitly ordered Sequences and an authored entrance led by Reasons before power and Love. Preserve all14 existing article forms and writing; RSS has14unchanged entries with stable event identities.",
+  "change": "Keep newly carried public Sequences visible when an older browser-owned workspace is reopened, without importing records or overwriting owned writing. Authored entrance and accepted1014 unchanged.",
   "sourcePrologueEndByte": 29032,
   "rss": {
     "path": "rss.xml",
@@ -33,9 +33,9 @@
     "content": "summary",
     "diffs": "inline",
     "baseline": "existing public collection; no invented original dates",
-    "comparisonReceiptSha256": "d6962fee98f6732712254fb1f1f205404012136d8176b6d6383e24a9ffee5654",
+    "comparisonReceiptSha256": "4d88afb89ad75eda8e83b1cfe40e7979b55650c669ba7687df511616784ab00d",
     "acceptedStateSha256": "9930bf35392fbe97863feb773020b31fa8ea449c85b0bb52424fd3c2cd6a9dc8",
-    "previousComparisonReceiptSha256": "dc12a1432cc85b004249ed3e875e121503cb3944860c748e349696568e4266e0",
+    "previousComparisonReceiptSha256": "d6962fee98f6732712254fb1f1f205404012136d8176b6d6383e24a9ffee5654",
     "changeCounts": {
       "baseline": 0,
       "new": 0,
@@ -45,8 +45,8 @@
     }
   },
   "sourceZip": {
-    "sha256": "03cfaf29337277c3e4568b9cab4b4b221235a05267958370915e41cc6eaefed7",
-    "bytes": 7439932
+    "bytes": 7441320,
+    "sha256": "b5fe8fc190c91f03c5c10a8992eb52611c9cef308527d8e83be6e8ae7af2b54a"
   },
   "history": {
     "preReorganizationCommit": "2a1495303f153279c1c7758ed885558a19156ef1",
