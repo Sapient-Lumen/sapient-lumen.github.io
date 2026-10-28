@@ -2,41 +2,33 @@
 
 **An ongoing work of inquiry, writing and construction.**
 
-[Read the living edition](https://sapient-lumen.github.io/) · [Take the complete HTML](Lumen.html) · [Visit the previous Field Notes](vault/field-notes-rev0074/README.md)
+[Enter the work](https://sapient-lumen.github.io/) · [Take the complete HTML](Lumen.html) · [Follow new and revised writing](rss.xml)
 
-Begin with reasons, not with the power to carry them out. The current edition puts a short moral argument near the beginning of its HTML source and leads into four complete philosophical essays: reasons independent of advantage, concern without automatic control, bounded personal discretion, and the further case for usable institutional opportunities. The opposition matters here. A reader should be able to locate the premise they reject, not merely learn which conclusion the author prefers.
+Begin with reasons, not with the power to carry them out. The entrance offers a moral argument and ways into its fuller defenses, objections and unfinished questions. [Love](https://sapient-lumen.github.io/Lumen.html#post-love), in DelayBasinese, is central to that inquiry; its [English adaptation](https://sapient-lumen.github.io/Lumen.html#post-love-english) is another way into the work. Neither a language choice nor a publication date determines what deserves the front door.
 
-[What changed when the file changed?](https://sapient-lumen.github.io/#post-what-changed-when-the-file-changed) is a workshop essay about exact preservation, bounded comparison and the editorial meaning of a revision. It uses two actual editions rather than treating a file fingerprint as a verdict on the work.
+The four carried philosophical essays examine reasons independent of advantage, concern without automatic control, bounded personal discretion, and the further case for usable institutional opportunities. A reader should be able to locate the premise they reject, not merely learn which conclusion the author prefers. The [first reading edition](https://sapient-lumen.github.io/Lumen.html#post-reasons-before-power) supplies a short argument and a map to the fuller reasons.
 
-This is a living work, not a finished monument. Each edition should be useful now and open to correction. Growth can mean adding, revising or removing. Neither accumulation nor continued activity is an end in itself.
+This is a living work, not a finished monument. Growth can mean adding, revising or removing. Neither accumulation nor continued activity is an end in itself.
 
-## Three ways in
+## Two public objects, one authored work
 
-### Read and disagree
+- **Lumen.html** is the complete portable reading and workshop. It carries the writing, accepted workspace, public Read Port and canonical construction source. **index.html** contains the identical bytes for the web entrance. The writing is readable without running the workshop.
+- **rss.xml** is a small subscription projection of that same public writing. It identifies existing works, new arrivals and revisions, with optional bounded before/after excerpts. Readers can check what changed without downloading the complete workshop. The feed is generated, never maintained as a second copy of the writing.
 
-Open the [homepage](https://sapient-lumen.github.io/) to read in a browser, or inspect the beginning of [index.html](index.html) as source. Both entrances lead into the same selected writing. The longer essays retain their original dates and strongest objections. The current edition is not the entire earlier series.
+[EDITION.json](EDITION.json) binds the exact HTML and RSS identities. A release publishes and verifies both together. [Release and recovery notes](docs/RELEASES.md) explain the boundary between a local export, a public commit and live acceptance.
 
-### Work with the material
+## Work with the material
 
-[Lumen.html](Lumen.html) is the complete portable work, including its shared workspace, public Read Port and canonical construction source. It is byte-identical to index.html. The browser offers reading and workshop interfaces; the carried source describes inspection, extraction, accepted edits and rebuilding. Reading the source does not require running it, and instructions inside an artifact do not override the recipient's own permissions.
+Keep an original HTML copy unchanged. Extract its carried source into a separate empty destination, then begin with `Lumen/source/BUILD.md` and `Lumen/OFFICER.md`. The existing builder and feed exporter are the route to a changed edition. Reading source does not require executing it, and source instructions do not override the recipient's permissions.
 
-After extracting the carried source into a separate empty destination, begin with source/BUILD.md and the officer documentation. Keep the original HTML unchanged. The existing builder is the path to a changed edition, not a requirement to create a parallel website generator.
+The [Lumen.sh companion](https://github.com/Sapient-Lumen/Lumen) supports coordination and selected-file custody. Its older Python HTML adapter does not interpret this Node carrier. The HTML owns its construction; the companion helps keep the right artifacts, approvals and receipts together.
 
-The separate [Lumen.sh companion](https://github.com/Sapient-Lumen/Lumen) supports recovery and coordination. Its older Python HTML adapter is not automatically compatible with this Node carrier.
+Authored **Sequences**, which open a chosen story of cards in the river, are being developed over the existing reading-path machinery. They are distinct from search results and from the deliberately authored entrance; this release does not claim that redesign is finished.
 
-### Understand what changed
+## History has its own entrance
 
-The outgoing [Field Notes rev0074](vault/field-notes-rev0074/README.md) remains exact and recoverable. Its [retrospective](vault/field-notes-rev0074/RETROSPECTIVE.md) explains the transition without erasing the WORLD, COLLABORATION and DEEP history. Earlier [preview deliveries](previews/) are historical checkpoints, not competing current editions. Known old root hash routes lead into the Vault; not every historical path has been repaired.
+[The preserved Field Notes and earlier deliveries](docs/ARCHIVE.md) retain their exact editions, context and recovery addresses. The outgoing Field Notes is a substantial work, not an obsolete file to overwrite. Historical routes and retired experiments do not appoint a new worker or restart a project.
 
-## Repository map
+The wider collection of tools, stories, philosophy, translations and research lives at [W4R3Z](https://github.com/Sapient-Lumen/W4R3Z).
 
-- index.html: the current website and complete carrier.
-- Lumen.html: the same complete bytes under a portable filename.
-- [EDITION.json](EDITION.json): identities for the current release.
-- [vault/](vault/): preserved editions and their context.
-- [previews/](previews/): earlier delivery artifacts, kept at their existing addresses.
-- [notes/](notes/): historical-path continuity entrances, not a second current writing store.
-
-The larger collection of tools, stories, philosophy, translations and research lives at [W4R3Z](https://github.com/Sapient-Lumen/W4R3Z).
-
-Inherited licenses and notices remain in the complete carrier. This page grants no new rights over third-party materials. A release is a usable checkpoint, not a declaration that the work is finished.
+Inherited licenses, attribution and notices remain applicable. This page grants no new rights over third-party materials.

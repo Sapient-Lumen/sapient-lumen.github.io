@@ -1,6 +1,6 @@
 {
   "schema": "lumen.public-reading-edition/v1",
-  "revision": "0283",
+  "revision": "0284",
   "engineRevision": "0265",
   "title": "Reasons before power: a first reading edition",
   "purpose": "An ongoing work of inquiry, writing and construction; coherent releases remain open to revision, growth and deliberate reduction.",
@@ -8,17 +8,41 @@
     "index.html",
     "Lumen.html"
   ],
-  "bytes": 22034231,
-  "sha256": "87a94748ac203c1de17f7682b07b932c72c94c87d69cddd188eae4338d4d1b16",
-  "gitBlobSha": "db5015c8e38ece5eb2856dfd15cc71784637dbb9",
+  "bytes": 22045547,
+  "sha256": "e07b3056eb57985889279731cc244872ec0862cf8193612807e4bea7f35a7c29",
+  "gitBlobSha": "692a244bc409883994dfb6f40c35812a4b76067f",
   "acceptedStateRevision": 1001,
   "acceptedStateSha256": "f97c578133e3768f01783ec04751795109eae479eb29862a1ebb599e89b23914",
   "acceptedJournalSha256": "bdbd3a2b57c323ed8da554ef94380319d9ec9527dd6c895d0b1fec6392057bb9",
   "works": 14,
   "textBlocks": 559,
-  "sourcePrologueEndLine": 115,
-  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/7ded955fa470d0c0b0bdf6847bfd3eb635f03beb/Lumen.html",
+  "sourcePrologueEndLine": 385,
+  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/2a1495303f153279c1c7758ed885558a19156ef1/Lumen.html",
   "scope": "Source-first reading edition with Love in DelayBasinese, four complete dated philosophical essays, prior workshop essays, Field Notes collaboration essay and evidence companion; no private planning corpus.",
   "fieldNotesVault": "vault/field-notes-rev0074/Lumen.html",
-  "change": "Expose reviewed writing history with authored reasons, bounded wording excerpts and exact edition links. Love remains a living draft in both forms. All accepted text blocks and artifacts are unchanged; metadata and retained history advance to accepted1001."
+  "change": "Add compact revision-aware RSS and subscription links; remove global language switch in favor of explicit work-local links; correct presentation language tags. Accepted1001 writing and histories unchanged. Retire old preview deployment files into pinned Git history with a recovery entrance; supplied gift and Field Notes vault unchanged.",
+  "sourcePrologueEndByte": 29032,
+  "rss": {
+    "path": "rss.xml",
+    "bytes": 16458,
+    "sha256": "d0d4a10fa47571df21f1b7a3a0b43c6fea73d9c462e6888f8653780fd221c4bd",
+    "gitBlobSha": "ae007ae21324ceb5bfd3b2a402ae91e406ede12a",
+    "mediaType": "application/rss+xml",
+    "itemCount": 14,
+    "mode": "changes",
+    "content": "summary",
+    "diffs": "inline",
+    "baseline": "existing public collection; no invented original dates",
+    "comparisonReceiptSha256": "dc12a1432cc85b004249ed3e875e121503cb3944860c748e349696568e4266e0",
+    "acceptedStateSha256": "f97c578133e3768f01783ec04751795109eae479eb29862a1ebb599e89b23914"
+  },
+  "sourceZip": {
+    "bytes": 7421252,
+    "sha256": "17532f244fc21f5469c751fd667f82c2db769dad1da4bd2755d51808a623e018"
+  },
+  "history": {
+    "preReorganizationCommit": "2a1495303f153279c1c7758ed885558a19156ef1",
+    "vaultPreserved": true,
+    "suppliedGiftPreserved": true
+  }
 }
