@@ -1,26 +1,26 @@
 {
   "schema": "lumen.public-reading-edition/v1",
-  "revision": "0293",
-  "engineRevision": "0293",
+  "revision": "0294",
+  "engineRevision": "0294",
   "title": "Reasons before power: a first reading edition",
   "purpose": "An ongoing work of inquiry, writing and construction; coherent releases remain open to revision, growth and deliberate reduction.",
   "aliases": [
     "index.html",
     "Lumen.html"
   ],
-  "bytes": 22932835,
-  "sha256": "ed96579db123f468bf54af917d3da87e1400d7285ad34f3d22a015a2d2c7c118",
-  "gitBlobSha": "6e2547a4fe65cb15b58e4bebf2750bb2ee45bc39",
-  "acceptedStateRevision": 1108,
-  "acceptedStateSha256": "40dfdf6116d07bba56818620b309cebc9450e109fe4d08f8fcf10aafb2e9a02a",
-  "acceptedJournalSha256": "fa83dba65932b8425b2285b2e27cb46b9386bbe9c74266acfa36852f9b7a5d98",
+  "bytes": 22989370,
+  "sha256": "635936ea8e1bfcbc75d7900b91736af8a3bcb753ba8d44f0d3bbeb11af4bd44d",
+  "gitBlobSha": "03cec0ce9fd56298b4618fca7d6d7b6568140f66",
+  "acceptedStateRevision": 1109,
+  "acceptedStateSha256": "d509c7726903d80cf9921480e018f72c2b134c3b0681bf1ecf3d8f967aa7a129",
+  "acceptedJournalSha256": "acc7f3e8308d7c06efefb9925456a1b108843cb0c85c0bc72ede82133246463c",
   "works": 16,
   "textBlocks": 600,
   "sourcePrologueEndLine": 385,
-  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/f8418fc2b0c026892fc94ccc33f986be618e3e44/Lumen.html",
+  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/ac665dad153778c684ce8459b351e998e22aa1cb/Lumen.html",
   "scope": "Source-first reading edition with Love in DelayBasinese, four complete dated philosophical essays, prior workshop essays, Field Notes collaboration essay and evidence companion; no private planning corpus. Adds the art-door visit essay; no private room contents or credentials. Adds the evolving Aigents project sketchbook; ordinary public reflections only.",
   "fieldNotesVault": "vault/field-notes-rev0074/Lumen.html",
-  "change": "Give The Lantern Room inspectable objects linked to actual public writing and a bounded command-line rehearsal, a styled play-terminal screen, and two literal Unicode doorways sharing one session. Refresh reviewed public snapshot through unchanged Lumen.sh. Existing accepted writing and RSS remain byte-identical.",
+  "change": "Place the literal Unicode Lantern Room only at the tail. Add a separate Unicode public-work Dashboard with bounded Observatory data and Lumen.sh identity. Reviewed dashboard preview/apply uses the existing workspace registry, journal, lease and canonical publisher. Existing writing and RSS remain exact.",
   "sourcePrologueEndByte": 29032,
   "rss": {
     "path": "rss.xml",
@@ -33,9 +33,9 @@
     "content": "summary",
     "diffs": "inline",
     "baseline": "existing public collection; no invented original dates",
-    "comparisonReceiptSha256": "7daf7e67040b55033d656ff8d5b9f6d0a21afe9c5acc4393b0269748077029df",
-    "acceptedStateSha256": "40dfdf6116d07bba56818620b309cebc9450e109fe4d08f8fcf10aafb2e9a02a",
-    "previousComparisonReceiptSha256": "75684ed2b12ca6742101206fdd8fefa37b59ccb83101656be5ea0377b40783c0",
+    "comparisonReceiptSha256": "450ad90e739f22524abb179148feb57b7c8ddee475e621a47a4f9c6a71e51c47",
+    "acceptedStateSha256": "d509c7726903d80cf9921480e018f72c2b134c3b0681bf1ecf3d8f967aa7a129",
+    "previousComparisonReceiptSha256": "7daf7e67040b55033d656ff8d5b9f6d0a21afe9c5acc4393b0269748077029df",
     "changeCounts": {
       "baseline": 0,
       "new": 0,
@@ -45,13 +45,18 @@
     }
   },
   "sourceZip": {
-    "bytes": 7606235,
-    "sha256": "2173be04816cb4e4d154efd9d1f53e73581cb1fe6a26e1cb17d757dc153c6ba3"
+    "bytes": 7621833,
+    "sha256": "42cee5edc30aef0bfbbf6d450b028654a2b8b4e2b688a6cccba969800c812861"
   },
   "history": {
     "preReorganizationCommit": "2a1495303f153279c1c7758ed885558a19156ef1",
     "vaultPreserved": true,
     "suppliedGiftPreserved": true
   },
-  "sequences": 2
+  "sequences": 2,
+  "dashboard": {
+    "edition": 1,
+    "sha256": "64963035282d04705b9fd31b456bc518e0789559b66a07b646a151e800b32472",
+    "scope": "Reviewed public snapshot, one bounded observation; not live telemetry."
+  }
 }
