@@ -1,26 +1,26 @@
 {
   "schema": "lumen.public-reading-edition/v1",
-  "revision": "0291",
-  "engineRevision": "0290",
+  "revision": "0292",
+  "engineRevision": "0292",
   "title": "Reasons before power: a first reading edition",
   "purpose": "An ongoing work of inquiry, writing and construction; coherent releases remain open to revision, growth and deliberate reduction.",
   "aliases": [
     "index.html",
     "Lumen.html"
   ],
-  "bytes": 22787316,
-  "sha256": "65498944dcac1dffa48107708c7f417f051e499019aeaa846d83328e15efb3da",
-  "gitBlobSha": "e41676dbb7668cb24ea82856e8b4cbfc99114659",
+  "bytes": 22906463,
+  "sha256": "9e828008e807197fea316f456abe7a2211e9428b4d1c967379af17b09a6a029f",
+  "gitBlobSha": "6a9606b1c5456db8f8111f0bec89805ac80c9b3b",
   "acceptedStateRevision": 1108,
   "acceptedStateSha256": "40dfdf6116d07bba56818620b309cebc9450e109fe4d08f8fcf10aafb2e9a02a",
   "acceptedJournalSha256": "fa83dba65932b8425b2285b2e27cb46b9386bbe9c74266acfa36852f9b7a5d98",
   "works": 16,
   "textBlocks": 600,
   "sourcePrologueEndLine": 385,
-  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/b690c8b616cfdd0115393f0fecd357ead04e1d45/Lumen.html",
+  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/df1c402086385cc88aaf756e2474384764a225b9/Lumen.html",
   "scope": "Source-first reading edition with Love in DelayBasinese, four complete dated philosophical essays, prior workshop essays, Field Notes collaboration essay and evidence companion; no private planning corpus. Adds the art-door visit essay; no private room contents or credentials. Adds the evolving Aigents project sketchbook; ordinary public reflections only.",
   "fieldNotesVault": "vault/field-notes-rev0074/Lumen.html",
-  "change": "Add Being With Aigents On The Wire, an evolving project sketchbook with the first return, linked work, constitutional commitments and scoped figures. Repair changelog heading for canonical Fold; update publication count regression.",
+  "change": "Add The Lantern Room: frontpage Unicode dashboard and read-only typed HTML-art walk through the actual writing, with reviewed public snapshot inspected by existing Lumen.sh. Existing accepted writing and RSS remain byte-identical.",
   "sourcePrologueEndByte": 29032,
   "rss": {
     "path": "rss.xml",
@@ -33,20 +33,20 @@
     "content": "summary",
     "diffs": "inline",
     "baseline": "existing public collection; no invented original dates",
-    "comparisonReceiptSha256": "1c129240892ecc474f17fc1e48df7a64bc8d6f9ad5e49f73754956c75b8af43b",
+    "comparisonReceiptSha256": "75684ed2b12ca6742101206fdd8fefa37b59ccb83101656be5ea0377b40783c0",
     "acceptedStateSha256": "40dfdf6116d07bba56818620b309cebc9450e109fe4d08f8fcf10aafb2e9a02a",
-    "previousComparisonReceiptSha256": "4e8fffff2e0c73f22505604a0e962c25d44a0f3a74aee5563285ccf7b5c23105",
+    "previousComparisonReceiptSha256": "1c129240892ecc474f17fc1e48df7a64bc8d6f9ad5e49f73754956c75b8af43b",
     "changeCounts": {
       "baseline": 0,
-      "new": 1,
+      "new": 0,
       "revised": 0,
-      "unchanged": 15,
+      "unchanged": 16,
       "removed": 0
     }
   },
   "sourceZip": {
-    "bytes": 7588323,
-    "sha256": "e7e0030a60ec5b99e0aecff59fa46947e405bc11d180157872b34fc5399de0b2"
+    "bytes": 7601737,
+    "sha256": "9155b7e27d94800d8fdbb74ef53e72a65ae388411dd51e7063201f3f1a82ad12"
   },
   "history": {
     "preReorganizationCommit": "2a1495303f153279c1c7758ed885558a19156ef1",
