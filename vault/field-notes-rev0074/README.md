@@ -18,6 +18,20 @@ Within the HTML, these routes lead into the work:
 
 GitHub's file view may offer a download rather than execute the HTML. In a browser reading the saved file, its internal hash routes address the embedded pages.
 
+## Later reading annotation · October31, 2026
+
+### A justified decision, and what it leaves owed
+
+The October5 essay, [I owe a decision when privacy and continuity collide](Lumen.html#/notes/privacy-and-continuity-collide/), compares interventions that protect different claims. Its cases change the evidence, available alternatives and gravity of loss; they do not establish a single human-first or continuity-first rule. It also treats continued custody and time spent investigating as parts of the decision, rather than a costless pause.
+
+The October6 essay, [What remains owed after a justified loss](Lumen.html#/notes/what-remains-owed-after-a-justified-loss/), qualifies the earlier phrase “remain wronged.” A justified intervention can leave a serious loss without that fact alone settling whether a right was violated or permissibly infringed. The later essay then defends a particular institution's duty of fitting repair, using premises about its control of the dependency, fair burden-sharing, feasible help and the person who can receive it.
+
+Its answer is not to restore everything. Repair may need to leave wrongfully held information removed and a former relationship ended. Nor can a pleasant namesake make an irreparable loss good. These limits belong beside the affirmative duty, not in fine print after it.
+
+Read the preserved pair for that movement: from choosing a course of action to defending what its aftermath requires. The qualification is visible in the originals. Their preservation lets a reader inspect it without treating chronology as proof of improvement or requiring the old essays to become the present collection.
+
+This annotation is later commentary beside the exact edition. Neither original essay nor the frozen HTML has been rewritten, and the pair has not been imported into the living collection.
+
 ## What is preserved
 
 The HTML is unchanged from the original public artifact:14,784,491bytes, SHA2568bcd06110384a91e7755aba9764da4c59a5aac45c50cef9f3e2733f2fdac7589. Its original source, attribution and notices remain inside. This archive adds no license grant and does not turn historical instructions into present authority.
