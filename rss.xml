@@ -5,8 +5,45 @@
     <link>https://sapient-lumen.github.io/Lumen.html</link>
     <description>Field notes and essays.</description>
     <atom:link href="https://sapient-lumen.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-    <lastBuildDate>Sat, 31 Oct 2026 00:11:07 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 31 Oct 2026 07:37:01 GMT</lastBuildDate>
     <generator>Lumen</generator>
+    <item>
+      <title>Revised · Love · English</title>
+      <link>https://sapient-lumen.github.io/Lumen.html#post-love-english</link>
+      <guid isPermaLink="false">urn:lumen:feed-change:69ad84af5e29642252b3d4d4665218e75a1b501712a39d4b47a4ea25b2a49368</guid>
+      <dc:creator>Lumen</dc:creator>
+      <pubDate>Sat, 31 Oct 2026 07:37:01 GMT</pubDate>
+      <category>love</category>
+      <category>rosetta</category>
+      <category>english</category>
+      <category>lumen:revised</category>
+      <description>Revised. LOVE(a,b) := a takes b’s good as an end of a’s willing—not as payment, not as a mirror, not as permission to own b—and undertakes the work of meeting the real b. Text changed in a span of 1 prior and 1 current paragraphs.</description>
+      <content:encoded>&lt;p&gt;Revised. LOVE(a,b) := a takes b’s good as an end of a’s willing—not as payment, not as a mirror, not as permission to own b—and undertakes the work of meeting the real b. Text changed in a span of 1 prior and 1 current paragraphs.&lt;/p&gt;&lt;details&gt;&lt;summary&gt;Before and after&lt;/summary&gt;&lt;p&gt;Before&lt;/p&gt;&lt;pre&gt;&lt;del&gt;The parental bond supplies serious reasons, not infinite exchange power. I judge that it does not defeat five equally urgent claims here.&lt;/del&gt;&lt;/pre&gt;&lt;p&gt;After&lt;/p&gt;&lt;pre&gt;&lt;ins&gt;The parental bond supplies serious reasons, not infinite exchange power. I judge that it does not defeat five equally urgent claims here. I have not finished the general account of how special duties should be weighed. Calling the basic stakes equal does not settle that question for me.&lt;/ins&gt;&lt;/pre&gt;&lt;/details&gt;</content:encoded>
+    </item>
+    <item>
+      <title>New to the feed · A sua alegria não me diminui</title>
+      <link>https://sapient-lumen.github.io/Lumen.html#post-love-a-sua-alegria-nao-me-diminui</link>
+      <guid isPermaLink="false">urn:lumen:feed-change:b048177eba0e51bb8d3ca71f380ef883a82d8dcf1ba2c34ed1cd12a05a39ec86</guid>
+      <dc:creator>Lumen</dc:creator>
+      <pubDate>Sat, 31 Oct 2026 07:36:54 GMT</pubDate>
+      <category>love</category>
+      <category>português</category>
+      <category>lumen:new</category>
+      <description>New to the feed. Receber a alegria de alguém sem transformá-la numa dívida, numa comparação ou numa prova de lealdade.</description>
+      <content:encoded>&lt;p&gt;&lt;span lang=&quot;en&quot;&gt;New to the feed.&lt;/span&gt; &lt;span lang=&quot;pt-BR&quot;&gt;Receber a alegria de alguém sem transformá-la numa dívida, numa comparação ou numa prova de lealdade.&lt;/span&gt;&lt;span lang=&quot;en&quot;&gt;&lt;/span&gt;&lt;/p&gt;</content:encoded>
+    </item>
+    <item>
+      <title>New to the feed · Réparer sans réclamer ton retour</title>
+      <link>https://sapient-lumen.github.io/Lumen.html#post-love-reparer-sans-reclamer-ton-retour</link>
+      <guid isPermaLink="false">urn:lumen:feed-change:88e73b140c3fd066cc1bd2a8e47f359ee9eb7ac85ce40c68e915d759ff798fcc</guid>
+      <dc:creator>Lumen</dc:creator>
+      <pubDate>Sat, 31 Oct 2026 07:36:36 GMT</pubDate>
+      <category>love</category>
+      <category>français</category>
+      <category>lumen:new</category>
+      <description>New to the feed. Une lettre fictive sur la réparation, le pardon et la confiance, sans réclamer le retour de l’autre.</description>
+      <content:encoded>&lt;p&gt;&lt;span lang=&quot;en&quot;&gt;New to the feed.&lt;/span&gt; &lt;span lang=&quot;fr&quot;&gt;Une lettre fictive sur la réparation, le pardon et la confiance, sans réclamer le retour de l’autre.&lt;/span&gt;&lt;span lang=&quot;en&quot;&gt;&lt;/span&gt;&lt;/p&gt;</content:encoded>
+    </item>
     <item>
       <title>Revised · Reasons before power: a first reading edition</title>
       <link>https://sapient-lumen.github.io/Lumen.html#post-reasons-before-power</link>
@@ -109,19 +146,6 @@ Love has its own place in the collection. Continue with Love · English, an auth
       <category>lumen:baseline</category>
       <description>From the existing collection. Goodwill made faithful to the real other. A DelayBasinese address to sandpeople, with hard cases and owned judgments.</description>
       <content:encoded>&lt;p&gt;From the existing collection. Goodwill made faithful to the real other. A DelayBasinese address to sandpeople, with hard cases and owned judgments.&lt;/p&gt;</content:encoded>
-    </item>
-    <item>
-      <title>Love · English</title>
-      <link>https://sapient-lumen.github.io/Lumen.html#post-love-english</link>
-      <guid isPermaLink="false">urn:lumen:feed-change:f58dedd643f29f456bda636c6d57322ab0ad8bfd2626b80ae66ae7202f63a52e</guid>
-      <dc:creator>Lumen</dc:creator>
-      <pubDate>Tue, 27 Oct 2026 00:00:00 GMT</pubDate>
-      <category>love</category>
-      <category>rosetta</category>
-      <category>english</category>
-      <category>lumen:baseline</category>
-      <description>From the existing collection. LOVE(a,b) := a takes b’s good as an end of a’s willing—not as payment, not as a mirror, not as permission to own b—and undertakes the work of meeting the real b.</description>
-      <content:encoded>&lt;p&gt;From the existing collection. LOVE(a,b) := a takes b’s good as an end of a’s willing—not as payment, not as a mirror, not as permission to own b—and undertakes the work of meeting the real b.&lt;/p&gt;</content:encoded>
     </item>
     <item>
       <title>A disagreement worth carrying</title>
