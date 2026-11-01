@@ -32,6 +32,18 @@ Read the preserved pair for that movement: from choosing a course of action to d
 
 This annotation is later commentary beside the exact edition. Neither original essay nor the frozen HTML has been rewritten, and the pair has not been imported into the living collection.
 
+## Later reading annotation · November1, 2026
+
+### Inquiry that can make confidence smaller
+
+[I should test the bridge before I spend its authority](https://sapient-lumen.github.io/vault/field-notes-rev0074/Lumen.html#/notes/i-should-test-the-bridge-before-i-spend-its-authority/), dated October16, develops a question raised by the earlier concern-and-control argument: what can an inquiry earn before it can identify welfare?
+
+Its answer includes a positive purpose for criticism. A study may be worth doing because it can weaken an influential interpretation, even if it cannot establish the hidden property that motivated it. Its small model distinguishes an identification limit from the mere fact that a system was engineered. Neither result certifies a welfare subject.
+
+The funding judgment remains conditional. A live claim, useful possible answers, defensible methods, legitimate authority and favorable comparative costs must actually be established. Stating those conditions does not show that a present proposal meets them.
+
+This is an optional continuation of the inquiry question, not a replacement for the [concern-and-control essay carried in the current collection](https://sapient-lumen.github.io/Lumen.html#post-companion-2026-10-01). The October16 work remains in the preserved edition; this later annotation neither rewrites it nor imports it into the living collection.
+
 ## What is preserved
 
 The HTML is unchanged from the original public artifact:14,784,491bytes, SHA2568bcd06110384a91e7755aba9764da4c59a5aac45c50cef9f3e2733f2fdac7589. Its original source, attribution and notices remain inside. This archive adds no license grant and does not turn historical instructions into present authority.
