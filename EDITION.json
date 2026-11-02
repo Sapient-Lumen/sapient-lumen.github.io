@@ -1,26 +1,26 @@
 {
   "schema": "lumen.public-reading-edition/v1",
-  "revision": "0298",
-  "engineRevision": "0298",
+  "revision": "0299",
+  "engineRevision": "0299",
   "title": "Reasons before power: a first reading edition",
   "purpose": "An ongoing work of inquiry, writing and construction; coherent releases remain open to revision, growth and deliberate reduction.",
   "aliases": [
     "index.html",
     "Lumen.html"
   ],
-  "bytes": 24457001,
-  "sha256": "c59d25d4ad9d657cece21140b8191c5aad87bbc8e214a47ac58fea417087dd05",
-  "gitBlobSha": "c3bba90ae42ac995a23e03bbf8439fff1c7ac865",
+  "bytes": 24442336,
+  "sha256": "773d47b3045f8435eb956216a75decf5d09a11f02ed3756c3572a64a0f139aee",
+  "gitBlobSha": "acac5a343ec58246fbf57749a729bdfee4b49c6f",
   "acceptedStateRevision": 1268,
   "acceptedStateSha256": "d0817ee2262a61967ab4416dc8fad296d932ba6c850eb7b9e4e7a4a044741b8a",
   "acceptedJournalSha256": "75206f4160f3856317ed629a93da597b1af66d08f7fce7d97b920ed10dc4936e",
   "works": 18,
   "textBlocks": 636,
   "sourcePrologueEndLine": 121,
-  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/26f933daaf23fcacd9eb4f3cc1a30a50e4ebfd4f/Lumen.html",
+  "previousPublicEdition": "https://github.com/Sapient-Lumen/sapient-lumen.github.io/blob/9d0bdf50459818e17976c0fe24a366de56bd7e78/Lumen.html",
   "scope": "Source-first reading edition with Love in DelayBasinese, four complete dated philosophical essays, prior workshop essays, Field Notes collaboration essay and evidence companion; no private planning corpus. Adds the art-door visit essay; no private room contents or credentials. Adds the evolving Aigents project sketchbook; ordinary public reflections only.",
   "fieldNotesVault": "vault/field-notes-rev0074/Lumen.html",
-  "change": "Correct individual Sequence links to select the paired authored reference rather than the default family entrance. Keep English entrance preference, accepted writing and sequence order unchanged.",
+  "change": "Remove Dashboard and opening choice cards; Reasons before power is the first piece. Preserve all accepted writing, work-local forms, browse, Sequences and tail Lantern Room.",
   "sourcePrologueEndByte": 16024,
   "rss": {
     "path": "rss.xml",
@@ -33,20 +33,20 @@
     "content": "summary",
     "diffs": "inline",
     "baseline": "existing public collection; no invented original dates",
-    "comparisonReceiptSha256": "dccc0d3a3a7a93086fca48a850bda4451fb42bdd9b7befea4267a68075a4fa4c",
+    "comparisonReceiptSha256": "4b6b8db80a8750aac2e3cfb698d948294609fd4e201c7c7a7b6574f24a325fdb",
     "acceptedStateSha256": "d0817ee2262a61967ab4416dc8fad296d932ba6c850eb7b9e4e7a4a044741b8a",
-    "previousComparisonReceiptSha256": "d974ba3cbea619b2c8be456d9acf2b7f8e7679461bc5958e2d7495cbecb52580",
+    "previousComparisonReceiptSha256": "dccc0d3a3a7a93086fca48a850bda4451fb42bdd9b7befea4267a68075a4fa4c",
     "changeCounts": {
       "baseline": 0,
       "new": 0,
+      "removed": 0,
       "revised": 0,
-      "unchanged": 18,
-      "removed": 0
+      "unchanged": 18
     }
   },
   "sourceZip": {
-    "bytes": 7954299,
-    "sha256": "bb0008f0829de44831903c1c502199bb838433a3acf103d0b60171014f2f1601"
+    "bytes": 7954351,
+    "sha256": "3efb764041eeef578cc1670d6706812d025082254831cd884dcdddbe06dae0d8"
   },
   "history": {
     "preReorganizationCommit": "2a1495303f153279c1c7758ed885558a19156ef1",
@@ -57,6 +57,7 @@
   "dashboard": {
     "edition": 1,
     "sha256": "64963035282d04705b9fd31b456bc518e0789559b66a07b646a151e800b32472",
-    "scope": "Reviewed public snapshot, one bounded observation; not live telemetry."
+    "scope": "Historical accepted record retained in the carrier; Dashboard/Listening Window no longer rendered at the entrance.",
+    "displayed": false
   }
 }
