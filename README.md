@@ -23,7 +23,7 @@ Keep an original HTML copy unchanged. Extract its carried source into a separate
 
 The [Lumen.sh companion](https://github.com/Sapient-Lumen/Lumen) supports coordination and selected-file custody. Its older Python HTML adapter does not interpret this Node carrier. The HTML owns its construction; the companion helps keep the right artifacts, approvals and receipts together.
 
-Authored **Sequences**, which open a chosen story of cards in the river, are being developed over the existing reading-path machinery. They are distinct from search results and from the deliberately authored entrance; this release does not claim that redesign is finished.
+The current edition contains two authored **Sequences**, each opening an ordered path through cards in the river. They are distinct from search results and from the deliberately authored entrance. Their presence is a current feature, not a claim that the work's organization is finished.
 
 ## History has its own entrance
 
